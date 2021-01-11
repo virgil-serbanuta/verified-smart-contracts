@@ -10,6 +10,7 @@ module PSEUDOCODE-SYNTAX
                       |   Variable "=" Expression ";"
                       |   "if" "(" Expression ")" Block               [avoid]
                       |   "if" "(" Expression ")" Block "else" Block  [prefer]
+                      |   "for" "(" index:Variable "," value:Variable ")" "in" Expression Block
                       |   Expression ";"
                       |   "ok" "(" Expression ")" ";"
   syntax Value  ::= "[" "]"
@@ -18,7 +19,9 @@ module PSEUDOCODE-SYNTAX
                 |   "void"
                 |   Bool
                 |   UserRole
+                |   Action
   syntax Expression ::= Expression "+" Expression
+                    |   Expression "<=" Expression
                     |   "!" Expression
                     |   FunctionCall
                     |   Variable
@@ -47,6 +50,10 @@ module PSEUDOCODE-SYNTAX
                       |   "getActionLastIndex"  // ()
                       |   "userRoleCanPropose"  // (user_role)
                       |   "userRoleCanSign"     // (user_role)
+                      |   "listLen"             // ([list])
+                      |   "getCaller"           // ()
+                      |   "getUserId"           // (address)
+                      |   "getUserIdToRole"     // (user_id)
 
   syntax KItem ::= runPseudoCode(Instructions)
   syntax KItem ::= runInstruction(Instruction)
@@ -82,14 +89,20 @@ module PSEUDOCODE-DETAILS
   configuration <T>
     <pseudocode-state>
       <variables>.Map</variables>
+      <stack> .List </stack>
     </pseudocode-state>
   </T>
 
   syntax KResult ::= Value | ValueList
 
+  syntax KItem ::= "pushContext" | "popContext" | "evaluateReturnValue"
+  syntax KItem ::= call(FunctionCall)
 
   syntax Value ::= UserRole
 
+  syntax Stack ::= stackEntry(MultisigState, Map)
+
+  /*
   context evaluate(
       _:FunctionTag(
           HOLE => evaluateL(HOLE)
@@ -99,36 +112,38 @@ module PSEUDOCODE-DETAILS
   context evaluateL((HOLE:Expression => evaluate(HOLE)))
   context evaluateL(HOLE:Expression => evaluate(HOLE) , _:ExpressionList)
   context evaluateL(E:Expression , HOLE:ExpressionList => evaluateL(HOLE)) requires isKResult(E)
+  */
 
   rule isKResult((E:Expression):ExpressionList) => isKResult(E)
   rule isKResult(E:Expression , Es:ExpressionList) => isKResult(E) andBool isKResult(Es)
 
-  rule evaluate(_:FunctionTag(Args:ExpressionList) #as FunctionCall)
-      => pushContext ~> call(FunctionCall) ~> popContext ~> evaluateReturnValue
+  rule  <k> evaluate(_:FunctionTag(Args:ExpressionList) #as FunctionCall)
+            => (pushContext ~> call(FunctionCall) ~> popContext ~> evaluateReturnValue)
+        ...</k>
     requires isKResult(Args)
 
   rule  <k> pushContext => .K ... </k>
-        <state> S:State </state>
+        <state> S:MultisigState </state>
         <variables> V:Map </variables>
-        <stack> (.List => stackEntry(S, V)) </stack>
+        <stack> (.List => ListItem(stackEntry(S, V))) ... </stack>
 
   rule  <k> _:Value ~> (popContext => .K) </k>
         <variables> _ => V </variables>
-        <stack> (stackEntry(_, V:Map) => .List) ... </stack>
+        <stack> (ListItem(stackEntry(_, V:Map)) => .List) ... </stack>
 
   rule  <k> error ~> (popContext => .K) </k>
         <state> _ => S </state>
         <variables> _ => V </variables>
-        <stack> (stackEntry(S:State, V:Map) => .List) ... </stack>
+        <stack> (ListItem(stackEntry(S:MultisigState, V:Map)) => .List) ... </stack>
 
   rule <k> error ~> (evaluateReturnValue => .K) ... </k>
 
   rule evaluate(init(Quorum:Usize, [Board:ExpressionList])) =>
       runPseudoCode(
         require(!isEmptyList(Board));
-        require(Quorum <=Int listLen(Board));
+        require(Quorum <= listLen([Board]));
         setQuorum(Quorum);
-        for (i, address) in Board {
+        for (i, address) in [Board] {
             user_id = i + 1;
             setUserId(address, user_id);
             setUserAddress(user_id, address);
@@ -144,7 +159,7 @@ module PSEUDOCODE-DETAILS
             caller = getCaller();
             caller_id = getUserId(caller);
             caller_role = getUserIdToRole(caller_id);
-            require(callerRoleCanPropose(caller_role));
+            require(userRoleCanPropose(caller_role));
             action_id = getActionLastIndex() + 1;
             setActionLastIndex(action_id);
             setActionData(action_id, A);

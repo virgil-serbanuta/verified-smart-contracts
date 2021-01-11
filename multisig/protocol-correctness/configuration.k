@@ -1,33 +1,14 @@
 module CONFIGURATION-SYNTAX
-  imports INT
-
-  syntax Usize ::= Int  // TODO: int32
-  syntax UserRole ::= "None" | "Proposer" | "BoardMember"
-endmodule
-
-module CONFIGURATION
   imports BYTES
   imports INT
   imports LIST
-  imports MAP
 
-  imports CONFIGURATION-SYNTAX
-
-  // type_abi_name_only!(Usize, "u32");
-
-  syntax Users ::= users(numUsers:Usize, userIdToAddress:Map, addressToUserId:Map)
-  syntax Address ::= address(Int)
-
-  syntax UserRoles ::= userRoles(Map)  // userId:Int -> UserRole
-  syntax BoardState ::= boardState(
-                            numBoardMembers:Usize,
-                            quorum:Usize,
-                            numProposers:Usize,
-                            userRoles:UserRoles)
-
+  syntax Usize ::= Int  // TODO: int32
   syntax BigUint ::= Int  // Assumes no operations on this.
-  syntax BoxedBytes ::= Bytes
   syntax CodeMetadata ::= Int  // Assumes no operations on this.
+  syntax UserRole ::= "None" | "Proposer" | "BoardMember"
+  syntax BoxedBytes ::= Bytes
+  syntax Address ::= address(Int)
   syntax Action ::= "Nothing"
                 |   AddBoardMember(Address)
                 |   AddProposer(Address)
@@ -44,6 +25,26 @@ module CONFIGURATION
                         amount: BigUint,
                         function: BoxedBytes,
                         arguments: List)  // list of BoxedBytes
+endmodule
+
+module CONFIGURATION
+  imports INT
+  imports LIST
+  imports MAP
+
+  imports CONFIGURATION-SYNTAX
+
+  // type_abi_name_only!(Usize, "u32");
+
+  syntax Users ::= users(numUsers:Usize, userIdToAddress:Map, addressToUserId:Map)
+
+  syntax UserRoles ::= userRoles(Map)  // userId:Int -> UserRole
+  syntax BoardState ::= boardState(
+                            numBoardMembers:Usize,
+                            quorum:Usize,
+                            numProposers:Usize,
+                            userRoles:UserRoles)
+
   syntax Signers ::= votes(List)  // list of userId:Int
   syntax ActionInfo ::= actionInfo(Action, Signers)
   syntax Actions ::= actions(Map)  // actionId:Int -> ActionInfo
@@ -77,6 +78,7 @@ module CONFIGURATION
 
   configuration
     <T>
+      <k>.K</k>
       <state> NoState </state>
     </T>
 
