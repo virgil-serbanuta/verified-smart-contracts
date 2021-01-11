@@ -2,6 +2,13 @@ module PSEUDOCODE-SYNTAX
   imports CONFIGURATION-SYNTAX
 
   syntax Variable ::= r"[A-Za-z_][A-Za-z_0-9]*" [token]
+  syntax Variable ::= "i"           [token]
+                  |   "address"     [token]
+                  |   "user_id"     [token]
+                  |   "caller"      [token]
+                  |   "caller_id"   [token]
+                  |   "caller_role" [token]
+                  |   "action_id"   [token]
 
   syntax Block ::= "{" Instructions "}"
   syntax Instructions ::= Instruction
@@ -42,26 +49,24 @@ module PSEUDOCODE-SYNTAX
                       |   "setActionLastIndex"  // (index)
                       |   "setActionData"       // (action_id, action)
                       |   "setActionSignerIDs"  // (action_id, signer_list)
+                      |   "setNumUsers"         // (usize)
                       |   "setUserId"           // (address, user_id)
                       |   "setUserAddress"      // (user_id, address)
                       |   "setUserIdToRole"     // (user_id, role)
+                      |   "getCaller"           // ()
                       |   "getUserId"           // (address)
                       |   "getUserIdToRole"     // (user_id)
                       |   "getActionLastIndex"  // ()
                       |   "userRoleCanPropose"  // (user_role)
                       |   "userRoleCanSign"     // (user_role)
                       |   "listLen"             // ([list])
-                      |   "getCaller"           // ()
-                      |   "getUserId"           // (address)
-                      |   "getUserIdToRole"     // (user_id)
+                      |   "isEmptyList"         // ([list])
 
   syntax KItem ::= runPseudoCode(Instructions)
   syntax KItem ::= runInstruction(Instruction)
   syntax KItem ::= evaluate(Expression)
   syntax KItem ::= evaluateL(ExpressionList)
 
-  syntax Bool ::= isEmptyList(ExpressionList)
-  syntax Usize ::= listLen(ExpressionList)
 
 endmodule
 
@@ -166,7 +171,7 @@ module PSEUDOCODE-DETAILS
             if (userRoleCanSign(caller_role)) {
               setActionSignerIDs(action_id, [caller_id]);  // TODO
             }
-            ok(ActionId);
+            ok(action_id);
         )
 
   rule  evaluate(userRoleCanPropose(None) => false)
