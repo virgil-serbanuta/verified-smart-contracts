@@ -27,7 +27,7 @@ module CONFIGURATION-SYNTAX
                         arguments: List)  // list of BoxedBytes
 endmodule
 
-module CONFIGURATION
+module CONFIGURATION-TYPES
   imports INT
   imports LIST
   imports MAP
@@ -75,11 +75,5 @@ module CONFIGURATION
 
   rule start(Command) => run(Command)
   rule error => .K
-
-  configuration
-    <T>
-      <k>.K</k>
-      <state> NoState </state>
-    </T>
 
 endmodule

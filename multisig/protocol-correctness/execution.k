@@ -8,8 +8,4 @@ endmodule
 module EXECUTION
   imports EXECUTION-SYNTAX
   imports PSEUDOCODE
-
-  configuration <T>
-    <k color="green"> runPseudoCode($PGM:Instructions) </k>
-  </T>
 endmodule

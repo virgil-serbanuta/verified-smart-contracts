@@ -88,15 +88,8 @@ endmodule
 module PSEUDOCODE-DETAILS
   imports BOOL
 
-  imports CONFIGURATION
+  imports PSEUDOCODE-CONFIGURATION
   imports PSEUDOCODE-SYNTAX
-
-  configuration <T>
-    <pseudocode-state>
-      <variables>.Map</variables>
-      <stack> .List </stack>
-    </pseudocode-state>
-  </T>
 
   syntax KResult ::= Value | ValueList
 
@@ -107,7 +100,6 @@ module PSEUDOCODE-DETAILS
 
   syntax Stack ::= stackEntry(MultisigState, Map)
 
-  /*
   context evaluate(
       _:FunctionTag(
           HOLE => evaluateL(HOLE)
@@ -117,7 +109,6 @@ module PSEUDOCODE-DETAILS
   context evaluateL((HOLE:Expression => evaluate(HOLE)))
   context evaluateL(HOLE:Expression => evaluate(HOLE) , _:ExpressionList)
   context evaluateL(E:Expression , HOLE:ExpressionList => evaluateL(HOLE)) requires isKResult(E)
-  */
 
   rule isKResult((E:Expression):ExpressionList) => isKResult(E)
   rule isKResult(E:Expression , Es:ExpressionList) => isKResult(E) andBool isKResult(Es)
@@ -182,4 +173,22 @@ module PSEUDOCODE-DETAILS
   rule  evaluate(userRoleCanSign(Proposer) => false)
   rule  evaluate(userRoleCanSign(BoardMember) => true)
 
+endmodule
+
+module PSEUDOCODE-CONFIGURATION
+  imports CONFIGURATION-TYPES
+  imports PSEUDOCODE-SYNTAX
+
+  configuration
+    <T>
+      <k color="green"> runPseudoCode($PGM:Instructions) </k>
+  
+      <state> NoState </state>
+
+      <pseudocode-state>
+        <variables>.Map</variables>
+        <stack> .List </stack>
+      </pseudocode-state>
+
+  </T>
 endmodule
