@@ -82,14 +82,16 @@ module PSEUDOCODE-SYNTAX
                     |   Expression ">" Expression
                     |   "!" Expression
 
-  syntax ExpressionCSV  ::= Expression
+  syntax ExpressionCSV  ::= "."
                         |   Expression "," ExpressionCSV
 
-  syntax ExpressionList ::= "[" "]"
-                        |   "[" ExpressionCSV "]"
+  syntax ArgumentCSV  ::= Expression
+                      |   Expression "," ArgumentCSV
+
+  syntax ExpressionList ::= "[" ExpressionCSV "]"
 
   syntax FunctionCall ::= FunctionTag "(" ")"
-                      |   FunctionTag "(" ExpressionCSV ")"
+                      |   FunctionTag "(" ArgumentCSV ")"
 
   syntax FunctionTag  ::= "proposeAction"             // (action)
                       |   "setQuorum"                 // (quorum)
@@ -139,7 +141,7 @@ module PSEUDOCODE-SYNTAX
                       |   EndpointTag
 
   syntax EndpointCall ::= EndpointTag "(" ")"
-                      |   EndpointTag "(" ExpressionCSV ")"
+                      |   EndpointTag "(" ArgumentCSV ")"
 
   syntax EndpointTag  ::= "init"                // (quorum, board)
                       |   "proposeAddBoardMember"  // (user_id)
@@ -159,8 +161,8 @@ module PSEUDOCODE-SYNTAX
   syntax KItem ::= runPseudoCode(Instructions)
   syntax KItem ::= runInstruction(Instruction)
   syntax KItem ::= evaluate(Expression)
-  syntax KItem ::= evaluateL(ExpressionCSV)
-
+  syntax KItem ::= evaluateEc(ExpressionCSV)
+  syntax KItem ::= evaluateAc(ArgumentCSV)
 
 endmodule
 
@@ -220,10 +222,11 @@ module PSEUDOCODE-EXTERNAL
   rule (evaluate(E:Expression) => .K) ~> clearExternalCallEnv
     requires isKResult(E)
 
+  rule  <k> (error => .K) ~> clearExternalCallEnv ...</k>
 
   syntax KItem ::= endpointToInstruction(EndpointCall)
   rule endpointToInstruction(Tag:EndpointTag()) => runInstruction(Tag();)
-  rule endpointToInstruction(Tag:EndpointTag(Es:ExpressionCSV)) => runInstruction(Tag(Es);)
+  rule endpointToInstruction(Tag:EndpointTag(Es:ArgumentCSV)) => runInstruction(Tag(Es);)
 
   rule  <k>
             runExternalCall(from A:Address run Call:EndpointCall;)
@@ -258,15 +261,17 @@ module PSEUDOCODE-FOR
   syntax Instruction ::= "for" "(" indexVar:Variable "=" value:Int "," valueVar:Variable ")" "in" ExpressionList Block
 
   context runInstruction(for(_:Variable, _:Variable) in {HOLE:Expression => evaluate(HOLE)}:>Expression _:Block)
-  rule runInstruction(for(_:Variable, _:Variable) in [] _:Block) => .K
-  rule runInstruction(for(Index:Variable, Value:Variable) in ([_] #as L:ExpressionList) B:Block)
+  rule runInstruction(for(Index:Variable, Value:Variable) in (L:ExpressionList) B:Block)
         => runInstruction(for(Index = 0, Value) in L B)
     requires isKResult(L)
   
-  rule runInstruction(for(IndexVar:Variable = Index:Int, ValueVar:Variable) in [E:Expression] {B:Instructions})
-        => runPseudoCode(IndexVar = Index; ValueVar = E; B)
-    requires isKResult(E)
-  rule runInstruction(for(IndexVar:Variable = Index:Int, ValueVar:Variable) in [E:Expression, Es:ExpressionCSV] {B:Instructions})
+  rule runInstruction(for(_:Variable = _:Int, _:Variable) in [.] _:Block)
+        => evaluate(void)
+  rule runInstruction(
+          for (IndexVar:Variable = Index:Int, ValueVar:Variable)
+              in [E:Expression, Es:ExpressionCSV]
+              {B:Instructions}
+        )
         => runPseudoCode(IndexVar = Index; ValueVar = E; B)
             ~> runInstruction(for(IndexVar = Index +Int 1, ValueVar) in [Es:ExpressionCSV] {B})
     requires isKResult(E)
@@ -319,7 +324,7 @@ module PSEUDOCODE-EXPRESSION
   context evaluate(A:Expression | {HOLE:Expression => evaluate(HOLE)}:>Expression) requires isKResult(A)
   rule evaluate((A:Int | B:Int) => (A |Int B))
 
-  context evaluate([{HOLE:ExpressionCSV => evaluateL(HOLE)}:>ExpressionCSV])
+  context evaluate([{HOLE:ExpressionCSV => evaluateEc(HOLE)}:>ExpressionCSV])
 endmodule
 
 module PSEUDOCODE-COMMON
@@ -339,14 +344,20 @@ module PSEUDOCODE-DETAILS
   imports PSEUDOCODE-COMMON
   imports PSEUDOCODE-SYNTAX
 
-  context evaluateL({HOLE:Expression => evaluate(HOLE)}:>ExpressionCSV)
-  context evaluateL({HOLE:Expression => evaluate(HOLE)}:>Expression , _:ExpressionCSV)
-  context evaluateL(E:Expression , {HOLE:ExpressionCSV => evaluateL(HOLE)}:>ExpressionCSV)
+  context evaluateAc({HOLE:Expression => evaluate(HOLE)}:>ArgumentCSV)
+  context evaluateAc({HOLE:Expression => evaluate(HOLE)}:>Expression , _:ArgumentCSV)
+  context evaluateAc(E:Expression , {HOLE:ArgumentCSV => evaluateAc(HOLE)}:>ArgumentCSV)
     requires isKResult(E)
 
+  context evaluateEc({HOLE:Expression => evaluate(HOLE)}:>Expression , _:ExpressionCSV)
+  context evaluateEc(E:Expression , {HOLE:ExpressionCSV => evaluateEc(HOLE)}:>ExpressionCSV)
+    requires isKResult(E)
+
+  rule isKResult(E:Expression , Es:ArgumentCSV) => isKResult(E) andBool isKResult(Es)
+
+  rule isKResult(.:ExpressionCSV) => true
   rule isKResult(E:Expression , Es:ExpressionCSV) => isKResult(E) andBool isKResult(Es)
 
-  rule isKResult([]) => true
   rule isKResult([Es:ExpressionCSV]) => isKResult(Es)
 endmodule
 
@@ -367,10 +378,10 @@ module PSEUDOCODE-FUNCTIONS
   syntax Stack ::= stackEntry(MultisigStateCell, Map)
 
   context evaluate(_:FunctionTag(
-          {HOLE => evaluateL(HOLE)}:>ExpressionCSV
+          {HOLE => evaluateAc(HOLE)}:>ArgumentCSV
       ))
 
-  rule  <k> evaluate(_:FunctionTag(Args:ExpressionCSV) #as FunctionCall)
+  rule  <k> evaluate(_:FunctionTag(Args:ArgumentCSV) #as FunctionCall)
             => (pushContext ~> call(FunctionCall) ~> popContext ~> evaluateReturnValue)
         ...</k>
     requires isKResult(Args)
@@ -536,7 +547,7 @@ module PSEUDOCODE-FUNCTIONS
             setActionLastIndex(action_id);
             setActionData(action_id, A);
             if (userRoleCanSign(caller_role)) {
-              setActionSignerIDs(action_id, [caller_id]);  // TODO
+              setActionSignerIDs(action_id, [caller_id, .]);  // TODO
             }
             ok(action_id);
         )
@@ -574,14 +585,14 @@ module PSEUDOCODE-FUNCTIONS
 
   rule  call(userRoleCanDiscardAction(R:UserRole) => userRoleCanPropose(R))
 
-  rule  call(isEmptyList([])) => true
-  rule  call(isEmptyList([_:ExpressionCSV])) => false
+  rule  call(isEmptyList([.])) => true
+  rule  call(isEmptyList(_:ExpressionList)) => false [owise]
 
-  syntax KItem ::= "plusOne"
-  rule  call(listLen([])) => 0
-  rule  call(listLen([_:Expression])) => 1
+  rule  call(listLen([.])) => 0
   rule  call(listLen([_:Expression , Es:ExpressionCSV]))
         => call(listLen([Es])) ~> plusOne
+
+  syntax KItem ::= "plusOne"
   rule  (I:Int ~> plusOne) => I +Int 1
 
   rule  <k> call(setQuorum(Quorum:Usize)) => void ... </k>
@@ -675,19 +686,16 @@ module PSEUDOCODE-FUNCTIONS
   rule  <k> call(getActionSignerIds(ActionId:Usize)) => Signers ... </k>
         <action-signers> ActionId |-> Signers:ExpressionList ... </action-signers>
 
-  rule  call(listContains([], _)) => false
-  rule  call(listContains([E:Int], X:Int)) => X ==Int E
-  rule  call(listContains([X:Usize, _:ExpressionCSV], X)) => true
-  rule  call(listContains([_:Usize, Es:ExpressionCSV], X:Usize) => listContains([Es], X))  [owise]
+  rule  call(listContains([.], _)) => false
+  rule  call(listContains([E:Expression, _:ExpressionCSV], E)) => true
+  rule  call(listContains([_:Expression, Es:ExpressionCSV], X:Expression)
+          => listContains([Es], X))  [owise]
 
-  rule  call(listFind([], _)) => -1
-  rule  call(listFind([X:Usize], X)) => 0
-  rule  call(listFind([_:Usize], _:Usize)) => -1  [owise]
+  rule  call(listFind([.], _)) => -1
   rule  call(listFind([X:Usize, _:ExpressionCSV], X)) => 0
   rule  call(listFind([_:Usize, Es:ExpressionCSV], X:Usize)) => call(listFind([Es], X)) ~> plusOne  [owise]
 
-  rule  call(listSwapRemove([_:Expression], 0:Usize)) => []
-  rule  call(listSwapRemove([_:Expression , L:ExpressionCSV], 0:Usize)) => lastToStart(L)
+  rule  call(listSwapRemove([_:Expression , L:ExpressionCSV], 0:Usize)) => lastToStart(., L)
   rule  call(listSwapRemove([E:Expression , L:ExpressionCSV], Index:Int))
         => call(listSwapRemove([L], Index -Int 1)) ~> pushListFreezer(E)
     requires Index >Int 0
@@ -695,19 +703,16 @@ module PSEUDOCODE-FUNCTIONS
   syntax KItem ::= pushListFreezer(Expression)
   rule  [L:ExpressionCSV] ~> pushListFreezer(E:Expression) => [E , L]
 
-  syntax KItem ::= lastToStart(ExpressionCSV)
-  syntax KItem ::= #lastToStart(ExpressionCSV, ExpressionCSV)
+  syntax KItem ::= lastToStart(ExpressionCSV, ExpressionCSV)
   syntax KItem ::= reverseExpressionCsv(ExpressionCSV, ExpressionCSV)
 
-  rule lastToStart(E:Expression) => E
-  rule lastToStart(E:Expression , L:ExpressionCSV) => #lastToStart(E, L)
+  rule lastToStart(., .) => [.]
+  rule lastToStart(L1:ExpressionCSV, (E:Expression , L2:ExpressionCSV))
+        => lastToStart((E , L1), L2)
+  rule lastToStart(L1:ExpressionCSV, (E:Expression, .))
+        => reverseExpressionCsv(L1, .) ~> pushListFreezer(E)
 
-  rule #lastToStart(L1:ExpressionCSV, (E:Expression , L2:ExpressionCSV)) => #lastToStart((E , L1), L2)
-  rule #lastToStart(E1:Expression, E:Expression) => E , E1
-  rule #lastToStart((E1:Expression , L1:ExpressionCSV):ExpressionCSV, E:Expression)
-        => reverseExpressionCsv(L1, E1) ~> pushListFreezer(E)
-
-  rule reverseExpressionCsv((E1:Expression):ExpressionCSV, L2:ExpressionCSV) => E1 , L2
+  rule reverseExpressionCsv(., L2:ExpressionCSV) => L2
   rule reverseExpressionCsv((E:Expression , Es:ExpressionCSV), L2:ExpressionCSV) => reverseExpressionCsv(Es, (E , L2))
 
   rule call(performActionFromId(ActionId:Usize))
@@ -758,12 +763,7 @@ module PSEUDOCODE-FUNCTIONS
         => runPseudoCode(
               gas_left = getGasLeft();
               new_address = deployContract(gas_left, Amount, Code, CodeMetadata, Arguments);
-              [new_address];
-        )
-
-  rule call(performAction(SCCall(To:Address, Amount:BigUint, Function:BoxedBytes, [])))
-        => runPseudoCode(
-              asyncCall(To, Amount, [Function]);
+              [new_address, .];
         )
 
   rule call(performAction(SCCall(To:Address, Amount:BigUint, Function:BoxedBytes, [Arguments:ExpressionCSV])))
@@ -774,7 +774,7 @@ module PSEUDOCODE-FUNCTIONS
   rule call(clearAction(ActionId:Usize))
         => runPseudoCode(
               setActionData(ActionId, Nothing);
-              setActionSignerIDs(ActionId, []);
+              setActionSignerIDs(ActionId, [.]);
         )
 
   rule call(quorumReached(ActionId:Usize))
@@ -790,16 +790,7 @@ module PSEUDOCODE-FUNCTIONS
               countCanSign(signer_ids);
         )
 
-  rule call(countCanSign([])) => 0
-  rule call(countCanSign([SignerId:Usize]))
-        => runPseudoCode(
-              result = 0;
-              user_role = getUserIdToRole(SignerId);
-              if (userRoleCanSign(user_role)) {
-                result = 1;
-              }
-              result;
-        )
+  rule call(countCanSign([.])) => 0
   rule call(countCanSign([SignerId:Usize , SignerIds:ExpressionCSV]))
         => runPseudoCode(
               result = 0;
@@ -854,15 +845,12 @@ module PSEUDOCODE-FUNCTIONS
               user_id;
         )
 
-  rule call(pushList([], E:Expression))
-        => evaluate([E])
-  rule call(pushList([E1:Expression], E2:Expression))
-        => evaluate([E1 , E2])
+  rule call(pushList([.], E:Expression))
+        => evaluate([E, .])
   rule call(pushList([E:Expression , Es:ExpressionCSV], E2:Expression))
         => call(pushList([Es], E2)) ~> prepend(E)
   
   syntax KItem ::= prepend(Expression)
-  rule (evaluate([]) ~> prepend(E:Expression)) => evaluate([E])
   rule (evaluate([Es:ExpressionCSV]) ~> prepend(E:Expression)) => evaluate([E , Es])
 
   rule call(sendTx(_To:Address, _Amount:BigUint, _Data:BoxedBytes))

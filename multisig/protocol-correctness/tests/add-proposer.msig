@@ -1,4 +1,4 @@
-from address(7) run init(1, [address(7)]);
+from address(7) run init(1, [address(7), .]);
 from address(7) run proposeAddProposer(address(10));
 from address(7) run proposeAddProposer(address(11));
 from address(7) run sign(1);

@@ -46,9 +46,9 @@
             3 |-> Nothing
           </action-data>
           <action-signers>
-            1 |-> [ ]
-            2 |-> [ ]
-            3 |-> [ ]
+            1 |-> [ . ]
+            2 |-> [ . ]
+            3 |-> [ . ]
           </action-signers>
         </actions>
       </action-state>

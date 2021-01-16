@@ -1,4 +1,4 @@
-from address(7) run init(1, [address(7)]);
+from address(7) run init(1, [address(7), .]);
 from address(7) run proposeAddBoardMember(address(8));
 from address(7) run proposeChangeQuorum(2);
 from address(7) run proposeAddProposer(address(10));
