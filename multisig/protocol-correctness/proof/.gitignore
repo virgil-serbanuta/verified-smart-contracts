@@ -1,0 +1,6 @@
+.kprove-*
+kore-repl*
+*.out
+*.duration
+*.duration.temp
+*.svg
