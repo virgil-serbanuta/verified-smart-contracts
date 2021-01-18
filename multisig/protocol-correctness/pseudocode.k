@@ -264,7 +264,7 @@ module PSEUDOCODE-FOR
   rule runInstruction(for(Index:Variable, Value:Variable) in (L:ExpressionList) B:Block)
         => runInstruction(for(Index = u(0), Value) in L B)
     requires isKResult(L)
-  
+
   rule runInstruction(for(_:Variable = _:Usize, _:Variable) in [.] _:Block)
         => evaluate(void)
   rule runInstruction(
@@ -627,10 +627,9 @@ module PSEUDOCODE-FUNCTIONS
   rule  <k> call(getQuorum()) => Quorum ... </k>
         <quorum> Quorum:Usize </quorum>
 
-  rule  <k> call(getUserId(A:Address)) => I ... </k>
+  rule  <k> call(getUserId(A:Address)) => u(I) ... </k>
         <address-to-user-id> A |-> I:Usize ...</address-to-user-id>
-
-  rule  <k> call(getUserId(A:Address)) => 0 ... </k>
+  rule  <k> call(getUserId(A:Address)) => u(0) ... </k>
         <address-to-user-id> M:Map </address-to-user-id>
     requires notBool A in_keys(M)
 
@@ -691,8 +690,8 @@ module PSEUDOCODE-FUNCTIONS
   rule  call(listContains([_:Expression, Es:ExpressionCSV], X:Expression)
           => listContains([Es], X))  [owise]
 
-  rule  call(listFind([.], _)) => -1
-  rule  call(listFind([X:Usize, _:ExpressionCSV], X)) => 0
+  rule  call(listFind([.], _)) => u(-1)
+  rule  call(listFind([X:Usize, _:ExpressionCSV], X)) => u(0)
   rule  call(listFind([_:Usize, Es:ExpressionCSV], X:Usize)) => call(listFind([Es], X)) ~> plusOne  [owise]
 
   rule  call(listSwapRemove([_:Expression , L:ExpressionCSV], u(0))) => lastToStart(., L)
@@ -849,7 +848,7 @@ module PSEUDOCODE-FUNCTIONS
         => evaluate([E, .])
   rule call(pushList([E:Expression , Es:ExpressionCSV], E2:Expression))
         => call(pushList([Es], E2)) ~> prepend(E)
-  
+
   syntax KItem ::= prepend(Expression)
   rule (evaluate([Es:ExpressionCSV]) ~> prepend(E:Expression)) => evaluate([E , Es])
 
@@ -886,7 +885,7 @@ module PSEUDOCODE-CONFIGURATION
   configuration
     <T>
       <k color="green"> runExternalCalls($PGM:ExternalCommands) </k>
-  
+
       <state>
         <multisig-state>
           <users>
