@@ -3,6 +3,8 @@ TEST_COMPARISON = ${TESTS:.golden=.cmp}
 
 CHECK_RESULT_RUN = if [ $$? -eq 0 ] ; then echo "passed $<"; mv $@.tmp $@; else echo "failed $<"; cat $@.tmp; exit 1; fi
 
+.PRECIOUS: tests/*.out
+
 execution.timestamp: execution.k *.k
 	@kompile $< --backend haskell
 	@touch execution.timestamp

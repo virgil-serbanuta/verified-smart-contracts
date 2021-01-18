@@ -8,9 +8,9 @@ module PSEUDOCODE-SYNTAX
                       |   "CodeMetadata::PAYABLE"     [function]
                       |   "CodeMetadata::READABLE"    [function]
 
-  syntax Usize ::= Int  // TODO: int32
-  syntax BigUint ::= Int  // Assumes no operations on this.
-  syntax CodeMetadata ::= Int  // Assumes no operations on this.
+  syntax Usize ::= u(Int)  // TODO: int32
+  syntax BigUint ::= big(Int)  // Assumes no operations on this.
+  syntax CodeMetadata ::= meta(Int)  // Assumes no operations on this.
   syntax UserRole ::= "None" | "Proposer" | "BoardMember"
   syntax BoxedBytes ::= bytes(String)
   syntax Address ::= address(Int)
@@ -258,22 +258,22 @@ module PSEUDOCODE-FOR
   imports PSEUDOCODE-COMMON
   imports PSEUDOCODE-SYNTAX
 
-  syntax Instruction ::= "for" "(" indexVar:Variable "=" value:Int "," valueVar:Variable ")" "in" ExpressionList Block
+  syntax Instruction ::= "for" "(" indexVar:Variable "=" value:Usize "," valueVar:Variable ")" "in" ExpressionList Block
 
   context runInstruction(for(_:Variable, _:Variable) in {HOLE:Expression => evaluate(HOLE)}:>Expression _:Block)
   rule runInstruction(for(Index:Variable, Value:Variable) in (L:ExpressionList) B:Block)
-        => runInstruction(for(Index = 0, Value) in L B)
+        => runInstruction(for(Index = u(0), Value) in L B)
     requires isKResult(L)
   
-  rule runInstruction(for(_:Variable = _:Int, _:Variable) in [.] _:Block)
+  rule runInstruction(for(_:Variable = _:Usize, _:Variable) in [.] _:Block)
         => evaluate(void)
   rule runInstruction(
-          for (IndexVar:Variable = Index:Int, ValueVar:Variable)
+          for (IndexVar:Variable = u(Index:Int), ValueVar:Variable)
               in [E:Expression, Es:ExpressionCSV]
               {B:Instructions}
         )
-        => runPseudoCode(IndexVar = Index; ValueVar = E; B)
-            ~> runInstruction(for(IndexVar = Index +Int 1, ValueVar) in [Es:ExpressionCSV] {B})
+        => runPseudoCode(IndexVar = u(Index); ValueVar = E; B)
+            ~> runInstruction(for(IndexVar = u(Index +Int 1), ValueVar) in [Es:ExpressionCSV] {B})
     requires isKResult(E)
 endmodule
 
@@ -301,11 +301,11 @@ module PSEUDOCODE-EXPRESSION
 
   context evaluate({HOLE:Expression => evaluate(HOLE)}:>Expression <= _:Expression)
   context evaluate(A:Expression <= {HOLE:Expression => evaluate(HOLE)}:>Expression) requires isKResult(A)
-  rule evaluate((A:Int <= B:Int) => (A <=Int B))
+  rule evaluate((u(A:Int) <= u(B:Int)) => (A <=Int B))
 
   context evaluate({HOLE:Expression => evaluate(HOLE)}:>Expression > _:Expression)
   context evaluate(A:Expression > {HOLE:Expression => evaluate(HOLE)}:>Expression) requires isKResult(A)
-  rule evaluate((A:Int > B:Int) => (A >Int B))
+  rule evaluate((u(A:Int) > u(B:Int)) => (A >Int B))
 
   context evaluate({HOLE:Expression => evaluate(HOLE)}:>Expression == _:Expression)
   context evaluate(A:Expression == {HOLE:Expression => evaluate(HOLE)}:>Expression) requires isKResult(A)
@@ -314,15 +314,15 @@ module PSEUDOCODE-EXPRESSION
 
   context evaluate({HOLE:Expression => evaluate(HOLE)}:>Expression + _:Expression)
   context evaluate(A:Expression + {HOLE:Expression => evaluate(HOLE)}:>Expression) requires isKResult(A)
-  rule evaluate((A:Int + B:Int) => (A +Int B))
+  rule evaluate((u(A:Int) + u(B:Int)) => u(A +Int B))
 
   context evaluate({HOLE:Expression => evaluate(HOLE)}:>Expression - _:Expression)
   context evaluate(A:Expression - {HOLE:Expression => evaluate(HOLE)}:>Expression) requires isKResult(A)
-  rule evaluate((A:Int - B:Int) => (A -Int B))
+  rule evaluate((u(A:Int) - u(B:Int)) => u(A -Int B))
 
   context evaluate({HOLE:Expression => evaluate(HOLE)}:>Expression | _:Expression)
   context evaluate(A:Expression | {HOLE:Expression => evaluate(HOLE)}:>Expression) requires isKResult(A)
-  rule evaluate((A:Int | B:Int) => (A |Int B))
+  rule evaluate((u(A:Int) | u(B:Int)) => u(A |Int B))
 
   context evaluate([{HOLE:ExpressionCSV => evaluateEc(HOLE)}:>ExpressionCSV])
 endmodule
@@ -332,10 +332,10 @@ module PSEUDOCODE-COMMON
 
   syntax KResult ::= Value
 
-  rule CodeMetadata::DEFAULT      => 0
-  rule CodeMetadata::UPGRADEABLE  => 1 <<Int 8
-  rule CodeMetadata::PAYABLE      => 1 <<Int 1
-  rule CodeMetadata::READABLE     => 1 <<Int 10
+  rule CodeMetadata::DEFAULT      => meta(0)
+  rule CodeMetadata::UPGRADEABLE  => meta(1 <<Int 8)
+  rule CodeMetadata::PAYABLE      => meta(1 <<Int 1)
+  rule CodeMetadata::READABLE     => meta(1 <<Int 10)
 
   syntax KItem ::= "error"
 endmodule
@@ -431,7 +431,7 @@ module PSEUDOCODE-FUNCTIONS
         require(Quorum <= listLen(Board));
         setQuorum(Quorum);
         for (i, address) in Board {
-            user_id = i + 1;
+            user_id = i + u(1);
             setUserId(address, user_id);
             setUserAddress(user_id, address);
             setUserIdToRole(user_id, BoardMember);
@@ -529,7 +529,7 @@ module PSEUDOCODE-FUNCTIONS
 
         signer_ids = getActionSignerIds(ActionId);
         signer_pos = listFind(signer_ids, caller_id);
-        if (0 <= signer_pos) {
+        if (u(0) <= signer_pos) {
           signer_ids = listSwapRemove(signer_ids, signer_pos);
           setActionSignerIDs(ActionId, signer_ids);
         }
@@ -543,7 +543,7 @@ module PSEUDOCODE-FUNCTIONS
             caller_id = getUserId(caller);
             caller_role = getUserIdToRole(caller_id);
             require(userRoleCanPropose(caller_role));
-            action_id = getActionLastIndex() + 1;
+            action_id = getActionLastIndex() + u(1);
             setActionLastIndex(action_id);
             setActionData(action_id, A);
             if (userRoleCanSign(caller_role)) {
@@ -568,7 +568,7 @@ module PSEUDOCODE-FUNCTIONS
               caller_id = getUserId(caller_address);
               caller_role = getUserIdToRole(caller_id);
               require(userRoleCanDiscardAction(caller_role));
-              require(getActionValidSignerCount(ActionId) == 0);
+              require(getActionValidSignerCount(ActionId) == u(0));
               clearAction(ActionId);
               ok(void);
         )
@@ -695,9 +695,9 @@ module PSEUDOCODE-FUNCTIONS
   rule  call(listFind([X:Usize, _:ExpressionCSV], X)) => 0
   rule  call(listFind([_:Usize, Es:ExpressionCSV], X:Usize)) => call(listFind([Es], X)) ~> plusOne  [owise]
 
-  rule  call(listSwapRemove([_:Expression , L:ExpressionCSV], 0:Usize)) => lastToStart(., L)
-  rule  call(listSwapRemove([E:Expression , L:ExpressionCSV], Index:Int))
-        => call(listSwapRemove([L], Index -Int 1)) ~> pushListFreezer(E)
+  rule  call(listSwapRemove([_:Expression , L:ExpressionCSV], u(0))) => lastToStart(., L)
+  rule  call(listSwapRemove([E:Expression , L:ExpressionCSV], u(Index:Int)))
+        => call(listSwapRemove([L], u(Index -Int 1))) ~> pushListFreezer(E)
     requires Index >Int 0
 
   syntax KItem ::= pushListFreezer(Expression)
@@ -740,7 +740,7 @@ module PSEUDOCODE-FUNCTIONS
               changeUserRole(UserAddress, None);
               num_board_members = getNumBoardMembers();
               num_proposers = getNumProposers();
-              require(num_board_members + num_proposers > 0);
+              require(num_board_members + num_proposers > u(0));
               require(getQuorum() <= num_board_members);
         )
 
@@ -790,13 +790,13 @@ module PSEUDOCODE-FUNCTIONS
               countCanSign(signer_ids);
         )
 
-  rule call(countCanSign([.])) => 0
+  rule call(countCanSign([.])) => u(0)
   rule call(countCanSign([SignerId:Usize , SignerIds:ExpressionCSV]))
         => runPseudoCode(
-              result = 0;
+              result = u(0);
               user_role = getUserIdToRole(SignerId);
               if (userRoleCanSign(user_role)) {
-                result = 1;
+                result = u(1);
               }
               result + countCanSign([SignerIds]);
         )
@@ -805,28 +805,28 @@ module PSEUDOCODE-FUNCTIONS
         => runPseudoCode(
           user_id = getOrCreateUser(UserAddress);
           old_role = None;
-          if (!(user_id == 0)) {
+          if (!(user_id == u(0))) {
             old_role = getUserIdToRole(user_id);
           }
           setUserIdToRole(user_id, NewRole);
 
           if (old_role == BoardMember) {
             if (!(NewRole == BoardMember)) {
-              setNumBoardMembers(getNumBoardMembers() - 1);
+              setNumBoardMembers(getNumBoardMembers() - u(1));
             }
           } else {
             if (NewRole == BoardMember) {
-              setNumBoardMembers(getNumBoardMembers() + 1);
+              setNumBoardMembers(getNumBoardMembers() + u(1));
             }
           }
 
           if (old_role == Proposer) {
             if (!(NewRole == Proposer)) {
-              setNumProposers(getNumProposers() - 1);
+              setNumProposers(getNumProposers() - u(1));
             }
           } else {
             if (NewRole == Proposer) {
-              setNumProposers(getNumProposers() + 1);
+              setNumProposers(getNumProposers() + u(1));
             }
           }
         )
@@ -834,9 +834,9 @@ module PSEUDOCODE-FUNCTIONS
   rule call(getOrCreateUser(Address:Address))
         => runPseudoCode(
               user_id = getUserId(Address);
-              if (user_id == 0) {
+              if (user_id == u(0)) {
                 num_users = getNumUsers();
-                num_users = num_users + 1;
+                num_users = num_users + u(1);
                 setNumUsers(num_users);
                 user_id = num_users;
                 setUserId(Address, user_id);
@@ -856,10 +856,10 @@ module PSEUDOCODE-FUNCTIONS
   rule call(sendTx(_To:Address, _Amount:BigUint, _Data:BoxedBytes))
         => evaluate(void)
 
-  rule call(getGasLeft()) => evaluate(-1)
+  rule call(getGasLeft()) => evaluate(u(-1))
 
   rule call(deployContract(
-            _GasLeft:Int,
+            _GasLeft:Usize,
             _Amount:BigUint,
             _Code:BoxedBytes,
             _:CodeMetadata,
@@ -897,11 +897,11 @@ module PSEUDOCODE-CONFIGURATION
           <board-state>
             <num-board-members>uninitialized</num-board-members>
             <quorum>uninitialized</quorum>
-            <num-proposers>0:Usize</num-proposers>
+            <num-proposers>u(0)</num-proposers>
             <user-roles>.Map</user-roles>
           </board-state>
           <action-state>
-            <action-last-index>0:Usize</action-last-index>
+            <action-last-index>u(0)</action-last-index>
             <actions>
               <action-data>.Map</action-data>
               <action-signers>.Map</action-signers>
@@ -930,11 +930,11 @@ module PSEUDOCODE-CONFIGURATION
           <board-state>
             <num-board-members>uninitialized</num-board-members>
             <quorum>uninitialized</quorum>
-            <num-proposers>0:Usize</num-proposers>
+            <num-proposers>u(0)</num-proposers>
             <user-roles>.Map</user-roles>
           </board-state>
           <action-state>
-            <action-last-index>0:Usize</action-last-index>
+            <action-last-index>u(0)</action-last-index>
             <actions>
               <action-data>.Map</action-data>
               <action-signers>.Map</action-signers>

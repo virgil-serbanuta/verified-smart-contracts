@@ -1,8 +1,8 @@
-from address(7) run init(1, [address(7), .]);
+from address(7) run init(u(1), [address(7), .]);
 from address(7) run proposeAddBoardMember(address(8));
-from address(7) run proposeChangeQuorum(2);
+from address(7) run proposeChangeQuorum(u(2));
 from address(7) run proposeAddProposer(address(10));
-from address(7) run performActionEndpoint(1);
-from address(7) run performActionEndpoint(2);
-from address(8) run sign(3);
-from address(7) run performActionEndpoint(3);
+from address(7) run performActionEndpoint(u(1));
+from address(7) run performActionEndpoint(u(2));
+from address(8) run sign(u(3));
+from address(7) run performActionEndpoint(u(3));
