@@ -6,44 +6,44 @@
     <multisig-state>
       <users>
         <num-users>
-          2
+          u ( 2 )
         </num-users>
         <user-id-to-address>
-          1 |-> address ( 7 )
-          2 |-> address ( 8 )
+          u ( 1 ) |-> address ( 7 )
+          u ( 2 ) |-> address ( 8 )
         </user-id-to-address>
         <address-to-user-id>
-          address ( 7 ) |-> 1
-          address ( 8 ) |-> 2
+          address ( 7 ) |-> u ( 1 )
+          address ( 8 ) |-> u ( 2 )
         </address-to-user-id>
       </users>
       <board-state>
         <num-board-members>
-          1
+          u ( 1 )
         </num-board-members>
         <quorum>
-          1
+          u ( 1 )
         </quorum>
         <num-proposers>
-          0
+          u ( 0 )
         </num-proposers>
         <user-roles>
-          1 |-> BoardMember
-          2 |-> None
+          u ( 1 ) |-> BoardMember
+          u ( 2 ) |-> None
         </user-roles>
       </board-state>
       <action-state>
         <action-last-index>
-          2
+          u ( 2 )
         </action-last-index>
         <actions>
           <action-data>
-            1 |-> Nothing
-            2 |-> Nothing
+            u ( 1 ) |-> Nothing
+            u ( 2 ) |-> Nothing
           </action-data>
           <action-signers>
-            1 |-> [ . ]
-            2 |-> [ . ]
+            u ( 1 ) |-> [ . ]
+            u ( 2 ) |-> [ . ]
           </action-signers>
         </actions>
       </action-state>
