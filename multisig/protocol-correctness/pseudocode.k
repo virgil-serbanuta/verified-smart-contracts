@@ -627,7 +627,7 @@ module PSEUDOCODE-FUNCTIONS
   rule  <k> call(getQuorum()) => Quorum ... </k>
         <quorum> Quorum:Usize </quorum>
 
-  rule  <k> call(getUserId(A:Address)) => u(I) ... </k>
+  rule  <k> call(getUserId(A:Address)) => I ... </k>
         <address-to-user-id> A |-> I:Usize ...</address-to-user-id>
   rule  <k> call(getUserId(A:Address)) => u(0) ... </k>
         <address-to-user-id> M:Map </address-to-user-id>
