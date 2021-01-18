@@ -13,3 +13,4 @@ clean:
 	-rm *.timestamp
 	-rm -r *-kompiled
 	-rm -r .kprove-*
+	-rm -r kore-repl.tar.gz
