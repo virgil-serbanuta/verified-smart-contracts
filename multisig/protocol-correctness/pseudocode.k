@@ -588,12 +588,12 @@ module PSEUDOCODE-FUNCTIONS
   rule  call(isEmptyList([.])) => true
   rule  call(isEmptyList(_:ExpressionList)) => false [owise]
 
-  rule  call(listLen([.])) => 0
+  rule  call(listLen([.])) => u(0)
   rule  call(listLen([_:Expression , Es:ExpressionCSV]))
         => call(listLen([Es])) ~> plusOne
 
   syntax KItem ::= "plusOne"
-  rule  (I:Int ~> plusOne) => I +Int 1
+  rule  (u(I:Int) ~> plusOne) => u(I +Int 1)
 
   rule  <k> call(setQuorum(Quorum:Usize)) => void ... </k>
         <quorum>_ => Quorum</quorum>
