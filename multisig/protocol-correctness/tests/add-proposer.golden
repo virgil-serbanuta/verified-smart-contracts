@@ -23,9 +23,6 @@
         <num-board-members>
           u ( 1 )
         </num-board-members>
-        <quorum>
-          u ( 1 )
-        </quorum>
         <num-proposers>
           u ( 2 )
         </num-proposers>
@@ -34,6 +31,9 @@
           u ( 2 ) |-> Proposer
           u ( 3 ) |-> Proposer
         </user-roles>
+        <quorum>
+          u ( 1 )
+        </quorum>
       </board-state>
       <action-state>
         <action-last-index>

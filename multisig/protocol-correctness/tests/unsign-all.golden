@@ -19,15 +19,15 @@
         <num-board-members>
           u ( 1 )
         </num-board-members>
-        <quorum>
-          u ( 1 )
-        </quorum>
         <num-proposers>
           u ( 0 )
         </num-proposers>
         <user-roles>
           u ( 1 ) |-> BoardMember
         </user-roles>
+        <quorum>
+          u ( 1 )
+        </quorum>
       </board-state>
       <action-state>
         <action-last-index>

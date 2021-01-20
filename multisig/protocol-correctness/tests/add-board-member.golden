@@ -21,9 +21,6 @@
         <num-board-members>
           u ( 2 )
         </num-board-members>
-        <quorum>
-          u ( 1 )
-        </quorum>
         <num-proposers>
           u ( 0 )
         </num-proposers>
@@ -31,6 +28,9 @@
           u ( 1 ) |-> BoardMember
           u ( 2 ) |-> BoardMember
         </user-roles>
+        <quorum>
+          u ( 1 )
+        </quorum>
       </board-state>
       <action-state>
         <action-last-index>

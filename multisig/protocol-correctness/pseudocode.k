@@ -222,6 +222,9 @@ module PSEUDOCODE-EXTERNAL
   rule (evaluate(E:Expression) => .K) ~> clearExternalCallEnv
     requires isKResult(E)
 
+  rule (E:Expression => .K) ~> clearExternalCallEnv
+    requires isKResult(E)
+
   rule  <k> (error => .K) ~> clearExternalCallEnv ...</k>
 
   syntax KItem ::= endpointToInstruction(EndpointCall)
@@ -272,9 +275,8 @@ module PSEUDOCODE-FOR
               in [E:Expression, Es:ExpressionCSV]
               {B:Instructions}
         )
-        => runPseudoCode(IndexVar = u(Index); ValueVar = E; B)
+        =>  runPseudoCode(IndexVar = u(Index); ValueVar = E; B)
             ~> runInstruction(for(IndexVar = u(Index +Int 1), ValueVar) in [Es:ExpressionCSV] {B})
-    requires isKResult(E)
 endmodule
 
 module PSEUDOCODE-IF
@@ -295,6 +297,9 @@ module PSEUDOCODE-EXPRESSION
   imports PSEUDOCODE-COMMON
   imports PSEUDOCODE-SYNTAX
 
+  rule add(u(A:Int), u(B:Int)) => u(A +Int B)  // TODO: The other functions
+  rule sub(u(A:Int), u(B:Int)) => u(A -Int B)
+
   context evaluate(! {HOLE:Expression => evaluate(HOLE)}:>Expression)
   rule evaluate((! false) => true)
   rule evaluate((! true) => false)
@@ -314,11 +319,11 @@ module PSEUDOCODE-EXPRESSION
 
   context evaluate({HOLE:Expression => evaluate(HOLE)}:>Expression + _:Expression)
   context evaluate(A:Expression + {HOLE:Expression => evaluate(HOLE)}:>Expression) requires isKResult(A)
-  rule evaluate((u(A:Int) + u(B:Int)) => u(A +Int B))
+  rule evaluate(A:Usize + B:Usize => add(A, B))
 
   context evaluate({HOLE:Expression => evaluate(HOLE)}:>Expression - _:Expression)
   context evaluate(A:Expression - {HOLE:Expression => evaluate(HOLE)}:>Expression) requires isKResult(A)
-  rule evaluate((u(A:Int) - u(B:Int)) => u(A -Int B))
+  rule evaluate(A:Usize - B:Usize => sub(A, B))
 
   context evaluate({HOLE:Expression => evaluate(HOLE)}:>Expression | _:Expression)
   context evaluate(A:Expression | {HOLE:Expression => evaluate(HOLE)}:>Expression) requires isKResult(A)
@@ -338,6 +343,8 @@ module PSEUDOCODE-COMMON
   rule CodeMetadata::READABLE     => meta(1 <<Int 10)
 
   syntax KItem ::= "error"
+  syntax Usize ::= add(Usize, Usize)  [function, functional]
+  syntax Usize ::= sub(Usize, Usize)  [function, functional]
 endmodule
 
 module PSEUDOCODE-DETAILS
@@ -372,6 +379,7 @@ module PSEUDOCODE-FUNCTIONS
   syntax KResult
 
   syntax KItem ::= "pushContext" | "popContext" | "evaluateReturnValue"
+  syntax KItem ::= stuck(KItem)
   syntax KItem ::= call(Expression)
   syntax KItem ::= Expression
 
@@ -593,7 +601,7 @@ module PSEUDOCODE-FUNCTIONS
         => call(listLen([Es])) ~> plusOne
 
   syntax KItem ::= "plusOne"
-  rule  (u(I:Int) ~> plusOne) => u(I +Int 1)
+  rule  (I:Usize ~> plusOne) => add(I, u(1))
 
   rule  <k> call(setQuorum(Quorum:Usize)) => void ... </k>
         <quorum>_ => Quorum</quorum>
@@ -607,13 +615,13 @@ module PSEUDOCODE-FUNCTIONS
   rule  <k> call(setNumProposers(Proposers:Usize)) => void ... </k>
         <num-proposers>_ => Proposers</num-proposers>
 
-  rule  <k> call(setUserId(A:Address, I:Usize)) => void ... </k>
-        <address-to-user-id>(.Map => A |-> I) M:Map </address-to-user-id>
-    requires notBool A in_keys(M)
+  rule  <k> call(setUserId(E:Expression, I:Usize)) => void ... </k>
+        <address-to-user-id>(.Map => E |-> I) M:Map </address-to-user-id>
+    requires notBool E in_keys(M) andBool isAddress(E)
 
-  rule  <k> call(setUserAddress(I:Usize, A:Address)) => void ... </k>
-        <user-id-to-address>(.Map => I |-> A) M:Map </user-id-to-address>
-    requires notBool I in_keys(M)
+  rule  <k> call(setUserAddress(I:Usize, E:Expression)) => void ... </k>
+        <user-id-to-address>(.Map => I |-> E) M:Map </user-id-to-address>
+    requires notBool I in_keys(M) andBool isAddress(E)
 
   rule  <k> call(setUserIdToRole(I:Usize, R:UserRole)) => void ... </k>
         <user-roles>(.Map => I |-> R) M:Map </user-roles>
@@ -895,9 +903,9 @@ module PSEUDOCODE-CONFIGURATION
           </users>
           <board-state>
             <num-board-members>uninitialized</num-board-members>
-            <quorum>uninitialized</quorum>
             <num-proposers>u(0)</num-proposers>
             <user-roles>.Map</user-roles>
+            <quorum>uninitialized</quorum>
           </board-state>
           <action-state>
             <action-last-index>u(0)</action-last-index>
@@ -928,9 +936,9 @@ module PSEUDOCODE-CONFIGURATION
           </users>
           <board-state>
             <num-board-members>uninitialized</num-board-members>
-            <quorum>uninitialized</quorum>
             <num-proposers>u(0)</num-proposers>
             <user-roles>.Map</user-roles>
+            <quorum>uninitialized</quorum>
           </board-state>
           <action-state>
             <action-last-index>u(0)</action-last-index>
