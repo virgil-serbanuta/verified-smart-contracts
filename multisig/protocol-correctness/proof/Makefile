@@ -1,13 +1,27 @@
 ALL_K = $(wildcard *.k) $(wildcard ../*.k)
-EXECUTION_K = $(filter-out proof.k, $(ALL_K))
+PROOFS = $(wildcard proof-*.k)
+EXECUTION_K = $(filter-out $(PROOFS), $(ALL_K))
+PROOF_TIMESTAMPS = ${PROOFS:.k=.timestamp}
+PROOF_DEBUGGERS = ${PROOFS:.k=.debugger}
 
-proof.timestamp: proof.k proof-execution.timestamp
-	@kprove proof.k
+.PHONY: clean ${PROOF_DEBUGGERS}
+
+proof.timestamp: ${PROOF_TIMESTAMPS} execution.timestamp
 	@touch proof.timestamp
 
-proof-execution.timestamp: proof-execution.k ${EXECUTION_K}
+proof-%.timestamp: proof-%.k execution.timestamp
+	@echo "Proving $*..."
+	@kprove proof-$*.k
+	@touch proof-$*.timestamp
+
+proof-%.debugger: proof-%.k execution.timestamp
+	@echo "Debugging $*..."
+	@kprove proof-$*.k --debugger --debug-script /home/virgil/runtime-verification/k/haskell-backend/src/main/native/haskell-backend/kore/data/kast.kscript
+
+execution.timestamp: execution.k ${EXECUTION_K}
+	@echo "Compiling execution..."
 	@kompile $< --backend haskell
-	@touch proof-execution.timestamp
+	@touch execution.timestamp
 
 clean:
 	-rm *.timestamp
