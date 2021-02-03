@@ -5,7 +5,7 @@ PROOFS = $(wildcard proof-*.k)
 EXECUTION_K = $(filter-out $(PROOFS), $(ALL_K))
 PROOF_TIMESTAMPS = ${PROOFS:.k=.timestamp}
 PROOF_DEBUGGERS = ${PROOFS:.k=.debugger}
-PROOFS0 = $(filter-out proof-init-loop.k proof-sign.k, $(PROOFS))
+PROOFS0 = $(filter-out proof-init-loop.k, $(PROOFS))
 PROOF0_TIMESTAMPS = ${PROOFS0:.k=.timestamp}
 
 BACKEND_COMMAND = "--haskell-backend-command /home/virgil/runtime-verification/kore/.build/kore/bin/kore-exec"

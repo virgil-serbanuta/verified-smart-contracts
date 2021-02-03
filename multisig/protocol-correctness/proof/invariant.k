@@ -54,6 +54,9 @@ module INVARIANT
         <external-call-env>
           <caller-address>uninitialized</caller-address>
         </external-call-env>
+        <proof-state>
+          <last-instrumented> .K </last-instrumented>
+        </proof-state>
       </state>
 
   syntax Bool ::= invariant(
@@ -84,12 +87,10 @@ module INVARIANT
     => notBool u(0) in_keys(UserIdToAddress)
       andBool notBool u(0) in_keys(UserIdToRole)
       andBool allValuesBecomeKeys(AddressToUserId, UserIdToAddress)
-      andBool allValuesBecomeKeys(AddressToUserId, UserIdToRole)
       andBool unusedIdsInMap(add(ActionLastIndex, u(1)), keysMap(ActionData), ExpandActionLastIndex)
       andBool unusedIdsInMap(add(ActionLastIndex, u(1)), keysMap(ActionSigners), ExpandActionLastIndex)
       andBool maxMapKey(ActionLastIndex, keysMap(ActionData))
       andBool maxMapKey(ActionLastIndex, keysMap(ActionSigners))
-      andBool subset(keysMap(ActionSigners), keysMap(ActionData))
 
       andBool valuesAreExpressionListOfUsize(ActionSigners)
       andBool valuesAreKResult(ActionSigners)
@@ -99,6 +100,9 @@ module INVARIANT
 
       andBool valuesAreOfType(UserIdToRole, rUserRole)
       andBool valuesAreKResult(UserIdToRole)
+
+      andBool valuesAreOfType(ActionData, rAction)
+      andBool valuesAreKResult(ActionData)
 
       //andBool 0 <=Int NumBoardMembers
       //andBool 0 <Int NumBoardMembers +Int NumProposers
@@ -131,14 +135,15 @@ module INVARIANT
       ActionSigners:Map,
       ExpandActionLastIndex:Usize)
     => notBool u(0) in_keys(UserIdToAddress)
-      andBool notBool u(0) in_keys(UserIdToRole)
-      andBool allValuesBecomeKeys(AddressToUserId, UserIdToAddress)
-      andBool allValuesBecomeKeys(AddressToUserId, UserIdToRole)
+      andBool notBool u(0) in_keys(UserIdToRole)  // +
+      andBool allValuesBecomeKeys(AddressToUserId, UserIdToAddress)  // +
       andBool unusedIdsInMap(add(ActionLastIndex, u(1)), keysMap(ActionData), ExpandActionLastIndex)
-      andBool unusedIdsInMap(add(ActionLastIndex, u(1)), keysMap(ActionSigners), ExpandActionLastIndex)
+      // andBool unusedIdsInMap(add(ActionLastIndex, u(1)), keysMap(ActionSigners), ExpandActionLastIndex)
+      //-
       // andBool maxMapKey(ActionLastIndex, keysMap(ActionData))
       // andBool maxMapKey(ActionLastIndex, keysMap(ActionSigners))
-      // andBool subset(keysMap(ActionSigners), keysMap(ActionData))
+
+      //-
 
       // andBool valuesAreExpressionListOfUsize(ActionSigners)
       // andBool valuesAreKResult(ActionSigners)
@@ -148,6 +153,66 @@ module INVARIANT
 
       // andBool valuesAreOfType(UserIdToRole, rUserRole)
       // andBool valuesAreKResult(UserIdToRole)
+
+      // andBool valuesAreOfType(ActionData, rAction)
+      // andBool valuesAreKResult(ActionData)
+
+      //-
+
+      //andBool 0 <=Int NumBoardMembers
+      //andBool 0 <Int NumBoardMembers +Int NumProposers
+      //andBool Quorum <=Int NumBoardMembers +Int NumProposers
+
+  syntax Bool ::= invariantDebug1(
+      numUsers:Usize,
+      userIdToAddress:Map,
+      addressToUserId:Map,
+      numBoardMembers:Usize,
+      numProposers:Usize,
+      userIdToRole:Map,
+      quorum:Usize,
+      actionLastIndex:Usize,
+      actionData:Map,
+      actionSigners:Map,
+      expandActionLastIndex:Usize)  [function, functional]
+
+  rule invariantDebug1(
+      _NumUsers:Usize,
+      UserIdToAddress:Map,
+      AddressToUserId:Map,
+      u(_NumBoardMembers:Int),
+      u(_NumProposers:Int),
+      UserIdToRole:Map,
+      u(_Quorum:Int),
+      ActionLastIndex:Usize,
+      ActionData:Map,
+      ActionSigners:Map,
+      ExpandActionLastIndex:Usize)
+    => notBool u(0) in_keys(UserIdToAddress)
+      andBool notBool u(0) in_keys(UserIdToRole)
+      andBool allValuesBecomeKeys(AddressToUserId, UserIdToAddress)
+      andBool allValuesBecomeKeys(AddressToUserId, UserIdToRole)
+      andBool unusedIdsInMap(add(ActionLastIndex, u(1)), keysMap(ActionData), ExpandActionLastIndex)
+      andBool unusedIdsInMap(add(ActionLastIndex, u(1)), keysMap(ActionSigners), ExpandActionLastIndex)
+      andBool maxMapKey(ActionLastIndex, keysMap(ActionData))
+      andBool maxMapKey(ActionLastIndex, keysMap(ActionSigners))
+      // andBool subset(keysMap(ActionSigners), keysMap(ActionData))
+
+      andBool valuesAreExpressionListOfUsize(ActionSigners)
+      andBool valuesAreKResult(ActionSigners)
+
+      andBool valuesAreOfType(AddressToUserId, rUsize)
+      andBool valuesAreKResult(AddressToUserId)
+
+      andBool valuesAreOfType(UserIdToRole, rUserRole)
+      andBool valuesAreKResult(UserIdToRole)
+
+      andBool valuesAreOfType(ActionData, rAction)
+      andBool valuesAreKResult(ActionData)
+
+      //andBool 0 <=Int NumBoardMembers
+      //andBool 0 <Int NumBoardMembers +Int NumProposers
+      //andBool Quorum <=Int NumBoardMembers +Int NumProposers
 
   syntax Bool ::= allValuesBecomeKeys(Map, Map)  [function, functional]
   rule allValuesBecomeKeys(_ |-> V M:Map, N:Map)
@@ -194,8 +259,8 @@ module INVARIANT
         andBool #unusedIdsInMap(u(LastIndex), S, Expand)
   */
 
-  rule #unusedIdsInMap(u(LastIndex:Int), u(K:Int) |-> _:KItem M:Map, 0)
-    => #unusedIdsInMap(u(LastIndex), M, 0) andBool LastIndex >Int K
+  rule #unusedIdsInMap(u(LastIndex:Int), u(K:Int) |-> _:KItem M:Map, Expand:Int)
+    => #unusedIdsInMap(u(LastIndex), M, Expand) andBool LastIndex >Int K
     [simplification]
 
   rule #unusedIdsInMap(u(LastIndex:Int), u(K:Int) |-> _:KItem M:Map, -1)
@@ -229,6 +294,18 @@ module INVARIANT
 
   rule isKResult(#pushList(Es:ExpressionCSV, E:Expression))
     => isKResult(Es) andBool isKResult(E)
+    [simplification]
+
+  rule listElementsAreUsize([#pushList(Es:ExpressionCSV, E:Expression)])
+    => listElementsAreUsize([Es]) andBool isUsize(E)
+    [simplification]
+
+  rule isKResult(#listSwapRemove(Es:ExpressionCSV, _:Int))
+    => isKResult(Es)
+    [simplification]
+
+  rule listElementsAreUsize([#listSwapRemove(Es:ExpressionCSV, _:Int)])
+    => listElementsAreUsize([Es])
     [simplification]
 
 endmodule

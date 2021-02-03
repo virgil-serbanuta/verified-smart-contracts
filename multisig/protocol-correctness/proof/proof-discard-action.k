@@ -51,7 +51,7 @@ module PROOF-DISCARD-ACTION
         ActionData0,
         ActionSigners0,
         u(1))
-    ensures invariantDebug(
+    ensures invariant(
         NumUsers,
         UserIdToAddress,
         AddressToUserId,

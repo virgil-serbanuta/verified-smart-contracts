@@ -25,13 +25,13 @@ module PROOF-PERFORM-ACTION-ENDPOINT
         <T><TT>
           <k> runExternalCalls(EC) </k>
           invariantState(
-              NumUsers:Usize,
-              UserIdToAddress:Map,
-              AddressToUserId:Map,
-              NumBoardMembers:Usize,
-              NumProposers:Usize,
-              UserRoles:Map,
-              Quorum:Usize,
+              ?NumUsers1:Usize,
+              ?UserIdToAddress1:Map,
+              ?AddressToUserId1:Map,
+              ?NumBoardMembers1:Usize,
+              ?NumProposers1:Usize,
+              ?UserRoles1:Map,
+              ?Quorum1:Usize,
               ?ActionLastIndex1:Usize,
               ?ActionData1:Map,
               ?ActionSigners1:Map):StateCell
@@ -48,14 +48,14 @@ module PROOF-PERFORM-ACTION-ENDPOINT
         ActionData0:Map,
         ActionSigners0:Map,
         u(1))
-    ensures invariant(
-        NumUsers:Usize,
-        UserIdToAddress:Map,
-        AddressToUserId:Map,
-        NumBoardMembers:Usize,
-        NumProposers:Usize,
-        UserRoles:Map,
-        Quorum:Usize,
+    ensures invariantDebug(
+        ?NumUsers1:Usize,
+        ?UserIdToAddress1:Map,
+        ?AddressToUserId1:Map,
+        ?NumBoardMembers1:Usize,
+        ?NumProposers1:Usize,
+        ?UserRoles1:Map,
+        ?Quorum1:Usize,
         ?ActionLastIndex1:Usize,
         ?ActionData1:Map,
         ?ActionSigners1:Map,

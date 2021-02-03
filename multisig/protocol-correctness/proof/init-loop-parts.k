@@ -68,6 +68,10 @@ module INIT-LOOP-PARTS
               <stack> Stack </stack>
             </pseudocode-state>
             ExternalCallEnv
+            <proof-state>
+              <last-instrumented> .K </last-instrumented>
+            </proof-state>
+
           </state>
         </TT>
 
@@ -118,14 +122,17 @@ module INIT-LOOP-PARTS
             </multisig-state>
             <pseudocode-state>
               <variables>
-                i |-> Index:Usize
-                address |-> Address:Expression
-                user_id |-> UserId:Usize
+                (i |-> Index)
+                (address |-> Address)
+                (user_id |-> UserId)
                 Variables
               </variables>
               <stack> Stack </stack>
             </pseudocode-state>
             ExternalCallEnv
+            <proof-state>
+              <last-instrumented> .K </last-instrumented>
+            </proof-state>
           </state>
         </TT>
 
