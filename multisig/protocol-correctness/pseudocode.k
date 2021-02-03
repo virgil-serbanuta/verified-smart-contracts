@@ -65,7 +65,6 @@ module PSEUDOCODE-SYNTAX
                 |   "void"
                 |   Bool
                 |   UserRole
-                |   Action
                 |   Address
                 |   BoxedBytes
                 |   BigUint
@@ -73,6 +72,7 @@ module PSEUDOCODE-SYNTAX
   syntax Expression ::= FunctionCall
                     |   Variable
                     |   ExpressionList
+                    |   Action
                     |   Value
                     |   Expression "+" Expression
                     |   Expression "-" Expression
@@ -437,6 +437,32 @@ module PSEUDOCODE-DETAILS
   rule isKResult(E:Expression , Es:ExpressionCSV) => isKResult(E) andBool isKResult(Es)
 
   rule isKResult([Es:ExpressionCSV]) => isKResult(Es)
+
+  rule isKResult(Nothing) => true
+  rule isKResult(AddBoardMember(A:Address)) => isKResult(A)
+  rule isKResult(AddProposer(A:Address)) => isKResult(A)
+  rule isKResult(RemoveUser(A:Address)) => isKResult(A)
+  rule isKResult(ChangeQuorum(U:Usize)) => isKResult(U)
+  rule  isKResult(SendEgld(To:Address, Amount:BigUint, Data:BoxedBytes))
+        => isKResult(To) andBool isKResult(Amount) andBool isKResult(Data)
+  rule  isKResult(SCDeploy(
+                        Amount:BigUint,
+                        Code:BoxedBytes,
+                        CodeMetadata:CodeMetadata,
+                        Arguments:ExpressionList))
+        => isKResult(Amount)
+            andBool isKResult(Code)
+            andBool isKResult(CodeMetadata)
+            andBool isKResult(Arguments)
+  rule isKResult(SCCall(
+                        To:Address,
+                        Amount:BigUint,
+                        Function:BoxedBytes,
+                        Arguments:ExpressionList))
+        => isKResult(To)
+            andBool isKResult(Amount)
+            andBool isKResult(Function)
+            andBool isKResult(Arguments)
 endmodule
 
 module PSEUDOCODE-FUNCTIONS
@@ -479,6 +505,7 @@ module PSEUDOCODE-FUNCTIONS
             <stack> (.List => ListItem(stackEntry(S, V))) ... </stack>
           </pseudocode-state>
           _:ExternalCallEnvCell
+          _:ProofStateCell
         </state>
 
   rule  <k> (evaluate(E:Expression) => E) ~> popContext ... </k>
@@ -500,6 +527,7 @@ module PSEUDOCODE-FUNCTIONS
             <stack> (ListItem(stackEntry(S:MultisigStateCell, V:Map)) => .List) ... </stack>
           </pseudocode-state>
           _:ExternalCallEnvCell
+          _:ProofStateCell
         </state>
 
   rule <k> error ~> (evaluateReturnValue => .K) ... </k>
@@ -775,6 +803,7 @@ module PSEUDOCODE-FUNCTIONS
   rule  #listFind([X:Usize, _:ExpressionCSV], X) => u(0)
   rule  #listFind([_:Usize, Es:ExpressionCSV], X:Usize) => add(#listFind([Es], X), u(1))  [owise]
 
+  /*
   rule  call(listSwapRemove([_:Expression , L:ExpressionCSV], u(0))) => lastToStart(., L)
   rule  call(listSwapRemove([E:Expression , L:ExpressionCSV], u(Index:Int)))
         => call(listSwapRemove([L], u(Index -Int 1))) ~> pushListFreezer(E)
@@ -792,6 +821,32 @@ module PSEUDOCODE-FUNCTIONS
   rule lastToStart(L1:ExpressionCSV, (E:Expression, .))
         => reverseExpressionCsv(L1, .) ~> pushListFreezer(E)
 
+  rule reverseExpressionCsv(., L2:ExpressionCSV) => L2
+  rule reverseExpressionCsv((E:Expression , Es:ExpressionCSV), L2:ExpressionCSV) => reverseExpressionCsv(Es, (E , L2))
+  */
+
+  rule  call(listSwapRemove([L:ExpressionCSV], u(I:Int)))
+        => [#listSwapRemove(L, I)]
+        // TODO: require I >= 0
+
+  syntax ExpressionCSV ::= #listSwapRemove(ExpressionCSV, Int)  [function, functional]
+  rule  #listSwapRemove(_:Expression , Es:ExpressionCSV, 0)
+        => lastToStart(., Es)
+  rule  #listSwapRemove(E:Expression , Es:ExpressionCSV, I:Int)
+        => E , #listSwapRemove(Es, I -Int 1)
+    requires I >Int 0
+  rule  #listSwapRemove(Es:ExpressionCSV, I:Int)
+        => Es
+    requires I <Int 0
+
+  syntax ExpressionCSV ::= lastToStart(ExpressionCSV, ExpressionCSV)  [function, functional]
+  rule lastToStart(., .) => .:ExpressionCSV
+  rule lastToStart(L1:ExpressionCSV, (E:Expression, .))
+        => E , reverseExpressionCsv(L1, .)
+  rule lastToStart(L1:ExpressionCSV, (E:Expression , L2:ExpressionCSV))
+        => lastToStart((E , L1), L2)
+
+  syntax ExpressionCSV ::= reverseExpressionCsv(ExpressionCSV, ExpressionCSV)  [function, functional]
   rule reverseExpressionCsv(., L2:ExpressionCSV) => L2
   rule reverseExpressionCsv((E:Expression , Es:ExpressionCSV), L2:ExpressionCSV) => reverseExpressionCsv(Es, (E , L2))
 
@@ -984,12 +1039,59 @@ module MAP-UTILS
   imports MAP
   imports MAYBE
 
+  // TODO: Not a real function, but the Haskell backend does not
+  // allow us to use the function with the same name in the comments below.
+  syntax KItem ::= splitMap(key:KItem, Map)  [function, functional]
+  syntax KItem ::= #splitMap(key:KItem, Map) | "endSplitMap"
+
+  rule  splitMap(K:KItem, (K |-> _:KItem _:Map) #as _:Map)
+        => endSplitMap
+    [simplification]
+  rule  splitMap(K:KItem, (K1 |-> _ M:Map) #as _:Map)
+        => splitMap(K, M)
+    requires notBool (K ==K K1)
+    [simplification]
+  rule  splitMap(K:KItem, M:Map) => #splitMap(K, M)
+
+  rule  #splitMap(K:KItem, (K |-> _:KItem _:Map) #as M:Map) => .K
+    ensures K in_keys(M)
+  rule  #splitMap(K:KItem, M:Map) => .K
+    ensures notBool (K in_keys(M))
+    [owise]
+
+  rule endSplitMap => .K
+
+  /*
+  syntax Map ::= splitMap(key:KItem, Map, Map)  [function, functional]
+
+  rule  splitMap(K:KItem, (K |-> _:KItem _:Map) #as _:Map, M:Map)
+        => M
+    [simplification]
+  rule  splitMap(K:KItem, (K1 |-> _ M:Map) #as _:Map, N:Map)
+        => splitMap(K, M, N)
+    requires notBool (K ==K K1)
+    [simplification]
+  rule  splitMap(K:KItem, M:Map, N:Map)
+        =>
+            (
+              (#Ceil(M #And (K |-> ?_:KItem ?_:Map)))
+              #And
+              {true #Equals (K in_keys(M))}
+              #And N
+            )
+            #Or (N #And {true #Equals (notBool (K in_keys(M)))})
+  */
+
   // Do the map lookups in a way that makes the Haskell backend happy.
 
   syntax KItem ::= mapLookup(KItem, Map)
-  rule mapLookup(K:KItem, ((K |-> V:KItem) _:Map) #as M:Map) => just(V)
+  rule mapLookup(K:KItem, M:Map) => splitMap(K, M) ~> #mapLookup(K, M)
+  /*rule mapLookup(K:KItem, M:Map) => #mapLookup(K, splitMap(K, M, M))*/
+
+  syntax KItem ::= #mapLookup(KItem, Map)
+  rule #mapLookup(K:KItem, ((K |-> V:KItem) _:Map) #as M:Map) => just(V)
     ensures K in_keys(M)
-  rule mapLookup(K:KItem, M:Map) => nothing
+  rule #mapLookup(K:KItem, M:Map) => nothing
     ensures notBool (K in_keys(M))
     [owise]
 
@@ -1017,12 +1119,17 @@ module MAP-UTILS
     ensures false
     [owise]
 
+  /*
   rule X:KItem in_keys((X |-> _:KItem _:Map) #as _:Map) => true
     [simplification]
   rule X:KItem in_keys((Y:KItem |-> _:KItem M:Map) #as _:Map)
         => X in_keys(M)
     requires notBool (X ==K Y)
     [simplification]
+  */
+  rule X:KItem in_keys((Y:KItem |-> _:KItem M:Map) #as _:Map)
+        => X ==K Y orBool X in_keys(M)
+    [simplification, label(xyzzy)]
 endmodule
 
 module PSEUDOCODE-MAP-UTILS
@@ -1084,6 +1191,10 @@ module PSEUDOCODE-CONFIGURATION
           <external-call-env>
             <caller-address>uninitialized</caller-address>
           </external-call-env>
+
+          <proof-state>
+            <last-instrumented> .K </last-instrumented>
+          </proof-state>
         </state>
     </TT>
   </T>
@@ -1118,5 +1229,8 @@ module PSEUDOCODE-CONFIGURATION
         <external-call-env>
           <caller-address>uninitialized</caller-address>
         </external-call-env>
+        <proof-state>
+          <last-instrumented> .K </last-instrumented>
+        </proof-state>
       </state>
 endmodule
