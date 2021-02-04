@@ -1127,9 +1127,11 @@ module MAP-UTILS
     requires notBool (X ==K Y)
     [simplification]
   */
+  /*
   rule X:KItem in_keys((Y:KItem |-> _:KItem M:Map) #as _:Map)
         => X ==K Y orBool X in_keys(M)
     [simplification, label(xyzzy)]
+    */
 endmodule
 
 module PSEUDOCODE-MAP-UTILS
