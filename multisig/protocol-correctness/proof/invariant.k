@@ -138,8 +138,8 @@ module INVARIANT
       andBool notBool u(0) in_keys(UserIdToRole)  // +
       andBool allValuesBecomeKeys(AddressToUserId, UserIdToAddress)  // +
       andBool unusedIdsInMap(add(ActionLastIndex, u(1)), keysMap(ActionData), ExpandActionLastIndex)
-      // andBool unusedIdsInMap(add(ActionLastIndex, u(1)), keysMap(ActionSigners), ExpandActionLastIndex)
       //-
+      // andBool unusedIdsInMap(add(ActionLastIndex, u(1)), keysMap(ActionSigners), ExpandActionLastIndex)
       // andBool maxMapKey(ActionLastIndex, keysMap(ActionData))
       // andBool maxMapKey(ActionLastIndex, keysMap(ActionSigners))
 
@@ -261,36 +261,31 @@ module INVARIANT
 
   rule #unusedIdsInMap(u(LastIndex:Int), u(K:Int) |-> _:KItem M:Map, Expand:Int)
     => #unusedIdsInMap(u(LastIndex), M, Expand) andBool LastIndex >Int K
-    [simplification]
-
-  rule #unusedIdsInMap(u(LastIndex:Int), u(K:Int) |-> _:KItem M:Map, -1)
-    => #unusedIdsInMap(u(LastIndex), M, -1)
-    requires LastIndex >Int K
-    [simplification]
+    [simplification, label(xyzzya)]
 
   rule #unusedIdsInMap(LastIndex:Usize, M:Map, Expand:Int)
     => notBool LastIndex in_keys(M)
       andBool #unusedIdsInMap(add(LastIndex, u(1)), M, Expand -Int 1)
     requires Expand >Int 0
-    [simplification]
+    [simplification, label(xyzzyb)]
 
   rule #unusedIdsInMap(LastIndex:Usize, M:Map, -1)
     => true
     requires #unusedIdsInMap(LastIndex, M, 0)
-    [simplification]
+    [simplification, label(xyzzyc)]
 
   rule #unusedIdsInMap(LastIndex:Usize, M:Map, -1)
     => true
     requires notBool LastIndex in_keys(M)
       andBool #unusedIdsInMap(add(LastIndex, u(1)), M, 0)
-    [simplification]
+    [simplification, label(xyzzyd)]
 
   rule #unusedIdsInMap(LastIndex:Usize, M:Map, -1)
     => true
     requires notBool LastIndex in_keys(M)
       andBool notBool add(LastIndex, u(1)) in_keys(M)
       andBool #unusedIdsInMap(add(LastIndex, u(2)), M, 0)
-    [simplification]
+    [simplification, label(xyzzye)]
 
   rule isKResult(#pushList(Es:ExpressionCSV, E:Expression))
     => isKResult(Es) andBool isKResult(E)
@@ -306,6 +301,10 @@ module INVARIANT
 
   rule listElementsAreUsize([#listSwapRemove(Es:ExpressionCSV, _:Int)])
     => listElementsAreUsize([Es])
+    [simplification]
+
+  rule A:Int +Int K:Int >Int B:Int => true
+    requires K >Int 0 andBool A >=Int B
     [simplification]
 
 endmodule
