@@ -4,7 +4,7 @@ module PROOF-PERFORM-SEND-EGLD
   claim
       <T>
         performLhs(
-            SendEgld(_To:Address, Amount:BigUint, Data:BoxedBytes),
+            SendEgld(_To:Address, Amount:BigUint, Data:BoxedBytes) #as Action:Action,
             K:K,
             NumUsers:Usize,
             UserIdToAddress:Map,
@@ -35,6 +35,7 @@ module PROOF-PERFORM-SEND-EGLD
             ExternalCallEnv)
       </T>
     requires performRequires(
+            Action,
             NumUsers,
             UserIdToAddress,
             AddressToUserId,

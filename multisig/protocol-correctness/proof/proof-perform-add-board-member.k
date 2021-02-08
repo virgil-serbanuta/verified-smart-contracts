@@ -4,7 +4,7 @@ module PROOF-PERFORM-ADD-BOARD-MEMBER
   claim 
       <T>
         performLhs(
-            AddBoardMember(_BoardMemberAddress:Address),
+            AddBoardMember(_BoardMemberAddress:Address) #as Action:Action,
             K:K,
             NumUsers:Usize,
             UserIdToAddress:Map,
@@ -35,6 +35,7 @@ module PROOF-PERFORM-ADD-BOARD-MEMBER
             ExternalCallEnv)
       </T>
     requires performRequires(
+            Action,
             NumUsers,
             UserIdToAddress,
             AddressToUserId,

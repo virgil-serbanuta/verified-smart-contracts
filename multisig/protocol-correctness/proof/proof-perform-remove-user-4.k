@@ -1,18 +1,18 @@
-module PROOF-PERFORM-ADD-PROPOSER
+module PROOF-PERFORM-REMOVE-USER-4
   imports EXECUTION
 
-  claim 
+  claim
       <T>
         performLhs(
-            AddProposer(_ProposerAddress:Address) #as Action:Action,
+            RemoveUser(UserAddress:Address) #as Action:Action,
             K:K,
             NumUsers:Usize,
             UserIdToAddress:Map,
-            AddressToUserId:Map,
-            NumBoardMembers:Usize,
-            NumProposers:Usize,
-            UserIdToRole:Map,
-            Quorum:Usize,
+            (UserAddress |-> UserId:KItem _AddressToUserId:Map) #as AddressToUserId:Map,
+            u(NumBoardMembers:Int),
+            u(NumProposers:Int),
+            (UserId |-> UserRole:KItem _UserIdToRole:Map) #as UserIdToRole:Map,
+            u(Quorum:Int),
             ActionState:ActionStateCell,
             .List, // TODO: Stack:List,
             ExternalCallEnv:ExternalCallEnvCell)
@@ -20,7 +20,7 @@ module PROOF-PERFORM-ADD-PROPOSER
       =>
       <T>
         performRhs(
-            evaluate(void),
+            error,
             K,
             ?_NumUsers,
             ?_UserIdToAddress,
@@ -28,7 +28,7 @@ module PROOF-PERFORM-ADD-PROPOSER
             ?_NumBoardMembers,
             ?_NumProposers,
             ?_UserIdToRole,
-            Quorum,
+            u(Quorum:Int),
             ActionState,
             ?_Variables:Map,
             .List, // TODO: Stack:List,
@@ -39,8 +39,11 @@ module PROOF-PERFORM-ADD-PROPOSER
             NumUsers,
             UserIdToAddress,
             AddressToUserId,
-            NumBoardMembers,
-            NumProposers,
+            u(NumBoardMembers),
+            u(NumProposers),
             UserIdToRole,
-            Quorum)
+            u(Quorum))
+        andBool notBool (UserRole ==K BoardMember)
+        andBool notBool (NumBoardMembers +Int (NumProposers -Int 1) >Int 0)
+
 endmodule

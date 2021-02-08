@@ -4,7 +4,7 @@ module PROOF-PERFORM-NOTHING
   claim 
       <T>
         performLhs(
-            Nothing,
+            Nothing #as Action:Action,
             K:K,
             NumUsers:Usize,
             UserIdToAddress:Map,
@@ -35,8 +35,12 @@ module PROOF-PERFORM-NOTHING
             ExternalCallEnv)
       </T>
     requires performRequires(
+            Action,
             NumUsers,
             UserIdToAddress,
             AddressToUserId,
-            UserIdToRole)
+            u(NumBoardMembers),
+            NumProposers,
+            UserIdToRole,
+            Quorum)
 endmodule

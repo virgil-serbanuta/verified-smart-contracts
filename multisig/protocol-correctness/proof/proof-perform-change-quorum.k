@@ -4,7 +4,7 @@ module PROOF-PERFORM-CHANGE-QUORUM
   claim 
       <T>
         performLhs(
-            ChangeQuorum(u(NewQuorum:Int)),
+            ChangeQuorum(u(NewQuorum:Int)) #as Action:Action,
             K:K,
             NumUsers:Usize,
             UserIdToAddress:Map,
@@ -12,7 +12,7 @@ module PROOF-PERFORM-CHANGE-QUORUM
             u(NumBoardMembers:Int),
             NumProposers:Usize,
             UserIdToRole:Map,
-            _OldQuorum:Usize,
+            OldQuorum:Usize,
             ActionState:ActionStateCell,
             .List, // TODO: Stack:List,
             ExternalCallEnv:ExternalCallEnvCell)
@@ -35,16 +35,20 @@ module PROOF-PERFORM-CHANGE-QUORUM
             ExternalCallEnv)
       </T>
     requires performRequires(
+            Action,
             NumUsers,
             UserIdToAddress,
             AddressToUserId,
-            UserIdToRole)
+            u(NumBoardMembers),
+            NumProposers,
+            UserIdToRole,
+            OldQuorum)
         andBool NewQuorum <=Int NumBoardMembers
 
   claim 
       <T>
         performLhs(
-            ChangeQuorum(u(NewQuorum:Int)),
+            ChangeQuorum(u(NewQuorum:Int)) #as Action:Action,
             K:K,
             NumUsers:Usize,
             UserIdToAddress:Map,
@@ -75,6 +79,7 @@ module PROOF-PERFORM-CHANGE-QUORUM
             ExternalCallEnv)
       </T>
     requires performRequires(
+            Action,
             NumUsers,
             UserIdToAddress,
             AddressToUserId,

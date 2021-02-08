@@ -1,10 +1,10 @@
-module PROOF-PERFORM-ADD-PROPOSER
+module PROOF-PERFORM-REMOVE-USER-6
   imports EXECUTION
 
-  claim 
+  claim
       <T>
         performLhs(
-            AddProposer(_ProposerAddress:Address) #as Action:Action,
+            RemoveUser(UserAddress:Address) #as Action:Action,
             K:K,
             NumUsers:Usize,
             UserIdToAddress:Map,
@@ -43,4 +43,5 @@ module PROOF-PERFORM-ADD-PROPOSER
             NumProposers,
             UserIdToRole,
             Quorum)
+        andBool notBool UserAddress in_keys(AddressToUserId)
 endmodule
