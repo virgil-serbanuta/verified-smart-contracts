@@ -22,12 +22,12 @@ module PROOF-PERFORM-REMOVE-USER-2
         performRhs(
             error,
             K,
-            ?_NumUsers,
-            ?_UserIdToAddress,
-            ?_AddressToUserId,
-            ?_NumBoardMembers,
-            ?_NumProposers,
-            ?_UserIdToRole,
+            ?NumUsersFinal,
+            ?UserIdToAddressFinal,
+            ?AddressToUserIdFinal,
+            ?NumBoardMembersFinal,
+            ?NumProposersFinal,
+            ?UserIdToRoleFinal,
             u(Quorum),
             ActionState,
             ?_Variables:Map,
@@ -47,4 +47,12 @@ module PROOF-PERFORM-REMOVE-USER-2
             ((Quorum <=Int NumBoardMembers -Int 1)
             andBool (NumBoardMembers -Int 1 +Int NumProposers >Int 0)
             )
+    ensures performEnsures(
+            ?NumUsersFinal,
+            ?UserIdToAddressFinal,
+            ?AddressToUserIdFinal,
+            ?NumBoardMembersFinal,
+            ?NumProposersFinal,
+            ?UserIdToRoleFinal,
+            u(Quorum))
 endmodule

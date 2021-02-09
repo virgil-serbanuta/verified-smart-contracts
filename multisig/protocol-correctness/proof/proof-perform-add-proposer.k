@@ -22,12 +22,12 @@ module PROOF-PERFORM-ADD-PROPOSER
         performRhs(
             evaluate(void),
             K,
-            ?_NumUsers,
-            ?_UserIdToAddress,
-            ?_AddressToUserId,
-            ?_NumBoardMembers,
-            ?_NumProposers,
-            ?_UserIdToRole,
+            ?NumUsersFinal,
+            ?UserIdToAddressFinal,
+            ?AddressToUserIdFinal,
+            ?NumBoardMembersFinal,
+            ?NumProposersFinal,
+            ?UserIdToRoleFinal,
             Quorum,
             ActionState,
             ?_Variables:Map,
@@ -42,5 +42,13 @@ module PROOF-PERFORM-ADD-PROPOSER
             NumBoardMembers,
             NumProposers,
             UserIdToRole,
+            Quorum)
+    ensures performEnsures(
+            ?NumUsersFinal,
+            ?UserIdToAddressFinal,
+            ?AddressToUserIdFinal,
+            ?NumBoardMembersFinal,
+            ?NumProposersFinal,
+            ?UserIdToRoleFinal,
             Quorum)
 endmodule

@@ -44,6 +44,14 @@ module PROOF-PERFORM-CHANGE-QUORUM
             UserIdToRole,
             OldQuorum)
         andBool NewQuorum <=Int NumBoardMembers
+    ensures performEnsures(
+            NumUsers,
+            UserIdToAddress,
+            AddressToUserId,
+            u(NumBoardMembers),
+            NumProposers,
+            UserIdToRole,
+            u(NewQuorum))
 
   claim 
       <T>
@@ -88,4 +96,12 @@ module PROOF-PERFORM-CHANGE-QUORUM
             UserIdToRole,
             OldQuorum)
         andBool NewQuorum >Int NumBoardMembers
+    ensures performEnsures(
+            NumUsers,
+            UserIdToAddress,
+            AddressToUserId,
+            u(NumBoardMembers),
+            NumProposers,
+            UserIdToRole,
+            OldQuorum)
 endmodule

@@ -13,7 +13,15 @@ module PERFORM-PARTS
       userIdToRole:Map,
       quorum:Usize)
     [function, functional]
-  syntax Bool ::= performEnsures()  [function, functional]
+  syntax Bool ::= performEnsures(
+      numUsers:Usize,
+      userIdToAddress:Map,
+      addressToUserId:Map,
+      numBoardMembers:Usize,
+      numProposers:Usize,
+      userIdToRole:Map,
+      quorum:Usize)
+    [function, functional]
   syntax TTCell ::= performLhs(
       action:Action,
       K,
@@ -75,7 +83,15 @@ module PERFORM-PARTS
       andBool Quorum <=Int NumBoardMembers
       andBool (NumBoardMembers +Int NumProposers >Int 0)
 
-  rule performEnsures() => true
+  rule performEnsures(
+          u(NumUsers:Int) #as UNumUsers:Usize,
+          UserIdToAddress:Map,
+          AddressToUserId:Map,
+          u(NumBoardMembers:Int),
+          u(NumProposers:Int),
+          UserIdToRole:Map,
+          u(Quorum:Int))
+    => true
 
   rule performLhs(
           Action:Action,

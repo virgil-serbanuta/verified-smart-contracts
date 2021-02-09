@@ -39,7 +39,15 @@ module PROOF-PERFORM-NOTHING
             NumUsers,
             UserIdToAddress,
             AddressToUserId,
-            u(NumBoardMembers),
+            NumBoardMembers,
+            NumProposers,
+            UserIdToRole,
+            Quorum)
+    ensures performEnsures(
+            NumUsers,
+            UserIdToAddress,
+            AddressToUserId,
+            NumBoardMembers,
             NumProposers,
             UserIdToRole,
             Quorum)
