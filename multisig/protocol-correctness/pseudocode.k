@@ -515,7 +515,6 @@ module PSEUDOCODE-FUNCTIONS
         <variables> _ => V </variables>
         <stack> (ListItem(stackEntry(_, V:Map)) => .List) ... </stack>
     requires isKResult(E)
-    [label(xyzzy)]
 
   rule  <k> (E:Expression ~> evaluateReturnValue) => evaluate(E) ... </k>
     requires isKResult(E)
@@ -1082,6 +1081,34 @@ module MAP-UTILS
               #And N
             )
             #Or (N #And {true #Equals (notBool (K in_keys(M)))})
+
+  rule  splitMap(K:KItem, M:Map, N:Map)
+        =>(
+            (
+              (#Ceil(M #And (K |-> ?_:KItem ?_:Map)))
+              #And
+              {true #Equals (K in_keys(M))}
+            )
+            #Or
+            ({true #Equals (notBool (K in_keys(M)))})
+          )
+          #And N
+
+
+  rule  splitMap(K:KItem, M:Map, N:Map) => N
+        ensures
+          (
+            (
+              (#Ceil(M #And (K |-> ?_:KItem ?_:Map)))
+              #And
+              {true #Equals (K in_keys(M))}
+            )
+            #Or
+            ({true #Equals (notBool (K in_keys(M)))})
+          )
+
+
+
   */
 
   // Do the map lookups in a way that makes the Haskell backend happy.
