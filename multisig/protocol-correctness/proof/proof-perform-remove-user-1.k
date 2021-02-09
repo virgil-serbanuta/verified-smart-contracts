@@ -11,7 +11,7 @@ module PROOF-PERFORM-REMOVE-USER-1
             (UserAddress |-> UserId:KItem _AddressToUserId:Map) #as AddressToUserId:Map,
             u(NumBoardMembers:Int),
             u(NumProposers:Int),
-            (UserId |-> BoardMember) #as UserIdToRole:Map,
+            (UserId |-> BoardMember UserIdToRoleFinal:Map) #as UserIdToRole:Map,
             u(Quorum:Int),
             ActionState:ActionStateCell,
             .List, // TODO: Stack:List,
@@ -27,7 +27,7 @@ module PROOF-PERFORM-REMOVE-USER-1
             ?AddressToUserIdFinal,
             ?NumBoardMembersFinal,
             ?NumProposersFinal,
-            ?UserIdToRoleFinal,
+            UserIdToRoleFinal,
             u(Quorum),
             ActionState,
             ?_Variables:Map,
@@ -51,7 +51,7 @@ module PROOF-PERFORM-REMOVE-USER-1
             ?AddressToUserIdFinal,
             ?NumBoardMembersFinal,
             ?NumProposersFinal,
-            ?UserIdToRoleFinal,
+            UserIdToRoleFinal,
             u(Quorum))
 
 endmodule

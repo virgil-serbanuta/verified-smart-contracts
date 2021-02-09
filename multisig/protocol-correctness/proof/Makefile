@@ -2,8 +2,11 @@ SHELL=/bin/bash -euo pipefail
 
 ALL_K = $(wildcard *.k) $(wildcard ../*.k)
 PROOFS = $(wildcard proof-*.k)
+PROOFS_PERFORM = $(wildcard proof-perform-*.k)
+FPROOFS_PERFORM = $(filter-out proof-perform-action-endpoint.k, $(PROOFS_PERFORM))
 EXECUTION_K = $(filter-out $(PROOFS), $(ALL_K))
 PROOF_TIMESTAMPS = ${PROOFS:.k=.timestamp}
+PROOF_PERFORM_TIMESTAMPS = ${FPROOFS_PERFORM:.k=.timestamp}
 PROOF_DEBUGGERS = ${PROOFS:.k=.debugger}
 PROOFS0 = $(filter-out proof-init-loop.k, $(PROOFS))
 PROOF0_TIMESTAMPS = ${PROOFS0:.k=.timestamp}
@@ -17,6 +20,9 @@ proof.timestamp: ${PROOF_TIMESTAMPS} execution.timestamp
 
 proof0.timestamp: ${PROOF0_TIMESTAMPS} execution.timestamp
 	@touch proof0.timestamp
+
+proofperform.timestamp: ${PROOF_PERFORM_TIMESTAMPS} execution.timestamp
+	@touch proofperform.timestamp
 
 proof-%.timestamp: proof-%.k execution.timestamp
 	@echo "Proving $*..."

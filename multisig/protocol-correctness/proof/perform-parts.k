@@ -76,7 +76,7 @@ module PERFORM-PARTS
       andBool allValuesBecomeKeys(AddressToUserId, UserIdToAddress)
       andBool allValuesBecomeKeys(UserIdToAddress, AddressToUserId)
 
-      andBool NumUsers >=Int 0
+      andBool NumUsers >=Int 0 // TODO: Strict >?
       andBool NumBoardMembers >=Int 0
       andBool NumProposers >=Int 0
 
@@ -92,6 +92,14 @@ module PERFORM-PARTS
           UserIdToRole:Map,
           u(Quorum:Int))
     => true
+      andBool valuesAreOfType(AddressToUserId, rUsize)
+      andBool valuesAreKResult(AddressToUserId)
+      andBool valuesAreNotEmpty(AddressToUserId, rUsize)
+
+      andBool valuesAreOfType(UserIdToRole, rUserRole)
+      andBool valuesAreKResult(UserIdToRole)
+      andBool valuesAreNotEmpty(UserIdToRole, rUserRole)
+      andBool unusedIdsInMap(add(UNumUsers, u(1)), keysMap(UserIdToRole), u(-1))
 
   rule performLhs(
           Action:Action,

@@ -22,12 +22,12 @@ module PROOF-PERFORM-REMOVE-USER-6
         performRhs(
             evaluate(void),
             K,
-            ?_NumUsers,
-            ?_UserIdToAddress,
-            ?_AddressToUserId,
-            ?_NumBoardMembers,
-            ?_NumProposers,
-            ?_UserIdToRole,
+            ?NumUsersFinal,
+            ?UserIdToAddressFinal,
+            ?AddressToUserIdFinal,
+            ?NumBoardMembersFinal,
+            ?NumProposersFinal,
+            ?UserIdToRoleFinal,
             Quorum,
             ActionState,
             ?_Variables:Map,
@@ -43,5 +43,13 @@ module PROOF-PERFORM-REMOVE-USER-6
             NumProposers,
             UserIdToRole,
             Quorum)
-        andBool notBool UserAddress in_keys(AddressToUserId)
+        andBool notBool (UserAddress in_keys(AddressToUserId))
+    ensures performEnsures(
+            ?NumUsersFinal,
+            ?UserIdToAddressFinal,
+            ?AddressToUserIdFinal,
+            ?NumBoardMembersFinal,
+            ?NumProposersFinal,
+            ?UserIdToRoleFinal,
+            Quorum)
 endmodule

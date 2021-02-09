@@ -11,7 +11,7 @@ module PROOF-PERFORM-REMOVE-USER-2
             (UserAddress |-> UserId:KItem _AddressToUserId:Map) #as AddressToUserId:Map,
             u(NumBoardMembers:Int),
             u(NumProposers:Int),
-            (UserId |-> BoardMember) #as UserIdToRole:Map,
+            (UserId |-> BoardMember _UserIdToRole:Map) #as UserIdToRole:Map,
             u(Quorum:Int),
             ActionState:ActionStateCell,
             .List, // TODO: Stack:List,
@@ -47,7 +47,7 @@ module PROOF-PERFORM-REMOVE-USER-2
             ((Quorum <=Int NumBoardMembers -Int 1)
             andBool (NumBoardMembers -Int 1 +Int NumProposers >Int 0)
             )
-    ensures performEnsures(
+    ensures performEnsures(  // TODO: we don't need it for error cases.
             ?NumUsersFinal,
             ?UserIdToAddressFinal,
             ?AddressToUserIdFinal,

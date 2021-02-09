@@ -11,7 +11,7 @@ module PROOF-PERFORM-REMOVE-USER-3
             (UserAddress |-> UserId:KItem _AddressToUserId:Map) #as AddressToUserId:Map,
             u(NumBoardMembers:Int),
             u(NumProposers:Int),
-            (UserId |-> UserRole:KItem _UserIdToRole:Map) #as UserIdToRole:Map,
+            (UserId |-> UserRole:KItem UserIdToRoleFinal:Map) #as UserIdToRole:Map,
             u(Quorum:Int),
             ActionState:ActionStateCell,
             .List, // TODO: Stack:List,
@@ -22,12 +22,12 @@ module PROOF-PERFORM-REMOVE-USER-3
         performRhs(
             evaluate(void),
             K,
-            ?_NumUsers,
-            ?_UserIdToAddress,
-            ?_AddressToUserId,
-            ?_NumBoardMembers,
-            ?_NumProposers,
-            ?_UserIdToRole,
+            ?NumUsersFinal,
+            ?UserIdToAddressFinal,
+            ?AddressToUserIdFinal,
+            ?NumBoardMembersFinal,
+            ?NumProposersFinal,
+            UserIdToRoleFinal,
             u(Quorum:Int),
             ActionState,
             ?_Variables:Map,
@@ -46,5 +46,13 @@ module PROOF-PERFORM-REMOVE-USER-3
         andBool notBool (UserRole ==K BoardMember)
         andBool Quorum <=Int NumBoardMembers
         andBool (NumBoardMembers +Int (NumProposers -Int 1) >Int 0)
+    ensures performEnsures(
+            ?NumUsersFinal,
+            ?UserIdToAddressFinal,
+            ?AddressToUserIdFinal,
+            ?NumBoardMembersFinal,
+            ?NumProposersFinal,
+            UserIdToRoleFinal,
+            u(Quorum))
 
 endmodule

@@ -148,7 +148,6 @@ module EXECUTION-HELPERS
     [priority(10)]
   */
 
-
   // expand is a stupid trick used to control symbolic function application.
   syntax Bool ::= unusedIdsInMap(lastIndex:Usize, Map, expand:Usize)  [function, functional]
 
@@ -164,8 +163,9 @@ module EXECUTION-HELPERS
         andBool #unusedIdsInMap(u(LastIndex), S, Expand)
   */
 
-  rule #unusedIdsInMap(u(LastIndex:Int), u(K:Int) |-> _:KItem M:Map, Expand:Int)
-    => #unusedIdsInMap(u(LastIndex), M, Expand) andBool LastIndex >Int K
+  rule #unusedIdsInMap(u(LastIndex:Int), U:Usize |-> _:KItem M:Map, Expand:Int)
+    => #unusedIdsInMap(u(LastIndex), M, Expand) 
+      andBool LastIndex >Int usizeToInt(U)
     [simplification, label(xyzzya)]
 
   rule #unusedIdsInMap(LastIndex:Usize, M:Map, Expand:Int)
