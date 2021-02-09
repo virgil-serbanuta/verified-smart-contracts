@@ -153,6 +153,12 @@ module EXECUTION-HELPERS
 
   rule unusedIdsInMap(LastIndex:Usize, M:Map, u(Expand:Int))
       => #unusedIdsInMap(LastIndex, M, Expand)
+    requires Expand >=Int 0
+  /*
+  rule unusedIdsInMap(_, _, _)
+      => true
+    //[simplification]
+  */
 
   syntax Bool ::= #unusedIdsInMap(lastIndex:Usize, Map, expand:Int)  [function, functional]
 
@@ -166,7 +172,7 @@ module EXECUTION-HELPERS
   rule #unusedIdsInMap(u(LastIndex:Int), U:Usize |-> _:KItem M:Map, Expand:Int)
     => #unusedIdsInMap(u(LastIndex), M, Expand) 
       andBool LastIndex >Int usizeToInt(U)
-    [simplification, label(xyzzya)]
+    [simplification(30), label(xyzzya)]
 
   rule #unusedIdsInMap(LastIndex:Usize, M:Map, Expand:Int)
     => notBool LastIndex in_keys(M)
@@ -200,8 +206,89 @@ module EXECUTION-HELPERS
 
 endmodule
 
+module INSTRUMENTATION
+  imports MAP
+
+  imports PSEUDOCODE
+  /*
+  syntax KItem ::= "iCallGetUserId"
+
+  syntax Bool ::= isCallGetUserId(KItem)  [function, functional]
+  rule isCallGetUserId(call(getUserId(_))) => true
+  rule isCallGetUserId(_) => false  [owise]
+
+  // Does not split properly, leaves a remainder
+  rule  <k> call(getUserId(A:Address)) ... </k>
+        <caller-address> B:Address </caller-address>
+        <last-instrumented> .K => iCallGetUserId </last-instrumented>
+    requires A ==K B
+    [priority(10)]
+  rule  <k> call(getUserId(A:Address)) ... </k>
+        <caller-address> B:Address </caller-address>
+        <last-instrumented> .K => iCallGetUserId </last-instrumented>
+    requires notBool (A ==K B)
+    [priority(10)]
+  rule  <k> X:KItem ... </k>
+        <last-instrumented> iCallGetUserId => .K </last-instrumented>
+    requires notBool isCallGetUserId(X)
+    [priority(10)]
+  */
+
+  /*
+  syntax KItem ::= "concretizing"
+
+  syntax KItem ::= concretize(Usize)
+  rule concretize(u(_)) => .K
+
+  syntax KItem ::= "concretizeEnd"
+  rule concretizeEnd => .K
+
+  syntax K ::= concretizeKeys(Map)  [function, functional]
+  rule concretizeKeys(K:Usize |-> _:KItem M:Map)
+      => concretize(K) ~> concretizeKeys(M)
+    [simplification]
+  rule concretizeKeys(M:Map) => concretizeEnd
+  */
+
+  syntax Singleton ::= "singleton"
+  syntax KItem ::= "concretizing"
+
+  syntax IntVarList ::= vars(Int, IntVarList)
+                    |   ".IntVarList"
+  
+  rule  <k> (.K => concretized(concretizeKeys(UserIdToAddress, vars(?_, vars(?_, .IntVarList))))
+                ~> concretized(concretizeKeys(UserIdToRole, vars(?_, vars(?_, .IntVarList))))
+            )
+            ~> void ~> evaluateReturnValue
+        ...</k>
+        <user-id-to-address> UserIdToAddress:Map </user-id-to-address>
+        <user-roles> UserIdToRole:Map </user-roles>
+        <last-instrumented> .K => (concretizing ~> .K) </last-instrumented>
+    [priority(20)]
+  rule  <k> K:KItem ... </k>
+        <last-instrumented> (concretizing ~> .K) => .K </last-instrumented>
+    requires true
+        andBool notBool (K ==K concretized(singleton))
+        andBool notBool (K ==K void)
+    [priority(20)]
+
+  syntax Singleton ::= concretizeKeys(Map, IntVarList)  [function, functional]
+  rule concretizeKeys(K:Usize |-> _:KItem M:Map, vars(U:Int, Vars:IntVarList))
+      => concretizeKeys(M, Vars)
+    ensures K ==K u(U:Int)
+      // => concretizeKeys(M, Vars) #And #Ceil(K #And u(U:Int))
+    [simplification(40)]
+  rule concretizeKeys(_:Map, _:IntVarList) => singleton
+    [simplification(50)]
+
+  syntax KItem ::= concretized(Singleton)
+  rule concretized(singleton) => .K
+
+endmodule
+
 module EXECUTION
   imports EXECUTION-HELPERS
+  imports INSTRUMENTATION
   imports INVARIANT
   imports INIT-LOOP-PARTS
   imports COUNT-CAN-SIGN-PARTS

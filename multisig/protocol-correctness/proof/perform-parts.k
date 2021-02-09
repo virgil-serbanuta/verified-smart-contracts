@@ -101,6 +101,9 @@ module PERFORM-PARTS
       andBool valuesAreNotEmpty(UserIdToRole, rUserRole)
       andBool unusedIdsInMap(add(UNumUsers, u(1)), keysMap(UserIdToRole), u(-1))
 
+      andBool allValuesBecomeKeys(AddressToUserId, UserIdToAddress)
+      andBool allValuesBecomeKeys(UserIdToAddress, AddressToUserId)
+
   rule performLhs(
           Action:Action,
           K:K,
