@@ -87,8 +87,8 @@ module INVARIANT
     => notBool u(0) in_keys(UserIdToAddress)
       andBool notBool u(0) in_keys(UserIdToRole)
       andBool allValuesBecomeKeys(AddressToUserId, UserIdToAddress)
-      andBool unusedIdsInMap(add(ActionLastIndex, u(1)), keysMap(ActionData), ExpandActionLastIndex)
-      andBool unusedIdsInMap(add(ActionLastIndex, u(1)), keysMap(ActionSigners), ExpandActionLastIndex)
+      andBool unusedIdsInMapKeys(add(ActionLastIndex, u(1)), keysMap(ActionData), ExpandActionLastIndex)
+      andBool unusedIdsInMapKeys(add(ActionLastIndex, u(1)), keysMap(ActionSigners), ExpandActionLastIndex)
       andBool maxMapKey(ActionLastIndex, keysMap(ActionData))
       andBool maxMapKey(ActionLastIndex, keysMap(ActionSigners))
 
@@ -137,9 +137,9 @@ module INVARIANT
     => notBool u(0) in_keys(UserIdToAddress)
       andBool notBool u(0) in_keys(UserIdToRole)  // +
       andBool allValuesBecomeKeys(AddressToUserId, UserIdToAddress)  // +
-      andBool unusedIdsInMap(add(ActionLastIndex, u(1)), keysMap(ActionData), ExpandActionLastIndex)
+      andBool unusedIdsInMapKeys(add(ActionLastIndex, u(1)), keysMap(ActionData), ExpandActionLastIndex)
       //-
-      // andBool unusedIdsInMap(add(ActionLastIndex, u(1)), keysMap(ActionSigners), ExpandActionLastIndex)
+      // andBool unusedIdsInMapKeys(add(ActionLastIndex, u(1)), keysMap(ActionSigners), ExpandActionLastIndex)
       // andBool maxMapKey(ActionLastIndex, keysMap(ActionData))
       // andBool maxMapKey(ActionLastIndex, keysMap(ActionSigners))
 
@@ -192,8 +192,8 @@ module INVARIANT
       andBool notBool u(0) in_keys(UserIdToRole)
       andBool allValuesBecomeKeys(AddressToUserId, UserIdToAddress)
       andBool allValuesBecomeKeys(AddressToUserId, UserIdToRole)
-      andBool unusedIdsInMap(add(ActionLastIndex, u(1)), keysMap(ActionData), ExpandActionLastIndex)
-      andBool unusedIdsInMap(add(ActionLastIndex, u(1)), keysMap(ActionSigners), ExpandActionLastIndex)
+      andBool unusedIdsInMapKeys(add(ActionLastIndex, u(1)), keysMap(ActionData), ExpandActionLastIndex)
+      andBool unusedIdsInMapKeys(add(ActionLastIndex, u(1)), keysMap(ActionSigners), ExpandActionLastIndex)
       andBool maxMapKey(ActionLastIndex, keysMap(ActionData))
       andBool maxMapKey(ActionLastIndex, keysMap(ActionSigners))
       // andBool subset(keysMap(ActionSigners), keysMap(ActionData))

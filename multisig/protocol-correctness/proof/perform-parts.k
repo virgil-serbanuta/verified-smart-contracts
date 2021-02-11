@@ -67,13 +67,14 @@ module PERFORM-PARTS
       andBool valuesAreOfType(AddressToUserId, rUsize)
       andBool valuesAreKResult(AddressToUserId)
       andBool valuesAreNotEmpty(AddressToUserId, rUsize)
+      andBool unusedIdsInMapValues(add(UNumUsers, u(1)), AddressToUserId)
 
       andBool valuesAreOfType(UserIdToRole, rUserRole)
       andBool valuesAreKResult(UserIdToRole)
       andBool valuesAreNotEmpty(UserIdToRole, rUserRole)
-      andBool unusedIdsInMap(add(UNumUsers, u(1)), keysMap(UserIdToRole), u(1))
+      andBool unusedIdsInMapKeys(add(UNumUsers, u(1)), keysMap(UserIdToRole), u(1))
 
-      andBool allValuesBecomeKeys(AddressToUserId, UserIdToAddress)
+      //andBool allValuesBecomeKeys(AddressToUserId, UserIdToAddress)
       andBool allValuesBecomeKeys(UserIdToAddress, AddressToUserId)
 
       andBool NumUsers >=Int 0 // TODO: Strict >?
@@ -99,9 +100,9 @@ module PERFORM-PARTS
       andBool valuesAreOfType(UserIdToRole, rUserRole)
       andBool valuesAreKResult(UserIdToRole)
       andBool valuesAreNotEmpty(UserIdToRole, rUserRole)
-      andBool unusedIdsInMap(add(UNumUsers, u(1)), keysMap(UserIdToRole), u(-1))
+      andBool unusedIdsInMapKeys(add(UNumUsers, u(1)), keysMap(UserIdToRole), u(-1))
 
-      andBool allValuesBecomeKeys(AddressToUserId, UserIdToAddress)
+      // andBool allValuesBecomeKeys(AddressToUserId, UserIdToAddress)
       andBool allValuesBecomeKeys(UserIdToAddress, AddressToUserId)
 
   rule performLhs(
