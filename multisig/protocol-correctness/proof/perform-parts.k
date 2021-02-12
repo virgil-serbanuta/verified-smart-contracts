@@ -22,6 +22,16 @@ module PERFORM-PARTS
       userIdToRole:Map,
       quorum:Usize)
     [function, functional]
+  syntax Bool ::= performInvariant(
+      numUsers:Usize,
+      userIdToAddress:Map,
+      addressToUserId:Map,
+      numBoardMembers:Usize,
+      numProposers:Usize,
+      userIdToRole:Map,
+      quorum:Usize,
+      expand:Int)
+    [function, functional]
   syntax TTCell ::= performLhs(
       action:Action,
       K,
@@ -63,7 +73,17 @@ module PERFORM-PARTS
           u(Quorum:Int))
     => true
       andBool isKResult(Action)
+      andBool performInvariant(
+          UNumUsers:Usize,
+          UserIdToAddress:Map,
+          AddressToUserId:Map,
+          u(NumBoardMembers:Int),
+          u(NumProposers:Int),
+          UserIdToRole:Map,
+          u(Quorum:Int),
+          1)
 
+    /*
       andBool valuesAreOfType(AddressToUserId, rUsize)
       andBool valuesAreKResult(AddressToUserId)
       andBool valuesAreNotEmpty(AddressToUserId, rUsize)
@@ -74,7 +94,6 @@ module PERFORM-PARTS
       andBool valuesAreNotEmpty(UserIdToRole, rUserRole)
       andBool unusedIdsInMapKeys(add(UNumUsers, u(1)), keysMap(UserIdToRole), u(1))
 
-      //andBool allValuesBecomeKeys(AddressToUserId, UserIdToAddress)
       andBool allValuesBecomeKeys(UserIdToAddress, AddressToUserId)
 
       andBool NumUsers >=Int 0 // TODO: Strict >?
@@ -83,6 +102,10 @@ module PERFORM-PARTS
 
       andBool Quorum <=Int NumBoardMembers
       andBool (NumBoardMembers +Int NumProposers >Int 0)
+
+      andBool NumBoardMembers ==Int countValues(UserIdToRole, BoardMember)
+      andBool NumProposers ==Int countValues(UserIdToRole, Proposer)
+      //*/
 
   rule performEnsures(
           u(NumUsers:Int) #as UNumUsers:Usize,
@@ -93,17 +116,95 @@ module PERFORM-PARTS
           UserIdToRole:Map,
           u(Quorum:Int))
     => true
+      /*
+      andBool performInvariant(
+          UNumUsers:Usize,
+          UserIdToAddress:Map,
+          AddressToUserId:Map,
+          u(NumBoardMembers:Int),
+          u(NumProposers:Int),
+          UserIdToRole:Map,
+          u(Quorum:Int),
+          u(-1))
+      */
+      /*
       andBool valuesAreOfType(AddressToUserId, rUsize)
       andBool valuesAreKResult(AddressToUserId)
       andBool valuesAreNotEmpty(AddressToUserId, rUsize)
+      andBool unusedIdsInMapValues(add(UNumUsers, u(1)), AddressToUserId)
 
       andBool valuesAreOfType(UserIdToRole, rUserRole)
       andBool valuesAreKResult(UserIdToRole)
       andBool valuesAreNotEmpty(UserIdToRole, rUserRole)
       andBool unusedIdsInMapKeys(add(UNumUsers, u(1)), keysMap(UserIdToRole), u(-1))
 
-      // andBool allValuesBecomeKeys(AddressToUserId, UserIdToAddress)
       andBool allValuesBecomeKeys(UserIdToAddress, AddressToUserId)
+
+      andBool NumUsers >=Int 0 // TODO: Strict >?
+      andBool NumBoardMembers >=Int 0
+      andBool NumProposers >=Int 0
+
+      andBool Quorum <=Int NumBoardMembers
+      andBool (NumBoardMembers +Int NumProposers >Int 0)
+
+      andBool NumBoardMembers ==Int countValues(UserIdToRole, BoardMember)
+      andBool NumProposers ==Int countValues(UserIdToRole, Proposer)
+      */
+      andBool valuesAreOfType(AddressToUserId, rUsize)
+      andBool valuesAreKResult(AddressToUserId)
+      andBool valuesAreNotEmpty(AddressToUserId, rUsize)
+      andBool unusedIdsInMapValues(add(UNumUsers, u(1)), AddressToUserId, -1)
+
+      andBool valuesAreOfType(UserIdToRole, rUserRole)
+      andBool valuesAreKResult(UserIdToRole)
+      andBool valuesAreNotEmpty(UserIdToRole, rUserRole)
+      andBool unusedIdsInMapKeys(add(UNumUsers, u(1)), keysMap(UserIdToRole), u(-1))
+
+      andBool allValuesBecomeKeys(UserIdToAddress, AddressToUserId)
+
+      andBool NumUsers >=Int 0 // TODO: Strict >?
+      andBool NumBoardMembers >=Int 0
+      // +
+      andBool NumProposers >=Int 0
+
+      andBool Quorum <=Int NumBoardMembers
+      andBool (NumBoardMembers +Int NumProposers >Int 0)
+
+      andBool NumBoardMembers ==Int countValues(UserIdToRole, BoardMember)
+      andBool NumProposers ==Int countValues(UserIdToRole, Proposer)
+      // -
+  rule performInvariant(
+          u(NumUsers:Int) #as UNumUsers:Usize,
+          UserIdToAddress:Map,
+          AddressToUserId:Map,
+          u(NumBoardMembers:Int),
+          u(NumProposers:Int),
+          UserIdToRole:Map,
+          u(Quorum:Int),
+          Expand:Int)
+    => true
+      andBool valuesAreOfType(AddressToUserId, rUsize)
+      andBool valuesAreKResult(AddressToUserId)
+      andBool valuesAreNotEmpty(AddressToUserId, rUsize)
+      andBool unusedIdsInMapValues(add(UNumUsers, u(1)), AddressToUserId, Expand)
+
+      andBool valuesAreOfType(UserIdToRole, rUserRole)
+      andBool valuesAreKResult(UserIdToRole)
+      andBool valuesAreNotEmpty(UserIdToRole, rUserRole)
+      andBool unusedIdsInMapKeys(add(UNumUsers, u(1)), keysMap(UserIdToRole), u(Expand))
+
+      andBool allValuesBecomeKeys(UserIdToAddress, AddressToUserId)
+
+      andBool NumUsers >=Int 0 // TODO: Strict >?
+      andBool NumBoardMembers >=Int 0
+      andBool NumProposers >=Int 0
+
+      andBool Quorum <=Int NumBoardMembers
+      andBool (NumBoardMembers +Int NumProposers >Int 0)
+
+      andBool NumBoardMembers ==Int countValues(UserIdToRole, BoardMember)
+      andBool NumProposers ==Int countValues(UserIdToRole, Proposer)
+
 
   rule performLhs(
           Action:Action,

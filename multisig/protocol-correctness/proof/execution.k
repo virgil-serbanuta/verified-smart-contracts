@@ -119,45 +119,6 @@ module EXECUTION-HELPERS
     [simplification]
 
   rule X:Int -Int X:Int => 0  [simplification]
-  // rule false andBool _:Bool => false  [simplification]
-  // rule true andBool X:Bool => X  [simplification]
-  // rule _:Bool andBool false => false  [simplification]
-  // rule X:Bool andBool true => X  [simplification]
-
-  // rule {((X:KItem |-> Vx:KItem Mx:Map) #as _:Map) #Equals ((Y:KItem |-> Vy:KItem My:Map) #as _:Map)}
-  //       =>
-  //           ({X #Equals Y} #And {Vx #Equals Vy} #And {Mx #Equals My})
-  //           #Or (
-  //                 (#Not ({X #Equals Y}))
-  //                 #And ({My #Equals (X |-> Vx ?M)}
-  //                         #And {Mx #Equals (Y |-> Vy ?M)}
-  //                       )
-  //               )
-  //   [simplification]
-
-  /*
-  syntax KItem ::= "iCallGetUserId"
-
-  syntax Bool ::= isCallGetUserId(KItem)  [function, functional]
-  rule isCallGetUserId(call(getUserId(_))) => true
-  rule isCallGetUserId(_) => false  [owise]
-
-  // Does not split properly, leaves a remainder
-  rule  <k> call(getUserId(A:Address)) ... </k>
-        <caller-address> B:Address </caller-address>
-        <last-instrumented> .K => iCallGetUserId </last-instrumented>
-    requires A ==K B
-    [priority(10)]
-  rule  <k> call(getUserId(A:Address)) ... </k>
-        <caller-address> B:Address </caller-address>
-        <last-instrumented> .K => iCallGetUserId </last-instrumented>
-    requires notBool (A ==K B)
-    [priority(10)]
-  rule  <k> X:KItem ... </k>
-        <last-instrumented> iCallGetUserId => .K </last-instrumented>
-    requires notBool isCallGetUserId(X)
-    [priority(10)]
-  */
 
   // expand is a stupid trick used to control symbolic function application.
   syntax Bool ::= unusedIdsInMapKeys(lastIndex:Usize, Map, expand:Usize)  [function, functional]
@@ -209,11 +170,24 @@ module EXECUTION-HELPERS
     [simplification, label(xyzzye)]
 
 
-  syntax Bool ::= unusedIdsInMapValues(lastIndex:Usize, Map)  [function, functional]
-  rule unusedIdsInMapValues(_, .Map) => true
-  rule unusedIdsInMapValues(u(LastIndex), K:KItem |-> Value M:Map)
-      => unusedIdsInMapValues(u(LastIndex), M)
+  syntax Bool ::= unusedIdsInMapValues(lastIndex:Usize, Map, expand:Int)  [function, functional]
+  rule unusedIdsInMapValues(_, .Map, _) => true
+  rule unusedIdsInMapValues(u(LastIndex), K:KItem |-> Value M:Map, E:Int)
+      => unusedIdsInMapValues(u(LastIndex), M, E)
       andBool LastIndex >Int usizeToInt(Value)
+    [simplification]
+
+
+  rule unusedIdsInMapValues(LastIndex:Usize, M:Map, E:Int)
+      => unusedIdsInMapValues(LastIndex, M, 0)
+    requires E >Int 0
+  rule unusedIdsInMapValues(LastIndex:Usize, M:Map, -1)
+      => true
+    requires unusedIdsInMapValues(sub(LastIndex, u(1)), M, 0)
+    [simplification]
+  rule unusedIdsInMapValues(LastIndex:Usize, M:Map, -1)
+      => true
+    requires unusedIdsInMapValues(LastIndex, M, 0)
     [simplification]
 
 
@@ -222,6 +196,18 @@ module EXECUTION-HELPERS
     [simplification]
   rule X:KItem in_keys(keysMap(M:Map)) => X in_keys(M)
     [simplification]
+
+  syntax Int ::= countValues(Map, KItem)  [function, functional]
+  rule countValues(.Map, _) => 0
+  rule countValues((_ |-> V) M:Map, V:KItem) => 1 +Int countValues(M, V)
+    [simplification]
+  rule countValues((_ |-> U) M:Map, V:KItem) => countValues(M, V)
+    requires notBool (U ==K V)
+    [simplification]
+
+  rule 0 <=Int countValues(_, _) => true  [simplification, smt-lemma]
+  rule countValues(_, _) >=Int 0 => true  [simplification]
+  rule countValues(_, _) +Int 1 >=Int 0 => true  [simplification]
 
 endmodule
 
