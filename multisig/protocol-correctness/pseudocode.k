@@ -867,9 +867,7 @@ module PSEUDOCODE-FUNCTIONS
   rule call(performActionFromId(ActionId:Usize))
         => runPseudoCode(
               action = getActionData(ActionId);
-              clearAction(ActionId);
               performAction(action);
-
         )
 
   rule call(performAction(Nothing)) => evaluate(void)
