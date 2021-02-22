@@ -965,7 +965,10 @@ module PSEUDOCODE-FUNCTIONS
 
           if (old_role == BoardMember) {
             if (!(NewRole == BoardMember)) {
-              setNumBoardMembers(getNumBoardMembers() - u(1));
+              // TODO: This is not implemented yet in the rust code.
+              new_board_members = getNumBoardMembers() - u(1);
+              require(getQuorum() <= new_board_members);
+              setNumBoardMembers(new_board_members);
             }
           } else {
             if (NewRole == BoardMember) {
