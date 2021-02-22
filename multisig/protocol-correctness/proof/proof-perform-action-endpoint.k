@@ -16,26 +16,14 @@ module PROOF-PERFORM-ACTION-ENDPOINT
   imports EXECUTION
   imports PSEUDOCODE
 
-  imports TRUSTED-PERFORM-ADD-BOARD-MEMBER
-  imports TRUSTED-PERFORM-ADD-PROPOSER
+  imports TRUSTED-PERFORM-ADD-PROPOSER  // +
   imports TRUSTED-PERFORM-CHANGE-QUORUM
   imports TRUSTED-PERFORM-NOTHING
-  imports TRUSTED-PERFORM-REMOVE-USER-1
-  imports TRUSTED-PERFORM-REMOVE-USER-2
-  imports TRUSTED-PERFORM-REMOVE-USER-3
-  imports TRUSTED-PERFORM-REMOVE-USER-4
   imports TRUSTED-PERFORM-REMOVE-USER-5
   imports TRUSTED-PERFORM-REMOVE-USER-6
-  imports TRUSTED-PERFORM-S-C-CALL
-  imports TRUSTED-PERFORM-S-C-DEPLOY
-  imports TRUSTED-PERFORM-SEND-EGLD
 
   claim <T><TT>
-          <k> runExternalCalls(
-                  (   from _:Address run performActionEndpoint(ActionId:Usize);
-                      EC:ExternalCommands
-                  )
-              )
+          <k> runInstruction(performActionFromId(ActionId:Usize);) ~> K:K
           </k>
           invariantState(
               NumUsers:Usize,
@@ -51,7 +39,7 @@ module PROOF-PERFORM-ACTION-ENDPOINT
         </TT></T>
       =>
         <T><TT>
-          <k> runExternalCalls(EC) </k>
+          <k> K </k>
           invariantState(
               ?NumUsers1:Usize,
               ?UserIdToAddress1:Map,
