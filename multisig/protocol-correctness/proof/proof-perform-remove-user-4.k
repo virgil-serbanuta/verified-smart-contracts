@@ -14,7 +14,7 @@ module TRUSTED-PERFORM-REMOVE-USER-4
             (UserId |-> UserRole:KItem _UserIdToRole:Map) #as UserIdToRole:Map,
             u(Quorum:Int),
             ActionState:ActionStateCell,
-            .List, // TODO: Stack:List,
+            Stack:List,
             ExternalCallEnv:ExternalCallEnvCell)
       </T>
       =>
@@ -31,7 +31,7 @@ module TRUSTED-PERFORM-REMOVE-USER-4
             u(Quorum:Int),
             ActionState,
             ?_Variables:Map,
-            .List, // TODO: Stack:List,
+            Stack:List,
             ExternalCallEnv)
       </T>
     requires performRequires(

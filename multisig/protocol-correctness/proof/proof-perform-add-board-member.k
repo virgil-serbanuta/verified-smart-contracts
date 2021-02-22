@@ -14,7 +14,7 @@ module TRUSTED-PERFORM-ADD-BOARD-MEMBER
             UserIdToRole:Map,
             Quorum:Usize,
             ActionState:ActionStateCell,
-            .List, // TODO: Stack:List,
+            Stack:List,
             ExternalCallEnv:ExternalCallEnvCell)
       </T>
       =>
@@ -31,7 +31,7 @@ module TRUSTED-PERFORM-ADD-BOARD-MEMBER
             Quorum,
             ActionState,
             ?_Variables:Map,
-            .List, // TODO: Stack:List,
+            Stack:List,
             ExternalCallEnv)
       </T>
     requires performRequires(

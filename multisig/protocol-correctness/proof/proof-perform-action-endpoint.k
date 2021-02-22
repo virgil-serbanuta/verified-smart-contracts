@@ -1,6 +1,34 @@
+require "proof-perform-add-board-member.k"
+require "proof-perform-add-proposer.k"
+require "proof-perform-change-quorum.k"
+require "proof-perform-nothing.k"
+require "proof-perform-remove-user-1.k"
+require "proof-perform-remove-user-2.k"
+require "proof-perform-remove-user-3.k"
+require "proof-perform-remove-user-4.k"
+require "proof-perform-remove-user-5.k"
+require "proof-perform-remove-user-6.k"
+require "proof-perform-s-c-call.k"
+require "proof-perform-s-c-deploy.k"
+require "proof-perform-send-egld.k"
+
 module PROOF-PERFORM-ACTION-ENDPOINT
   imports EXECUTION
   imports PSEUDOCODE
+
+  imports TRUSTED-PERFORM-ADD-BOARD-MEMBER
+  imports TRUSTED-PERFORM-ADD-PROPOSER
+  imports TRUSTED-PERFORM-CHANGE-QUORUM
+  imports TRUSTED-PERFORM-NOTHING
+  imports TRUSTED-PERFORM-REMOVE-USER-1
+  imports TRUSTED-PERFORM-REMOVE-USER-2
+  imports TRUSTED-PERFORM-REMOVE-USER-3
+  imports TRUSTED-PERFORM-REMOVE-USER-4
+  imports TRUSTED-PERFORM-REMOVE-USER-5
+  imports TRUSTED-PERFORM-REMOVE-USER-6
+  imports TRUSTED-PERFORM-S-C-CALL
+  imports TRUSTED-PERFORM-S-C-DEPLOY
+  imports TRUSTED-PERFORM-SEND-EGLD
 
   claim <T><TT>
           <k> runExternalCalls(

@@ -14,7 +14,7 @@ module TRUSTED-PERFORM-CHANGE-QUORUM
             UserIdToRole:Map,
             OldQuorum:Usize,
             ActionState:ActionStateCell,
-            .List, // TODO: Stack:List,
+            Stack:List,
             ExternalCallEnv:ExternalCallEnvCell)
       </T>
       =>
@@ -31,7 +31,7 @@ module TRUSTED-PERFORM-CHANGE-QUORUM
             u(NewQuorum),
             ActionState,
             ?_Variables:Map,
-            .List, // TODO: Stack:List,
+            Stack:List,
             ExternalCallEnv)
       </T>
     requires performRequires(
@@ -52,6 +52,7 @@ module TRUSTED-PERFORM-CHANGE-QUORUM
             NumProposers,
             UserIdToRole,
             u(NewQuorum))
+    [trusted]
 
   claim 
       <T>

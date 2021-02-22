@@ -18,7 +18,7 @@ module TRUSTED-PERFORM-S-C-DEPLOY
             UserIdToRole:Map,
             Quorum:Usize,
             ActionState:ActionStateCell,
-            .List, // TODO: Stack:List,
+            Stack:List,
             ExternalCallEnv:ExternalCallEnvCell)
       </T>
       =>
@@ -35,7 +35,7 @@ module TRUSTED-PERFORM-S-C-DEPLOY
             Quorum,
             ActionState,
             ?_Variables:Map,
-            .List, // TODO: Stack:List,
+            Stack:List,
             ExternalCallEnv)
       </T>
     requires performRequires(

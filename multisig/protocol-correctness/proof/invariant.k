@@ -79,11 +79,11 @@ module INVARIANT
       u(NumBoardMembers:Int),
       u(NumProposers:Int),
       UserIdToRole:Map,
-      u(_Quorum:Int),
+      u(Quorum:Int),
       ActionLastIndex:Usize,
       ActionData:Map,
       ActionSigners:Map,
-      ExpandActionLastIndex:Usize)
+      u(ExpandActionLastIndex):Usize)
     => true
       andBool notBool u(0) in_keys(UserIdToAddress)
       andBool notBool u(0) in_keys(UserIdToRole)
@@ -94,15 +94,15 @@ module INVARIANT
       andBool valuesAreOfType(AddressToUserId, rUsize)
       andBool valuesAreKResult(AddressToUserId)
       andBool valuesAreNotEmpty(AddressToUserId, rUsize)
-      andBool unusedIdsInMapValues(add(u(NumUsers), u(1)), AddressToUserId, -1)
+      andBool unusedIdsInMapValues(add(u(NumUsers), u(1)), AddressToUserId, ExpandActionLastIndex)
 
       andBool valuesAreOfType(UserIdToRole, rUserRole)
       andBool valuesAreKResult(UserIdToRole)
       andBool valuesAreNotEmpty(UserIdToRole, rUserRole)
-      andBool unusedIdsInMapKeys(add(u(NumUsers), u(1)), keysMap(UserIdToRole), u(-1))
+      andBool unusedIdsInMapKeys(add(u(NumUsers), u(1)), keysMap(UserIdToRole), u(ExpandActionLastIndex))
 
-      andBool unusedIdsInMapKeys(add(ActionLastIndex, u(1)), keysMap(ActionData), ExpandActionLastIndex)
-      andBool unusedIdsInMapKeys(add(ActionLastIndex, u(1)), keysMap(ActionSigners), ExpandActionLastIndex)
+      andBool unusedIdsInMapKeys(add(ActionLastIndex, u(1)), keysMap(ActionData), u(ExpandActionLastIndex))
+      andBool unusedIdsInMapKeys(add(ActionLastIndex, u(1)), keysMap(ActionSigners), u(ExpandActionLastIndex))
       andBool maxMapKey(ActionLastIndex, keysMap(ActionData))
       andBool maxMapKey(ActionLastIndex, keysMap(ActionSigners))
 
@@ -116,8 +116,7 @@ module INVARIANT
       andBool NumBoardMembers >=Int 0
       andBool NumProposers >=Int 0
 
-      // TODO: Uncomment this.
-      // andBool Quorum <=Int NumBoardMembers
+      andBool Quorum <=Int NumBoardMembers
       andBool (NumBoardMembers +Int NumProposers >Int 0)
 
       andBool NumBoardMembers ==Int countMapValues(UserIdToRole, BoardMember)

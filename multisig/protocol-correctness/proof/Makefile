@@ -26,7 +26,11 @@ proofperform.timestamp: ${PROOF_PERFORM_TIMESTAMPS} execution.timestamp
 
 proof-%.timestamp: proof-%.k execution.timestamp
 	@echo "Proving $*..."
+	@cat /proc/uptime | sed 's/\s.*//' > proof-$*.duration.temp
 	@((kprove proof-$*.k $(BACKEND_COMMAND) > proof-$*.out 2>&1) && echo "$* done") || (cat proof-$*.out; echo "$* failed"; echo "$*" >> failures; false)
+	@cat /proc/uptime | sed 's/\s.*//' >> proof-$*.duration.temp
+	@./compute-duration.py proof-$*.duration.temp > proof-$*.duration
+	@rm proof-$*.duration.temp
 	@touch proof-$*.timestamp
 
 proof-%.debugger: proof-%.k execution.timestamp
@@ -45,3 +49,5 @@ clean:
 	-rm -r kore-*.tar.gz
 	-rm proof-*.out
 	-rm failures
+	-rm *.duration
+	-rm *.duration.tmp
