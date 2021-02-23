@@ -874,32 +874,27 @@ module PSEUDOCODE-FUNCTIONS
 
   rule call(performAction(AddBoardMember(BoardMemberAddress:Address)))
         => runPseudoCode(
-              changeUserRole(BoardMemberAddress, BoardMember);
+              void;
         )
 
   rule call(performAction(AddProposer(ProposerAddress:Address)))
         => runPseudoCode(
-              changeUserRole(ProposerAddress, Proposer);
+              void;
         )
 
   rule call(performAction(RemoveUser(UserAddress:Address)))
         => runPseudoCode(
-              changeUserRole(UserAddress, None);
-              num_board_members = getNumBoardMembers();
-              num_proposers = getNumProposers();
-              require(num_board_members + num_proposers > u(0));
-              require(getQuorum() <= num_board_members);
+              void;
         )
 
   rule call(performAction(ChangeQuorum(NewQuorum)))
         => runPseudoCode(
-              require(NewQuorum <= getNumBoardMembers());
-              setQuorum(NewQuorum);
+              void;
         )
 
   rule call(performAction(SendEgld(To:Address, Amount:BigUint, Data:BoxedBytes)))
         => runPseudoCode(
-              sendTx(To, Amount, Data);
+              void;
         )
 
   rule call(performAction(SCDeploy(
@@ -908,15 +903,12 @@ module PSEUDOCODE-FUNCTIONS
             CodeMetadata:CodeMetadata,
             Arguments:ExpressionList)))
         => runPseudoCode(
-              gas_left = getGasLeft();
-              new_address = deployContract(gas_left, Amount, Code, CodeMetadata, Arguments);
-              [new_address, .];
               void;
         )
 
   rule call(performAction(SCCall(To:Address, Amount:BigUint, Function:BoxedBytes, [Arguments:ExpressionCSV])))
         => runPseudoCode(
-              asyncCall(To, Amount, [Function , Arguments]);
+              void;
         )
 
   rule call(clearAction(ActionId:Usize))
