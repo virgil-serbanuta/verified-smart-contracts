@@ -870,47 +870,6 @@ module PSEUDOCODE-FUNCTIONS
               performAction(action);
         )
 
-  rule call(performAction(Nothing)) => evaluate(void)
-
-  rule call(performAction(AddBoardMember(BoardMemberAddress:Address)))
-        => runPseudoCode(
-              void;
-        )
-
-  rule call(performAction(AddProposer(ProposerAddress:Address)))
-        => runPseudoCode(
-              void;
-        )
-
-  rule call(performAction(RemoveUser(UserAddress:Address)))
-        => runPseudoCode(
-              void;
-        )
-
-  rule call(performAction(ChangeQuorum(NewQuorum)))
-        => runPseudoCode(
-              void;
-        )
-
-  rule call(performAction(SendEgld(To:Address, Amount:BigUint, Data:BoxedBytes)))
-        => runPseudoCode(
-              void;
-        )
-
-  rule call(performAction(SCDeploy(
-            Amount:BigUint,
-            Code:BoxedBytes,
-            CodeMetadata:CodeMetadata,
-            Arguments:ExpressionList)))
-        => runPseudoCode(
-              void;
-        )
-
-  rule call(performAction(SCCall(To:Address, Amount:BigUint, Function:BoxedBytes, [Arguments:ExpressionCSV])))
-        => runPseudoCode(
-              void;
-        )
-
   rule call(clearAction(ActionId:Usize))
         => runPseudoCode(
               setActionData(ActionId, Nothing);
