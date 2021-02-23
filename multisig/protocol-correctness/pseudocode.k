@@ -587,46 +587,6 @@ module PSEUDOCODE-FUNCTIONS
               performAction(action);
         )
 
-  rule call(clearAction(ActionId:Usize))
-        => runPseudoCode(
-              setActionData(ActionId, Nothing);
-              setActionSignerIDs(ActionId, [.]);
-        )
-
-  rule call(pushList([Es:ExpressionCSV], E:Expression))
-        => [#pushList(Es, E)]
-
-  syntax ExpressionCSV ::= #pushList(ExpressionCSV, Expression)  [function, functional]
-
-  rule #pushList(., E:Expression)
-        => E, .
-  rule #pushList(E:Expression , Es:ExpressionCSV, E2:Expression)
-        => prepend(#pushList(Es, E2), E)
-
-  syntax ExpressionCSV ::= prepend(ExpressionCSV, Expression)  [function, functional]
-  rule prepend(Es:ExpressionCSV, E:Expression) => E , Es
-
-  rule call(sendTx(_To:Address, _Amount:BigUint, _Data:BoxedBytes))
-        => evaluate(void)
-
-  rule call(getGasLeft()) => evaluate(u(-1))
-
-  rule call(deployContract(
-            _GasLeft:Usize,
-            _Amount:BigUint,
-            _Code:BoxedBytes,
-            _:CodeMetadata,
-            Arguments:ExpressionList))
-        => evaluate(void)
-    requires isKResult(Arguments)
-
-  rule call(asyncCall(
-            _:Address,
-            _Amount:BigUint,
-            Arguments:ExpressionList))
-        => evaluate(void)
-    requires isKResult(Arguments)
-
 endmodule
 
 module MAYBE
