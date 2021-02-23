@@ -642,7 +642,6 @@ module PSEUDOCODE-CONFIGURATION
           <multisig-state>
             <users>
               <num-users>u(0)</num-users>
-              <user-id-to-address>.Map</user-id-to-address>
               <address-to-user-id>.Map</address-to-user-id>
             </users>
             <action-state>

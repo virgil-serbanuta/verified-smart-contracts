@@ -50,7 +50,6 @@ module PERFORM-PARTS
             <multisig-state>
               <users>
                 <num-users>NumUsers</num-users>
-                <user-id-to-address>UserIdToAddress</user-id-to-address>
                 <address-to-user-id>AddressToUserId</address-to-user-id>
               </users>
               ActionState
@@ -84,7 +83,6 @@ module PERFORM-PARTS
             <multisig-state>
               <users>
                 <num-users>NumUsers</num-users>
-                <user-id-to-address>UserIdToAddress</user-id-to-address>
                 <address-to-user-id>AddressToUserId</address-to-user-id>
               </users>
               ActionState
