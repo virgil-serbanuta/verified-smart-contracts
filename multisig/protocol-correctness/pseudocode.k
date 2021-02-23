@@ -632,14 +632,6 @@ module MAP-UTILS
     ensures false
     [owise]
 
-  /*
-  rule X:KItem in_keys((X |-> _:KItem _:Map) #as _:Map) => true
-    [simplification]
-  rule X:KItem in_keys((Y:KItem |-> _:KItem M:Map) #as _:Map)
-        => X in_keys(M)
-    requires notBool (X ==K Y)
-    [simplification]
-  */
   rule X:KItem in_keys((Y:KItem |-> _:KItem M:Map) #as _:Map)
         => X ==K Y orBool X in_keys(M)
     [simplification]
@@ -692,39 +684,4 @@ module PSEUDOCODE-CONFIGURATION
         </state>
     </TT>
   </T>
-
-  syntax StateCell ::= "initialState"   [function]
-  rule initialState =>
-      <state>
-        <multisig-state>
-          <users>
-            <num-users>u(0)</num-users>
-            <user-id-to-address>.Map</user-id-to-address>
-            <address-to-user-id>.Map</address-to-user-id>
-          </users>
-          <board-state>
-            <num-board-members>u(0)</num-board-members>
-            <num-proposers>u(0)</num-proposers>
-            <user-roles>.Map</user-roles>
-            <quorum>u(0)</quorum>
-          </board-state>
-          <action-state>
-            <action-last-index>u(0)</action-last-index>
-            <actions>
-              <action-data>.Map</action-data>
-              <action-signers>.Map</action-signers>
-            </actions>
-          </action-state>
-        </multisig-state>
-        <pseudocode-state>
-          <variables>.Map</variables>
-          <stack> .List </stack>
-        </pseudocode-state>
-        <external-call-env>
-          <caller-address>uninitialized</caller-address>
-        </external-call-env>
-        <proof-state>
-          <last-instrumented> .K </last-instrumented>
-        </proof-state>
-      </state>
 endmodule
