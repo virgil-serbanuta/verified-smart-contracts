@@ -575,60 +575,6 @@ module PSEUDOCODE-FUNCTIONS
   rule  <k> call(setNumBoardMembers(Members:Usize)) => void ... </k>
         <num-board-members>_ => Members</num-board-members>
 
-  rule  <k> call(setNumProposers(Proposers:Usize)) => void ... </k>
-        <num-proposers>_ => Proposers</num-proposers>
-
-  rule  <k> (.K => nullableMapSet(E, I, M, rUsize)) ~> call(setUserId(E:Expression, I:Usize)) ...</k>
-        <address-to-user-id> M:Map </address-to-user-id>
-  rule  <k> (M:Map ~> call(setUserId(_:Expression, _:Usize))) => void ... </k>
-        <address-to-user-id> _:Map => M </address-to-user-id>
-
-  rule  <k> (.K => mapSet(I, E, M)) ~> call(setUserAddress(I:Usize, E:Expression)) ...</k>
-        <user-id-to-address> M:Map </user-id-to-address>
-  rule  <k> (M:Map ~> call(setUserAddress(_:Usize, _:Expression))) => void ... </k>
-        <user-id-to-address> _:Map => M </user-id-to-address>
-
-  rule  <k> (.K => nullableMapSet(I, R, M, rUserRole)) ~> call(setUserIdToRole(I:Usize, R:UserRole)) ... </k>
-        <user-roles> M:Map </user-roles>
-  rule  <k> (M:Map ~> call(setUserIdToRole(_:Usize, _:UserRole))) => void ... </k>
-        <user-roles> _:Map => M </user-roles>
-
-  rule  <k> call(getCaller()) => A ... </k>
-        <caller-address> A:Address </caller-address>
-
-  rule  <k> call(getQuorum()) => Quorum ... </k>
-        <quorum> Quorum:Usize </quorum>
-
-  rule  <k> call(getUserId(A:Expression))
-            =>  cast(A, rAddress)
-                ~> removeValue
-                ~> nullableMapLookup(A, M, rUsize)
-        ... </k>
-        <address-to-user-id> M:Map </address-to-user-id>
-
-  rule  <k> call(getUserIdToRole(I:Usize)) => nullableMapLookup(I, M, rUserRole) ... </k>
-        <user-roles> M:Map </user-roles>
-
-  rule  <k> call(getActionLastIndex()) => Index ... </k>
-        <action-last-index> Index:Usize </action-last-index>
-
-  rule  <k> call(setActionLastIndex(Index:Usize)) => void ... </k>
-        <action-last-index> _ => Index </action-last-index>
-
-  rule  <k> call(getNumUsers()) => Users ... </k>
-        <num-users> Users:Usize </num-users>
-
-  rule  <k> call(getNumBoardMembers()) => Members ... </k>
-        <num-board-members> Members:Usize </num-board-members>
-
-  rule  <k> call(getNumProposers()) => Proposers ... </k>
-        <num-proposers> Proposers:Usize </num-proposers>
-
-  rule  <k> (.K => nullableMapSet(ActionId, A, M, rAction)) ~> call(setActionData(ActionId:Usize, A:Action)) ... </k>
-        <action-data> M:Map </action-data>
-  rule  <k> (M:Map ~> call(setActionData(_:Usize, _:Action))) => void ... </k>
-        <action-data> _:Map => M </action-data>
-
   rule  <k> call(getActionData(ActionId:Usize)) => nullableMapLookup(ActionId, M, rAction) ... </k>
         <action-data> M:Map </action-data>
 
