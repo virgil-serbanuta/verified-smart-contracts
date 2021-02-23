@@ -544,7 +544,7 @@ module PSEUDOCODE-FUNCTIONS
   context runInstruction(ok({HOLE:Expression => evaluate(HOLE)}:>Expression);)
   rule runInstruction(ok(E:Expression);) => E requires isKResult(E)
 
-  rule  <k> call(getActionData(ActionId:Usize)) => nullableMapLookup(ActionId, M, rAction) ... </k>
+  rule  <k> call(getActionData(ActionId:Usize)) => void ... </k>
         <action-data> M:Map </action-data>
 
   rule  <k> (.K => call(getActionData(ActionId))) ~> call(isEmptyActionData(ActionId:Usize)) ... </k>
