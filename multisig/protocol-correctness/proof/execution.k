@@ -28,22 +28,6 @@ module EXECUTION-HELPERS
   syntax Int ::= usizeToInt(Usize)  [function, functional]
   rule usizeToInt(u(V:Int)) => V
 
-  syntax Bool ::= valuesAreKResult(Map)  [function, functional]
-  rule valuesAreKResult(.Map) => true
-  rule valuesAreKResult(_ |-> V M:Map)
-      => isKResult(V) andBool valuesAreKResult(M)
-  rule valuesAreKResult(_ |-> V M:Map)
-      => isKResult(V) andBool valuesAreKResult(M)
-    [simplification]
-
-  syntax Bool ::= valuesAreOfType(Map, ReflectionType)  [function, functional]
-  rule valuesAreOfType(.Map, _:ReflectionType) => true
-  rule valuesAreOfType(_ |-> V M:Map, T:ReflectionType)
-      => valueOfType(V, T) andBool valuesAreOfType(M, T)
-  rule valuesAreOfType(_ |-> V M:Map, T:ReflectionType)
-      => valueOfType(V, T) andBool valuesAreOfType(M, T)
-    [simplification]
-
   syntax Int ::= countMapValues(Map, KItem)  [function, functional, smtlib(countMapValues)]
 
   rule 0 <=Int countMapValues(_, _) => true  [simplification, smt-lemma]
