@@ -33,12 +33,6 @@ module INVARIANT
             <user-id-to-address>UserIdToAddress</user-id-to-address>
             <address-to-user-id>AddressToUserId</address-to-user-id>
           </users>
-          <board-state>
-            <num-board-members>NumBoardMembers</num-board-members>
-            <num-proposers>NumProposers</num-proposers>
-            <user-roles>UserIdToRole</user-roles>
-            <quorum>Quorum</quorum>
-          </board-state>
           <action-state>
             <action-last-index>ActionLastIndex</action-last-index>
             <actions>

@@ -656,12 +656,6 @@ module PSEUDOCODE-CONFIGURATION
               <user-id-to-address>.Map</user-id-to-address>
               <address-to-user-id>.Map</address-to-user-id>
             </users>
-            <board-state>
-              <num-board-members>u(0)</num-board-members>
-              <num-proposers>u(0)</num-proposers>
-              <user-roles>.Map</user-roles>
-              <quorum>u(0)</quorum>
-            </board-state>
             <action-state>
               <action-last-index>u(0)</action-last-index>
               <actions>

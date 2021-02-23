@@ -56,12 +56,6 @@ module PERFORM-PARTS
                 <user-id-to-address>UserIdToAddress</user-id-to-address>
                 <address-to-user-id>AddressToUserId</address-to-user-id>
               </users>
-              <board-state>
-                <num-board-members>NumBoardMembers</num-board-members>
-                <num-proposers>NumProposers</num-proposers>
-                <user-roles>UserIdToRole</user-roles>
-                <quorum>Quorum</quorum>
-              </board-state>
               ActionState
             </multisig-state>
             <pseudocode-state>
@@ -101,12 +95,6 @@ module PERFORM-PARTS
                 <user-id-to-address>UserIdToAddress</user-id-to-address>
                 <address-to-user-id>AddressToUserId</address-to-user-id>
               </users>
-              <board-state>
-                <num-board-members>NumBoardMembers</num-board-members>
-                <num-proposers>NumProposers</num-proposers>
-                <user-roles>UserIdToRole</user-roles>
-                <quorum>Quorum</quorum>
-              </board-state>
               ActionState
             </multisig-state>
             <pseudocode-state>
