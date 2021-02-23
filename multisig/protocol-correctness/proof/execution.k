@@ -44,38 +44,6 @@ module EXECUTION-HELPERS
       => valueOfType(V, T) andBool valuesAreOfType(M, T)
     [simplification]
 
-
-  syntax Bool ::= unusedIdsInMapValues(lastIndex:Usize, Map, expand:Int)  [function, functional]
-  rule unusedIdsInMapValues(_, .Map, _) => true
-  rule unusedIdsInMapValues(u(LastIndex), _:KItem |-> Value M:Map, E:Int)
-      => unusedIdsInMapValues(u(LastIndex), M, E)
-      andBool LastIndex >Int usizeToInt(Value)
-    [simplification(10)]
-  rule unusedIdsInMapValues(LastIndex:Usize, M:Map, E:Int)
-      => unusedIdsInMapValues(LastIndex, M, 0)
-    requires E >Int 0
-
-  rule unusedIdsInMapValues(u(LastIndex +Int 3), M:Map, _:Int)
-      => true
-    requires unusedIdsInMapValues(u(LastIndex +Int 2), M, 0)
-    [simplification]
-
-  rule unusedIdsInMapValues(LastIndex:Usize, M:Map, -1)
-      => true
-    requires unusedIdsInMapValues(sub(LastIndex, u(1)), M, 0)
-    [simplification]
-  rule unusedIdsInMapValues(LastIndex:Usize, M:Map, -1)
-      => true
-    requires unusedIdsInMapValues(LastIndex, M, 0)
-    [simplification]
-
-  syntax Map ::= keysMap(Map)  [function, functional]
-  rule keysMap(.Map) => .Map
-  rule keysMap(K:KItem |-> _:KItem M:Map) => K |-> 0 keysMap(M)
-    [simplification]
-  rule X:KItem in_keys(keysMap(M:Map)) => X in_keys(M)
-    [simplification]
-
   syntax Int ::= countMapValues(Map, KItem)  [function, functional, smtlib(countMapValues)]
   rule countMapValues(.Map, _) => 0
   rule countMapValues((_ |-> V) M:Map, V:KItem) => 1 +Int countMapValues(M, V)
