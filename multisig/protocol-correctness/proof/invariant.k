@@ -34,7 +34,6 @@ module INVARIANT
             <address-to-user-id>AddressToUserId</address-to-user-id>
           </users>
           <action-state>
-            <action-last-index>ActionLastIndex</action-last-index>
             <actions>
               <action-data>ActionData</action-data>
               <action-signers>ActionSigners</action-signers>

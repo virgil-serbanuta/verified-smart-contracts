@@ -657,7 +657,6 @@ module PSEUDOCODE-CONFIGURATION
               <address-to-user-id>.Map</address-to-user-id>
             </users>
             <action-state>
-              <action-last-index>u(0)</action-last-index>
               <actions>
                 <action-data>.Map</action-data>
                 <action-signers>.Map</action-signers>
