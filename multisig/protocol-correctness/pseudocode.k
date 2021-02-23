@@ -321,9 +321,6 @@ module PSEUDOCODE-MEMORY
 
   context runInstruction(_:Variable = {HOLE => evaluate(HOLE)}:>Expression;)
 
-  rule  <k> (.K => mapSet(V, E, M)) ~> runInstruction(V:Variable = E:Expression;) ...</k>
-        <variables> M:Map </variables>
-    requires isKResult(E)
   rule <k> (M:Map ~> runInstruction(_ = _;)) => evaluate(void) ... </k>
         <variables> _:Map => M </variables>
 
@@ -653,14 +650,6 @@ module PSEUDOCODE-MAP-UTILS
 
   rule nullableMapLookup(K:KItem, M:Map, T:ReflectionType)
         => cast(orElse(mapLookup(K, M), defaultValue(T)), T)
-
-  syntax KItem ::= nullableMapSet(key:KItem, value:KItem, Map, ReflectionType)
-  rule nullableMapSet(Key:KItem, Value:KItem, M:Map, T:ReflectionType)
-        => mapDelete(Key, M)
-    requires Value ==K defaultValue(T)
-  rule nullableMapSet(Key:KItem, Value:KItem, M:Map, T:ReflectionType)
-        => mapSet(Key, Value, M)
-    requires notBool (Value ==K defaultValue(T))
 
 endmodule
 
