@@ -18,6 +18,9 @@ BACKEND_COMMAND = "--haskell-backend-command /home/virgil/runtime-verification/k
 proof.timestamp: ${PROOF_TIMESTAMPS} execution.timestamp
 	@touch proof.timestamp
 
+short-proofs.timestamp: proof-init-loop.timestamp proof-count-can-sign.timestamp proof-init.timestamp proof-listlen.timestamp proof-perform-add-proposer-1.timestamp  proof-perform-add-proposer-2.timestamp  proof-perform-add-proposer-3.timestamp  proof-perform-change-quorum.timestamp proof-perform-nothing.timestamp proof-perform-remove-user-1.timestamp  proof-perform-remove-user-2.timestamp proof-perform-remove-user-5.timestamp proof-perform-s-c-call.timestamp proof-perform-s-c-deploy.timestamp proof-perform-send-egld.timestamp execution.timestamp
+	@touch short-proof.timestamp
+
 proof0.timestamp: ${PROOF0_TIMESTAMPS} execution.timestamp
 	@touch proof0.timestamp
 
