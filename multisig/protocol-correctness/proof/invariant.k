@@ -43,9 +43,6 @@ module INVARIANT
           <variables>.Map</variables>
           <stack> .List </stack>
         </pseudocode-state>
-        <proof-state>
-          <last-instrumented> .K </last-instrumented>
-        </proof-state>
       </state>
 
 endmodule

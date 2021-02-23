@@ -61,9 +61,6 @@ module PERFORM-PARTS
               </variables>
               <stack> Stack </stack>
             </pseudocode-state>
-            <proof-state>
-              <last-instrumented> .K </last-instrumented>
-            </proof-state>
           </state>
         </TT>
 
@@ -98,9 +95,6 @@ module PERFORM-PARTS
               </variables>
               <stack> Stack </stack>
             </pseudocode-state>
-            <proof-state>
-              <last-instrumented> .K </last-instrumented>
-            </proof-state>
           </state>
         </TT>
 

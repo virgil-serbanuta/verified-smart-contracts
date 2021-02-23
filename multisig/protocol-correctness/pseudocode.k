@@ -506,7 +506,6 @@ module PSEUDOCODE-FUNCTIONS
             <variables> V:Map => .Map </variables>
             <stack> (.List => ListItem(stackEntry(S, V))) ... </stack>
           </pseudocode-state>
-          _:ProofStateCell
         </state>
 
   rule  <k> (evaluate(E:Expression) => E) ~> popContext ... </k>
@@ -527,7 +526,6 @@ module PSEUDOCODE-FUNCTIONS
             <variables> _ => V </variables>
             <stack> (ListItem(stackEntry(S:MultisigStateCell, V:Map)) => .List) ... </stack>
           </pseudocode-state>
-          _:ProofStateCell
         </state>
 
   rule <k> error ~> (evaluateReturnValue => .K) ... </k>
@@ -657,10 +655,6 @@ module PSEUDOCODE-CONFIGURATION
             <variables>.Map</variables>
             <stack> .List </stack>
           </pseudocode-state>
-
-          <proof-state>
-            <last-instrumented> .K </last-instrumented>
-          </proof-state>
         </state>
     </TT>
   </T>
