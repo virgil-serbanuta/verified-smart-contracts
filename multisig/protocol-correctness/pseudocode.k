@@ -668,32 +668,6 @@ module PSEUDOCODE-FUNCTIONS
   rule  #listFind([X:Usize, _:ExpressionCSV], X) => u(0)
   rule  #listFind([_:Usize, Es:ExpressionCSV], X:Usize) => add(#listFind([Es], X), u(1))  [owise]
 
-  /*
-  rule  call(listSwapRemove([_:Expression , L:ExpressionCSV], u(0))) => lastToStart(., L)
-  rule  call(listSwapRemove([E:Expression , L:ExpressionCSV], u(Index:Int)))
-        => call(listSwapRemove([L], u(Index -Int 1))) ~> pushListFreezer(E)
-    requires Index >Int 0
-
-  syntax KItem ::= pushListFreezer(Expression)
-  rule  [L:ExpressionCSV] ~> pushListFreezer(E:Expression) => [E , L]
-
-  syntax KItem ::= lastToStart(ExpressionCSV, ExpressionCSV)
-  syntax KItem ::= reverseExpressionCsv(ExpressionCSV, ExpressionCSV)
-
-  rule lastToStart(., .) => [.]
-  rule lastToStart(L1:ExpressionCSV, (E:Expression , L2:ExpressionCSV))
-        => lastToStart((E , L1), L2)
-  rule lastToStart(L1:ExpressionCSV, (E:Expression, .))
-        => reverseExpressionCsv(L1, .) ~> pushListFreezer(E)
-
-  rule reverseExpressionCsv(., L2:ExpressionCSV) => L2
-  rule reverseExpressionCsv((E:Expression , Es:ExpressionCSV), L2:ExpressionCSV) => reverseExpressionCsv(Es, (E , L2))
-  */
-
-  rule  call(listSwapRemove([L:ExpressionCSV], u(I:Int)))
-        => [#listSwapRemove(L, I)]
-        // TODO: require I >= 0
-
   syntax ExpressionCSV ::= #listSwapRemove(ExpressionCSV, Int)  [function, functional]
   rule  #listSwapRemove(_:Expression , Es:ExpressionCSV, 0)
         => lastToStart(., Es)
@@ -725,53 +699,6 @@ module PSEUDOCODE-FUNCTIONS
         => runPseudoCode(
               setActionData(ActionId, Nothing);
               setActionSignerIDs(ActionId, [.]);
-        )
-
-  rule call(changeUserRole(UserAddress:Address, NewRole:UserRole))
-        => runPseudoCode(
-          user_id = getOrCreateUser(UserAddress);
-          old_role = None;
-          if (!(user_id == u(0))) {
-            old_role = getUserIdToRole(user_id);
-          }
-          setUserIdToRole(user_id, NewRole);
-
-          if (old_role == BoardMember) {
-            if (!(NewRole == BoardMember)) {
-              // TODO: This is not implemented yet in the rust code.
-              new_board_members = getNumBoardMembers() - u(1);
-              require(getQuorum() <= new_board_members);
-              setNumBoardMembers(new_board_members);
-            }
-          } else {
-            if (NewRole == BoardMember) {
-              setNumBoardMembers(getNumBoardMembers() + u(1));
-            }
-          }
-
-          if (old_role == Proposer) {
-            if (!(NewRole == Proposer)) {
-              setNumProposers(getNumProposers() - u(1));
-            }
-          } else {
-            if (NewRole == Proposer) {
-              setNumProposers(getNumProposers() + u(1));
-            }
-          }
-        )
-
-  rule call(getOrCreateUser(Address:Address))
-        => runPseudoCode(
-              user_id = getUserId(Address);
-              if (user_id == u(0)) {
-                num_users = getNumUsers();
-                num_users = num_users + u(1);
-                setNumUsers(num_users);
-                user_id = num_users;
-                setUserId(Address, user_id);
-                setUserAddress(user_id, Address);
-              }
-              user_id;
         )
 
   rule call(pushList([Es:ExpressionCSV], E:Expression))
