@@ -85,10 +85,6 @@ module INVARIANT
       ActionSigners:Map,
       u(ExpandActionLastIndex):Usize)
     => true
-
-      andBool valuesAreExpressionListOfUsize(ActionSigners)
-      andBool valuesAreKResult(ActionSigners)
-
       andBool valuesAreOfType(ActionData, rAction)
       andBool valuesAreKResult(ActionData)
 
