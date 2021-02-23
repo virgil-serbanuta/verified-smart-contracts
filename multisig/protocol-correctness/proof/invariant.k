@@ -88,25 +88,4 @@ module INVARIANT
       andBool valuesAreOfType(ActionData, rAction)
       andBool valuesAreKResult(ActionData)
 
-  syntax Bool ::= subset(Map, Map)  [function, functional]
-  rule subset(K:KItem |-> _:KItem M:Map, N:Map)
-      => K in_keys(N) andBool subset(M, N)
-    [simplification]
-  rule subset(M:Map, _:KItem |-> _:KItem N:Map)
-      => true
-    requires subset(M, N)
-    [simplification]
-
-  syntax Bool ::= maxMapKey(lastIndex:Usize, Map)  [function, functional]
-  rule maxMapKey(_:Usize, .Map) => true
-  rule maxMapKey(u(V:Int), u(K:Int) |-> _:KItem M:Map)
-      => (K <=Int V) andBool maxMapKey(u(V), M)
-  rule maxMapKey(u(V:Int), u(K:Int) |-> _:KItem M:Map)
-      => (K <=Int V) andBool maxMapKey(u(V), M)
-    [simplification]
-  rule maxMapKey(u(V:Int +Int 1), M:Map)
-      => true
-    requires maxMapKey(u(V:Int), M:Map)
-    [simplification]
-
 endmodule
