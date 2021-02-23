@@ -481,7 +481,7 @@ module PSEUDOCODE-FUNCTIONS
   imports MAP-UTILS
   imports PSEUDOCODE-COMMON
   imports PSEUDOCODE-CONFIGURATION
-  imports PSEUDOCODE-MAP-UTILS
+  //imports PSEUDOCODE-MAP-UTILS
   imports PSEUDOCODE-SYNTAX
   imports PSEUDOCODE-TYPE-REFLECTION
 
@@ -643,12 +643,6 @@ module MAP-UTILS
   rule X:KItem in_keys((Y:KItem |-> _:KItem M:Map) #as _:Map)
         => X ==K Y orBool X in_keys(M)
     [simplification]
-endmodule
-
-module PSEUDOCODE-MAP-UTILS
-  imports MAP-UTILS
-  imports PSEUDOCODE-TYPE-REFLECTION
-
 endmodule
 
 module PSEUDOCODE-CONFIGURATION
