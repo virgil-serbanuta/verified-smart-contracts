@@ -1,18 +1,6 @@
-require "proof-perform-add-proposer.k"
-require "proof-perform-change-quorum.k"
-require "proof-perform-nothing.k"
-require "proof-perform-remove-user-5.k"
-require "proof-perform-remove-user-6.k"
-
 module PROOF-PERFORM-ACTION-ENDPOINT
   imports EXECUTION
   imports PSEUDOCODE
-
-  // imports TRUSTED-PERFORM-ADD-PROPOSER
-  // imports TRUSTED-PERFORM-CHANGE-QUORUM
-  // imports TRUSTED-PERFORM-NOTHING
-  // imports TRUSTED-PERFORM-REMOVE-USER-5
-  // imports TRUSTED-PERFORM-REMOVE-USER-6
 
   claim 
       <T>
