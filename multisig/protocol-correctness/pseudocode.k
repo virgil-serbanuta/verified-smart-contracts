@@ -632,62 +632,8 @@ module PSEUDOCODE-FUNCTIONS
   rule  <k> call(getActionData(ActionId:Usize)) => nullableMapLookup(ActionId, M, rAction) ... </k>
         <action-data> M:Map </action-data>
 
-  rule  <k> (.K => nullableMapSet(ActionId, Signers, M, rExpressionList))
-            ~> call(setActionSignerIDs(ActionId:Usize, Signers:ExpressionList))
-        ...</k>
-        <action-signers> M:Map </action-signers>
-
-  rule  <k> (M:Map ~> call(setActionSignerIDs(_:Usize, _:ExpressionList))) => void ... </k>
-        <action-signers> _:Map => M </action-signers>
-
   rule  <k> (.K => call(getActionData(ActionId))) ~> call(isEmptyActionData(ActionId:Usize)) ... </k>
   rule  Action:Action ~> call(isEmptyActionData(_:Usize)) => Action ==K Nothing
-
-  rule  call(canSign(BoardMember)) => true
-  rule  call(canSign(_)) => false  [owise]
-
-  rule  <k> call(getActionSignerIds(ActionId:Usize))
-            => nullableMapLookup(ActionId, M:Map, rExpressionList)
-        ... </k>
-        <action-signers> M:Map </action-signers>
-
-  rule call(listContains(Es:ExpressionList, E:Expression)) => #listContains(Es, E)
-
-  syntax Bool ::= #listContains(ExpressionList, Expression)  [function, functional]
-
-  rule  #listContains([.], _) => false
-  rule  #listContains([E:Expression, _:ExpressionCSV], E) => true
-  rule  #listContains([_:Expression, Es:ExpressionCSV], X:Expression)
-          => #listContains([Es], X)  [owise]
-
-  rule call(listFind(Es:ExpressionList, E:Expression)) => #listFind(Es, E)
-
-  syntax Usize ::= #listFind(ExpressionList, Expression)  [function, functional]
-
-  rule  #listFind([.], _) => u(-1)
-  rule  #listFind([X:Usize, _:ExpressionCSV], X) => u(0)
-  rule  #listFind([_:Usize, Es:ExpressionCSV], X:Usize) => add(#listFind([Es], X), u(1))  [owise]
-
-  syntax ExpressionCSV ::= #listSwapRemove(ExpressionCSV, Int)  [function, functional]
-  rule  #listSwapRemove(_:Expression , Es:ExpressionCSV, 0)
-        => lastToStart(., Es)
-  rule  #listSwapRemove(E:Expression , Es:ExpressionCSV, I:Int)
-        => E , #listSwapRemove(Es, I -Int 1)
-    requires I >Int 0
-  rule  #listSwapRemove(Es:ExpressionCSV, I:Int)
-        => Es
-    requires I <Int 0
-
-  syntax ExpressionCSV ::= lastToStart(ExpressionCSV, ExpressionCSV)  [function, functional]
-  rule lastToStart(., .) => .:ExpressionCSV
-  rule lastToStart(L1:ExpressionCSV, (E:Expression, .))
-        => E , reverseExpressionCsv(L1, .)
-  rule lastToStart(L1:ExpressionCSV, (E:Expression , L2:ExpressionCSV))
-        => lastToStart((E , L1), L2)
-
-  syntax ExpressionCSV ::= reverseExpressionCsv(ExpressionCSV, ExpressionCSV)  [function, functional]
-  rule reverseExpressionCsv(., L2:ExpressionCSV) => L2
-  rule reverseExpressionCsv((E:Expression , Es:ExpressionCSV), L2:ExpressionCSV) => reverseExpressionCsv(Es, (E , L2))
 
   rule call(performActionFromId(ActionId:Usize))
         => runPseudoCode(
