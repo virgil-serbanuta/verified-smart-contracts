@@ -15,7 +15,7 @@ module PROOF-PERFORM-ACTION-ENDPOINT
   imports TRUSTED-PERFORM-REMOVE-USER-6
 
   claim <T><TT>
-          <k> runInstruction(performActionFromId(ActionId:Usize);) ~> K:K
+          <k> runInstruction(performAction(Action:Action);) ~> K:K
           </k>
           invariantState(
               NumUsers:Usize,
