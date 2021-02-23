@@ -44,6 +44,4 @@ module PROOF-PERFORM-ACTION-ENDPOINT
               ?ActionData1:Map,
               ?ActionSigners1:Map):StateCell
         </TT></T>
-    requires invariant(ActionData0:Map)
-    ensures invariant(?ActionData1:Map)
 endmodule
