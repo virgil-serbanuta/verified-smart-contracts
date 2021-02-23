@@ -44,28 +44,6 @@ module PROOF-PERFORM-ACTION-ENDPOINT
               ?ActionData1:Map,
               ?ActionSigners1:Map):StateCell
         </TT></T>
-    requires invariant(
-        NumUsers:Usize,
-        UserIdToAddress:Map,
-        AddressToUserId:Map,
-        NumBoardMembers:Usize,
-        NumProposers:Usize,
-        UserRoles:Map,
-        Quorum:Usize,
-        ActionLastIndex0:Usize,
-        ActionData0:Map,
-        ActionSigners0:Map,
-        u(1))
-    ensures invariant(
-        ?NumUsers1:Usize,
-        ?UserIdToAddress1:Map,
-        ?AddressToUserId1:Map,
-        ?NumBoardMembers1:Usize,
-        ?NumProposers1:Usize,
-        ?UserRoles1:Map,
-        ?Quorum1:Usize,
-        ?ActionLastIndex1:Usize,
-        ?ActionData1:Map,
-        ?ActionSigners1:Map,
-        u(-1))  // TODO: Unsigned, should use other convention.
+    requires invariant(ActionData0:Map)
+    ensures invariant(?ActionData1:Map)
 endmodule

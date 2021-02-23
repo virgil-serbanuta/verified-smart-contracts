@@ -59,31 +59,9 @@ module INVARIANT
         </proof-state>
       </state>
 
-  syntax Bool ::= invariant(
-      numUsers:Usize,
-      userIdToAddress:Map,
-      addressToUserId:Map,
-      numBoardMembers:Usize,
-      numProposers:Usize,
-      userIdToRole:Map,
-      quorum:Usize,
-      actionLastIndex:Usize,
-      actionData:Map,
-      actionSigners:Map,
-      expandActionLastIndex:Usize)  [function, functional]
+  syntax Bool ::= invariant(actionData:Map)  [function, functional]
 
-  rule invariant(
-      u(NumUsers:Int),
-      UserIdToAddress:Map,
-      AddressToUserId:Map,
-      u(NumBoardMembers:Int),
-      u(NumProposers:Int),
-      UserIdToRole:Map,
-      u(Quorum:Int),
-      ActionLastIndex:Usize,
-      ActionData:Map,
-      ActionSigners:Map,
-      u(ExpandActionLastIndex):Usize)
+  rule invariant(ActionData:Map)
     => true
       andBool valuesAreOfType(ActionData, rAction)
       andBool valuesAreKResult(ActionData)
