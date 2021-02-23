@@ -44,13 +44,5 @@ module TRUSTED-PERFORM-REMOVE-USER-5
             UserIdToRole,
             Quorum)
         andBool notBool (UserId in_keys(UserIdToRole))
-    ensures performEnsures(
-            ?NumUsersFinal,
-            ?UserIdToAddressFinal,
-            ?AddressToUserIdFinal,
-            ?NumBoardMembersFinal,
-            ?NumProposersFinal,
-            ?UserIdToRoleFinal,
-            Quorum)
     [trusted]
 endmodule

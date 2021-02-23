@@ -43,13 +43,5 @@ module TRUSTED-PERFORM-NOTHING
             NumProposers,
             UserIdToRole,
             Quorum)
-    ensures performEnsures(
-            NumUsers,
-            UserIdToAddress,
-            AddressToUserId,
-            NumBoardMembers,
-            NumProposers,
-            UserIdToRole,
-            Quorum)
     [trusted]
 endmodule
