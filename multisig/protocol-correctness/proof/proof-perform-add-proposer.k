@@ -14,8 +14,7 @@ module TRUSTED-PERFORM-ADD-PROPOSER
             UserIdToRole:Map,
             Quorum:Usize,
             ActionState:ActionStateCell,
-            Stack:List,
-            ExternalCallEnv:ExternalCallEnvCell)
+            Stack:List)
       </T>
       =>
       <T>
@@ -31,8 +30,7 @@ module TRUSTED-PERFORM-ADD-PROPOSER
             Quorum,
             ActionState,
             ?_Variables:Map,
-            Stack:List,
-            ExternalCallEnv)
+            Stack:List)
       </T>
     [trusted]
 endmodule

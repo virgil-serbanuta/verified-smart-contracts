@@ -14,8 +14,7 @@ module TRUSTED-PERFORM-REMOVE-USER-5
             UserIdToRole:Map,
             Quorum:Usize,
             ActionState:ActionStateCell,
-            Stack:List,
-            ExternalCallEnv:ExternalCallEnvCell)
+            Stack:List)
       </T>
       =>
       <T>
@@ -31,8 +30,7 @@ module TRUSTED-PERFORM-REMOVE-USER-5
             Quorum,
             ActionState,
             ?_Variables:Map,
-            Stack:List,
-            ExternalCallEnv)
+            Stack:List)
       </T>
     requires true
         andBool notBool (UserId in_keys(UserIdToRole))

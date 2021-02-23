@@ -14,8 +14,7 @@ module TRUSTED-PERFORM-NOTHING
             UserIdToRole:Map,
             Quorum:Usize,
             ActionState:ActionStateCell,
-            Stack:List,
-            ExternalCallEnv:ExternalCallEnvCell)
+            Stack:List)
       </T>
       =>
       <T>
@@ -31,8 +30,7 @@ module TRUSTED-PERFORM-NOTHING
             Quorum,
             ActionState,
             ?_Variables:Map,
-            Stack,
-            ExternalCallEnv)
+            Stack)
       </T>
     [trusted]
 endmodule

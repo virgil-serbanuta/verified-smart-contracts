@@ -14,8 +14,7 @@ module TRUSTED-PERFORM-CHANGE-QUORUM
             UserIdToRole:Map,
             OldQuorum:Usize,
             ActionState:ActionStateCell,
-            Stack:List,
-            ExternalCallEnv:ExternalCallEnvCell)
+            Stack:List)
       </T>
       =>
       <T>
@@ -31,8 +30,7 @@ module TRUSTED-PERFORM-CHANGE-QUORUM
             u(NewQuorum),
             ActionState,
             ?_Variables:Map,
-            Stack:List,
-            ExternalCallEnv)
+            Stack:List)
       </T>
     requires true
         andBool NewQuorum <=Int NumBoardMembers

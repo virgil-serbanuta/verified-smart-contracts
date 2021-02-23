@@ -14,8 +14,7 @@ module TRUSTED-PERFORM-REMOVE-USER-6
             UserIdToRole:Map,
             Quorum:Usize,
             ActionState:ActionStateCell,
-            Stack:List,
-            ExternalCallEnv:ExternalCallEnvCell)
+            Stack:List)
       </T>
       =>
       <T>
@@ -31,8 +30,7 @@ module TRUSTED-PERFORM-REMOVE-USER-6
             Quorum,
             ActionState,
             ?_Variables:Map,
-            Stack:List,
-            ExternalCallEnv)
+            Stack:List)
       </T>
     requires true
         andBool notBool (UserAddress in_keys(AddressToUserId))

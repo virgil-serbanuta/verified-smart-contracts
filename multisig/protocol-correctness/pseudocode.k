@@ -506,7 +506,6 @@ module PSEUDOCODE-FUNCTIONS
             <variables> V:Map => .Map </variables>
             <stack> (.List => ListItem(stackEntry(S, V))) ... </stack>
           </pseudocode-state>
-          _:ExternalCallEnvCell
           _:ProofStateCell
         </state>
 
@@ -528,7 +527,6 @@ module PSEUDOCODE-FUNCTIONS
             <variables> _ => V </variables>
             <stack> (ListItem(stackEntry(S:MultisigStateCell, V:Map)) => .List) ... </stack>
           </pseudocode-state>
-          _:ExternalCallEnvCell
           _:ProofStateCell
         </state>
 
@@ -659,9 +657,6 @@ module PSEUDOCODE-CONFIGURATION
             <variables>.Map</variables>
             <stack> .List </stack>
           </pseudocode-state>
-          <external-call-env>
-            <caller-address>uninitialized</caller-address>
-          </external-call-env>
 
           <proof-state>
             <last-instrumented> .K </last-instrumented>

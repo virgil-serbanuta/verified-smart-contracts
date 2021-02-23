@@ -14,8 +14,7 @@ module PERFORM-PARTS
       userIdToRole:Map,
       quorum:Usize,
       ActionStateCell,
-      stack:List,
-      ExternalCallEnvCell)
+      stack:List)
     [function, functional]
   syntax TTCell ::= performRhs(
           result:KItem,
@@ -29,8 +28,7 @@ module PERFORM-PARTS
           quorum:Usize,
           ActionStateCell,
           variables:Map,
-          stack:List,
-          ExternalCallEnvCell)
+          stack:List)
       [function, functional]
 
   rule performLhs(
@@ -44,8 +42,7 @@ module PERFORM-PARTS
           UserIdToRole:Map,
           Quorum:Usize,
           ActionState:ActionStateCell,
-          Stack:List,
-          ExternalCallEnv:ExternalCallEnvCell)
+          Stack:List)
         =>
         <TT>
           <k> call(performAction(Action)) ~> K </k>
@@ -64,7 +61,6 @@ module PERFORM-PARTS
               </variables>
               <stack> Stack </stack>
             </pseudocode-state>
-            ExternalCallEnv
             <proof-state>
               <last-instrumented> .K </last-instrumented>
             </proof-state>
@@ -83,8 +79,7 @@ module PERFORM-PARTS
           Quorum:Usize,
           ActionState:ActionStateCell,
           Variables:Map,
-          Stack:List,
-          ExternalCallEnv:ExternalCallEnvCell)
+          Stack:List)
         =>
         <TT>
           <k> Result ~> K </k>
@@ -103,7 +98,6 @@ module PERFORM-PARTS
               </variables>
               <stack> Stack </stack>
             </pseudocode-state>
-            ExternalCallEnv
             <proof-state>
               <last-instrumented> .K </last-instrumented>
             </proof-state>
