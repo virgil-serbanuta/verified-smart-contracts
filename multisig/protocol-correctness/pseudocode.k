@@ -291,7 +291,6 @@ module PSEUDOCODE-EXTERNAL
 
   syntax KItem ::= "clearExternalCallEnv"
   rule  <k> clearExternalCallEnv => .K ... </k>
-        <caller-address> _ => uninitialized </caller-address>
 
   rule (evaluate(E:Expression) => .K) ~> clearExternalCallEnv
     requires isKResult(E)
