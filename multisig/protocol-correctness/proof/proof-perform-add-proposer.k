@@ -43,13 +43,5 @@ module TRUSTED-PERFORM-ADD-PROPOSER
             NumProposers,
             UserIdToRole,
             Quorum)
-    ensures performEnsures(
-            ?NumUsersFinal,
-            ?UserIdToAddressFinal,
-            ?AddressToUserIdFinal,
-            ?NumBoardMembersFinal,
-            ?NumProposersFinal,
-            ?UserIdToRoleFinal,
-            Quorum)
     [trusted]
 endmodule

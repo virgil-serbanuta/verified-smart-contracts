@@ -92,42 +92,6 @@ module PERFORM-PARTS
           UserIdToRole:Map,
           u(_Quorum:Int))
     => true
-      /*
-      andBool performInvariant(
-          UNumUsers:Usize,
-          UserIdToAddress:Map,
-          AddressToUserId:Map,
-          u(NumBoardMembers:Int),
-          u(NumProposers:Int),
-          UserIdToRole:Map,
-          u(Quorum:Int),
-          u(-1))
-      */
-      andBool notBool u(0) in_keys(UserIdToAddress)
-      andBool notBool u(0) in_keys(UserIdToRole)
-      
-      andBool allValuesBecomeKeys(UserIdToAddress, AddressToUserId)
-
-      andBool valuesAreOfType(AddressToUserId, rUsize)
-      andBool valuesAreKResult(AddressToUserId)
-      andBool valuesAreNotEmpty(AddressToUserId, rUsize)
-      andBool unusedIdsInMapValues(add(UNumUsers, u(1)), AddressToUserId, -1)
-
-      andBool valuesAreOfType(UserIdToRole, rUserRole)
-      andBool valuesAreKResult(UserIdToRole)
-      andBool valuesAreNotEmpty(UserIdToRole, rUserRole)
-      andBool unusedIdsInMapKeys(add(UNumUsers, u(1)), keysMap(UserIdToRole), u(-1))
-
-      andBool NumUsers >=Int 0 // TODO: Strict >?
-      andBool NumBoardMembers >=Int 0
-      andBool NumProposers >=Int 0
-
-      // TODO: Uncomment this.
-      // andBool Quorum <=Int NumBoardMembers
-      andBool (NumBoardMembers +Int NumProposers >Int 0)
-
-      andBool NumBoardMembers ==Int countMapValues(UserIdToRole, BoardMember)
-      andBool NumProposers ==Int countMapValues(UserIdToRole, Proposer)
 
   rule performInvariant(
           u(NumUsers:Int) #as UNumUsers:Usize,
