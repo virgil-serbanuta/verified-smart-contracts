@@ -965,8 +965,8 @@ module PSEUDOCODE-FUNCTIONS
 
           if (old_role == BoardMember) {
             if (!(NewRole == BoardMember)) {
-              // TODO: This is not implemented yet in the rust code.
               new_board_members = getNumBoardMembers() - u(1);
+              // TODO: This is not implemented yet in the rust code.
               require(getQuorum() <= new_board_members);
               setNumBoardMembers(new_board_members);
             }
@@ -1056,28 +1056,26 @@ module MAP-UTILS
   imports K-EQUAL
   imports MAP
   imports MAYBE
+  imports PSEUDOCODE-COMMON
 
-  // TODO: Not a real function, but the Haskell backend does not
-  // allow us to use the function with the same name in the comments below.
-  syntax KItem ::= splitMap(key:KItem, Map)  [function, functional]
-  syntax KItem ::= #splitMap(key:KItem, Map) | "endSplitMap"
-
-  rule  splitMap(K:KItem, (K |-> _:KItem _:Map) #as _:Map)
-        => endSplitMap
-    [simplification]
-  rule  splitMap(K:KItem, (K1 |-> _ M:Map) #as _:Map)
-        => splitMap(K, M)
-    requires notBool (K ==K K1)
-    [simplification]
-  rule  splitMap(K:KItem, M:Map) => #splitMap(K, M)
-
-  rule  #splitMap(K:KItem, (K |-> _:KItem _:Map) #as M:Map) => .K
-    ensures K in_keys(M)
-  rule  #splitMap(K:KItem, M:Map) => .K
-    ensures notBool (K in_keys(M))
-    [owise]
-
+  syntax KItem ::= splitMap(key:KItem, toSplit:Map, value:KItem, remainder:Map)  [function, functional]
+  syntax KItem ::= "endSplitMap"
   rule endSplitMap => .K
+
+  rule splitMap(Key:KItem, M:Map, _Value:KItem, _Remainder:Map) => stuck
+    requires notBool Key in_keys(M)
+  rule splitMap(Key:KItem, (Key |-> _:KItem) _:Map, _Value:KItem, _Remainder:Map)
+      => endSplitMap
+    [simplification(30)]
+  rule splitMap(Key:KItem, (K1:KItem |-> _SomeValue:KItem) M:Map, Value:KItem, Remainder:Map)
+      => splitMap(Key, M, Value, Remainder)
+    requires notBool (Key ==K K1) andBool Key in_keys(M)
+    [simplification(30)]
+  rule splitMap(Key:KItem, M:Map, Value:KItem, Remainder:Map)
+      => endSplitMap
+    requires Key in_keys(M)
+    ensures M ==K (Key |-> Value Remainder)
+    [simplification(50)]
 
   /*
   syntax Map ::= splitMap(key:KItem, Map, Map)  [function, functional]
@@ -1131,8 +1129,16 @@ module MAP-UTILS
   // Do the map lookups in a way that makes the Haskell backend happy.
 
   syntax KItem ::= mapLookup(KItem, Map)
-  rule mapLookup(K:KItem, M:Map) => splitMap(K, M) ~> #mapLookup(K, M)
-  /*rule mapLookup(K:KItem, M:Map) => #mapLookup(K, splitMap(K, M, M))*/
+  rule mapLookup(K:KItem, M:Map)
+      =>  splitMap(K, M, ?_Value:KItem, ?_Remainder:Map)
+          ~> #mapLookup(K, M)
+    requires K in_keys(M)
+  rule mapLookup(K:KItem, M:Map)
+      =>  nothing
+    requires notBool K in_keys(M)
+  /*
+  rule mapLookup(K:KItem, M:Map) => #mapLookup(K, splitMap(K, M, M))
+  */
 
   syntax KItem ::= #mapLookup(KItem, Map)
   rule #mapLookup(K:KItem, ((K |-> V:KItem) _:Map) #as M:Map) => just(V)

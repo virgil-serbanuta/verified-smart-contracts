@@ -60,6 +60,11 @@
           uninitialized
         </caller-address>
       </external-call-env>
+      <proof-state>
+        <last-instrumented>
+          .
+        </last-instrumented>
+      </proof-state>
     </state>
   </TT>
 </T>
