@@ -112,16 +112,6 @@ module INVARIANT
       andBool valuesAreOfType(ActionData, rAction)
       andBool valuesAreKResult(ActionData)
 
-      andBool NumUsers >=Int 0 // TODO: Strict >?
-      andBool NumBoardMembers >=Int 0
-      andBool NumProposers >=Int 0
-
-      andBool Quorum <=Int NumBoardMembers
-      andBool (NumBoardMembers +Int NumProposers >Int 0)
-
-      andBool NumBoardMembers ==Int countMapValues(UserIdToRole, BoardMember)
-      andBool NumProposers ==Int countMapValues(UserIdToRole, Proposer)
-
   syntax Bool ::= subset(Map, Map)  [function, functional]
   rule subset(K:KItem |-> _:KItem M:Map, N:Map)
       => K in_keys(N) andBool subset(M, N)
