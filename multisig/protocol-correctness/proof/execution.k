@@ -45,12 +45,6 @@ module EXECUTION-HELPERS
     [simplification]
 
   syntax Int ::= countMapValues(Map, KItem)  [function, functional, smtlib(countMapValues)]
-  rule countMapValues(.Map, _) => 0
-  rule countMapValues((_ |-> V) M:Map, V:KItem) => 1 +Int countMapValues(M, V)
-    [simplification]
-  rule countMapValues((_ |-> U) M:Map, V:KItem) => countMapValues(M, V)
-    requires notBool (U ==K V)
-    [simplification]
 
   rule 0 <=Int countMapValues(_, _) => true  [simplification, smt-lemma]
   rule countMapValues(_, _) >=Int 0 => true  [simplification]
