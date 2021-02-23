@@ -59,11 +59,4 @@ module INVARIANT
         </proof-state>
       </state>
 
-  syntax Bool ::= invariant(actionData:Map)  [function, functional]
-
-  rule invariant(ActionData:Map)
-    => true
-      andBool valuesAreOfType(ActionData, rAction)
-      andBool valuesAreKResult(ActionData)
-
 endmodule
