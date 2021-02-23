@@ -143,12 +143,4 @@ module INVARIANT
     requires maxMapKey(u(V:Int), M:Map)
     [simplification]
 
-  rule isKResult(#pushList(Es:ExpressionCSV, E:Expression))
-    => isKResult(Es) andBool isKResult(E)
-    [simplification]
-
-  rule listElementsAreUsize([#pushList(Es:ExpressionCSV, E:Expression)])
-    => listElementsAreUsize([Es]) andBool isUsize(E)
-    [simplification]
-
 endmodule
