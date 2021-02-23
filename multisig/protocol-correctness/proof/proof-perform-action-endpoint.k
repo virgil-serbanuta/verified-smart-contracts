@@ -56,7 +56,7 @@ module PROOF-PERFORM-ACTION-ENDPOINT
         ActionData0:Map,
         ActionSigners0:Map,
         u(1))
-    ensures invariantDebug(
+    ensures invariant(
         ?NumUsers1:Usize,
         ?UserIdToAddress1:Map,
         ?AddressToUserId1:Map,

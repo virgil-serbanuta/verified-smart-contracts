@@ -123,60 +123,6 @@ module INVARIANT
       andBool NumProposers ==Int countMapValues(UserIdToRole, Proposer)
 
 
-  syntax Bool ::= invariantDebug(
-      numUsers:Usize,
-      userIdToAddress:Map,
-      addressToUserId:Map,
-      numBoardMembers:Usize,
-      numProposers:Usize,
-      userIdToRole:Map,
-      quorum:Usize,
-      actionLastIndex:Usize,
-      actionData:Map,
-      actionSigners:Map,
-      expandActionLastIndex:Usize)  [function, functional]
-
-  rule invariantDebug(
-      _NumUsers:Usize,
-      UserIdToAddress:Map,
-      AddressToUserId:Map,
-      u(_NumBoardMembers:Int),
-      u(_NumProposers:Int),
-      UserIdToRole:Map,
-      u(_Quorum:Int),
-      ActionLastIndex:Usize,
-      ActionData:Map,
-      ActionSigners:Map,
-      ExpandActionLastIndex:Usize)
-    => notBool u(0) in_keys(UserIdToAddress)
-      andBool notBool u(0) in_keys(UserIdToRole)  // +
-      andBool allValuesBecomeKeys(AddressToUserId, UserIdToAddress)  // +
-      andBool unusedIdsInMapKeys(add(ActionLastIndex, u(1)), keysMap(ActionData), ExpandActionLastIndex)
-      //-
-      // andBool unusedIdsInMapKeys(add(ActionLastIndex, u(1)), keysMap(ActionSigners), ExpandActionLastIndex)
-      // andBool maxMapKey(ActionLastIndex, keysMap(ActionData))
-      // andBool maxMapKey(ActionLastIndex, keysMap(ActionSigners))
-
-      //-
-
-      // andBool valuesAreExpressionListOfUsize(ActionSigners)
-      // andBool valuesAreKResult(ActionSigners)
-
-      // andBool valuesAreOfType(AddressToUserId, rUsize)
-      // andBool valuesAreKResult(AddressToUserId)
-
-      // andBool valuesAreOfType(UserIdToRole, rUserRole)
-      // andBool valuesAreKResult(UserIdToRole)
-
-      // andBool valuesAreOfType(ActionData, rAction)
-      // andBool valuesAreKResult(ActionData)
-
-      //-
-
-      //andBool 0 <=Int NumBoardMembers
-      //andBool 0 <Int NumBoardMembers +Int NumProposers
-      //andBool Quorum <=Int NumBoardMembers +Int NumProposers
-
   syntax Bool ::= invariantDebug1(
       numUsers:Usize,
       userIdToAddress:Map,
