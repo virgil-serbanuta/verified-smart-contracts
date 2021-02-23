@@ -550,11 +550,6 @@ module PSEUDOCODE-FUNCTIONS
   rule  <k> (.K => call(getActionData(ActionId))) ~> call(isEmptyActionData(ActionId:Usize)) ... </k>
   rule  Action:Action ~> call(isEmptyActionData(_:Usize)) => Action ==K Nothing
 
-  rule call(performActionFromId(ActionId:Usize))
-        => runPseudoCode(
-              action = getActionData(ActionId);
-              performAction(action);
-        )
 
 endmodule
 
