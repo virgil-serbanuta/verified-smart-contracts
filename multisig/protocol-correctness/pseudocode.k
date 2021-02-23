@@ -321,6 +321,9 @@ module PSEUDOCODE-MEMORY
 
   context runInstruction(_:Variable = {HOLE => evaluate(HOLE)}:>Expression;)
 
+  rule  <k> (.K => mapSet(V, E, M)) ~> runInstruction(V:Variable = E:Expression;) ...</k>
+        <variables> M:Map </variables>
+    requires isKResult(E)
   rule <k> (M:Map ~> runInstruction(_ = _;)) => evaluate(void) ... </k>
         <variables> _:Map => M </variables>
 
