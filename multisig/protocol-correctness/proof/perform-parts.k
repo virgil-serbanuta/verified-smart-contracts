@@ -3,16 +3,6 @@ module PERFORM-PARTS
   imports EXECUTION-HELPERS
   imports PSEUDOCODE
 
-  syntax Bool ::= performRequires(
-      action:Action,
-      numUsers:Usize,
-      userIdToAddress:Map,
-      addressToUserId:Map,
-      numBoardMembers:Usize,
-      numProposers:Usize,
-      userIdToRole:Map,
-      quorum:Usize)
-    [function, functional]
   syntax TTCell ::= performLhs(
       action:Action,
       K,
@@ -42,18 +32,6 @@ module PERFORM-PARTS
           stack:List,
           ExternalCallEnvCell)
       [function, functional]
-
-  rule performRequires(
-          Action:Action,
-          UNumUsers:Usize,
-          UserIdToAddress:Map,
-          AddressToUserId:Map,
-          u(NumBoardMembers:Int),
-          u(NumProposers:Int),
-          UserIdToRole:Map,
-          u(Quorum:Int))
-    => true
-      andBool isKResult(Action)
 
   rule performLhs(
           Action:Action,

@@ -34,14 +34,5 @@ module TRUSTED-PERFORM-ADD-PROPOSER
             Stack:List,
             ExternalCallEnv)
       </T>
-    requires performRequires(
-            Action,
-            NumUsers,
-            UserIdToAddress,
-            AddressToUserId,
-            NumBoardMembers,
-            NumProposers,
-            UserIdToRole,
-            Quorum)
     [trusted]
 endmodule

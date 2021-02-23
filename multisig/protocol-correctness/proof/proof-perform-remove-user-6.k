@@ -34,15 +34,7 @@ module TRUSTED-PERFORM-REMOVE-USER-6
             Stack:List,
             ExternalCallEnv)
       </T>
-    requires performRequires(
-            Action,
-            NumUsers,
-            UserIdToAddress,
-            AddressToUserId,
-            NumBoardMembers,
-            NumProposers,
-            UserIdToRole,
-            Quorum)
+    requires true
         andBool notBool (UserAddress in_keys(AddressToUserId))
     [trusted]
 endmodule

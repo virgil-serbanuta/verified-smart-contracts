@@ -34,14 +34,5 @@ module TRUSTED-PERFORM-NOTHING
             Stack,
             ExternalCallEnv)
       </T>
-    requires performRequires(
-            Action,
-            NumUsers,
-            UserIdToAddress,
-            AddressToUserId,
-            NumBoardMembers,
-            NumProposers,
-            UserIdToRole,
-            Quorum)
     [trusted]
 endmodule

@@ -34,15 +34,7 @@ module TRUSTED-PERFORM-CHANGE-QUORUM
             Stack:List,
             ExternalCallEnv)
       </T>
-    requires performRequires(
-            Action,
-            NumUsers,
-            UserIdToAddress,
-            AddressToUserId,
-            u(NumBoardMembers),
-            NumProposers,
-            UserIdToRole,
-            OldQuorum)
+    requires true
         andBool NewQuorum <=Int NumBoardMembers
     [trusted]
 
