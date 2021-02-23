@@ -85,22 +85,6 @@ module INVARIANT
       ActionSigners:Map,
       u(ExpandActionLastIndex):Usize)
     => true
-      andBool notBool u(0) in_keys(UserIdToAddress)
-      andBool notBool u(0) in_keys(UserIdToRole)
-
-      andBool allValuesBecomeKeys(AddressToUserId, UserIdToAddress)  // not in the perform invariant
-      andBool allValuesBecomeKeys(UserIdToAddress, AddressToUserId)
-
-      andBool valuesAreOfType(AddressToUserId, rUsize)
-      andBool valuesAreKResult(AddressToUserId)
-      andBool valuesAreNotEmpty(AddressToUserId, rUsize)
-      andBool unusedIdsInMapValues(add(u(NumUsers), u(1)), AddressToUserId, ExpandActionLastIndex)
-
-      andBool valuesAreOfType(UserIdToRole, rUserRole)
-      andBool valuesAreKResult(UserIdToRole)
-      andBool valuesAreNotEmpty(UserIdToRole, rUserRole)
-      andBool unusedIdsInMapKeys(add(u(NumUsers), u(1)), keysMap(UserIdToRole), u(ExpandActionLastIndex))
-
       andBool unusedIdsInMapKeys(add(ActionLastIndex, u(1)), keysMap(ActionData), u(ExpandActionLastIndex))
       andBool unusedIdsInMapKeys(add(ActionLastIndex, u(1)), keysMap(ActionSigners), u(ExpandActionLastIndex))
       andBool maxMapKey(ActionLastIndex, keysMap(ActionData))
