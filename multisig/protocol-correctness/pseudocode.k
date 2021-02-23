@@ -544,37 +544,6 @@ module PSEUDOCODE-FUNCTIONS
   context runInstruction(ok({HOLE:Expression => evaluate(HOLE)}:>Expression);)
   rule runInstruction(ok(E:Expression);) => E requires isKResult(E)
 
-  rule  call(userRoleCanPropose(None)) => false
-  rule  call(userRoleCanPropose(Proposer)) => true
-  rule  call(userRoleCanPropose(BoardMember)) => true
-
-  rule  call(userRoleCanSign(None)) => false
-  rule  call(userRoleCanSign(Proposer)) => false
-  rule  call(userRoleCanSign(BoardMember)) => true
-
-  rule  call(userRoleCanPerformAction(R:UserRole) => userRoleCanPropose(R))
-
-  rule  call(userRoleCanDiscardAction(R:UserRole) => userRoleCanPropose(R))
-
-  rule  call(isEmptyList([.])) => true
-  rule  call(isEmptyList(_:ExpressionList)) => false [owise]
-
-  rule  call(listLen([.])) => u(0)
-  rule  call(listLen([_:Expression , Es:ExpressionCSV]))
-        => call(listLen([Es])) ~> plusOne
-
-  syntax KItem ::= "plusOne"
-  rule  (I:Usize ~> plusOne) => add(I, u(1))
-
-  rule  <k> call(setQuorum(Quorum:Usize)) => void ... </k>
-        <quorum>_ => Quorum</quorum>
-
-  rule  <k> call(setNumUsers(Users:Usize)) => void ... </k>
-        <num-users>_ => Users</num-users>
-
-  rule  <k> call(setNumBoardMembers(Members:Usize)) => void ... </k>
-        <num-board-members>_ => Members</num-board-members>
-
   rule  <k> call(getActionData(ActionId:Usize)) => nullableMapLookup(ActionId, M, rAction) ... </k>
         <action-data> M:Map </action-data>
 
@@ -631,56 +600,7 @@ module MAP-UTILS
 
   rule endSplitMap => .K
 
-  /*
-  syntax Map ::= splitMap(key:KItem, Map, Map)  [function, functional]
-
-  rule  splitMap(K:KItem, (K |-> _:KItem _:Map) #as _:Map, M:Map)
-        => M
-    [simplification]
-  rule  splitMap(K:KItem, (K1 |-> _ M:Map) #as _:Map, N:Map)
-        => splitMap(K, M, N)
-    requires notBool (K ==K K1)
-    [simplification]
-  rule  splitMap(K:KItem, M:Map, N:Map)
-        =>
-            (
-              (#Ceil(M #And (K |-> ?_:KItem ?_:Map)))
-              #And
-              {true #Equals (K in_keys(M))}
-              #And N
-            )
-            #Or (N #And {true #Equals (notBool (K in_keys(M)))})
-
-  rule  splitMap(K:KItem, M:Map, N:Map)
-        =>(
-            (
-              (#Ceil(M #And (K |-> ?_:KItem ?_:Map)))
-              #And
-              {true #Equals (K in_keys(M))}
-            )
-            #Or
-            ({true #Equals (notBool (K in_keys(M)))})
-          )
-          #And N
-
-
-  rule  splitMap(K:KItem, M:Map, N:Map) => N
-        ensures
-          (
-            (
-              (#Ceil(M #And (K |-> ?_:KItem ?_:Map)))
-              #And
-              {true #Equals (K in_keys(M))}
-            )
-            #Or
-            ({true #Equals (notBool (K in_keys(M)))})
-          )
-
-
-
-  */
-
-  // Do the map lookups in a way that makes the Haskell backend happy.
+    // Do the map lookups in a way that makes the Haskell backend happy.
 
   syntax KItem ::= mapLookup(KItem, Map)
   rule mapLookup(K:KItem, M:Map) => splitMap(K, M) ~> #mapLookup(K, M)

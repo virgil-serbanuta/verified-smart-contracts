@@ -1,8 +1,6 @@
 require "../pseudocode.k"
 require "invariant.k"
 
-require "count-can-sign-parts.k"
-require "init-loop-parts.k"
 require "perform-parts.k"
 
 module EXECUTION-SYNTAX
@@ -238,45 +236,6 @@ module INSTRUMENTATION
   imports MAP
 
   imports PSEUDOCODE
-  /*
-  syntax KItem ::= "iCallGetUserId"
-
-  syntax Bool ::= isCallGetUserId(KItem)  [function, functional]
-  rule isCallGetUserId(call(getUserId(_))) => true
-  rule isCallGetUserId(_) => false  [owise]
-
-  // Does not split properly, leaves a remainder
-  rule  <k> call(getUserId(A:Address)) ... </k>
-        <caller-address> B:Address </caller-address>
-        <last-instrumented> .K => iCallGetUserId </last-instrumented>
-    requires A ==K B
-    [priority(10)]
-  rule  <k> call(getUserId(A:Address)) ... </k>
-        <caller-address> B:Address </caller-address>
-        <last-instrumented> .K => iCallGetUserId </last-instrumented>
-    requires notBool (A ==K B)
-    [priority(10)]
-  rule  <k> X:KItem ... </k>
-        <last-instrumented> iCallGetUserId => .K </last-instrumented>
-    requires notBool isCallGetUserId(X)
-    [priority(10)]
-  */
-
-  /*
-  syntax KItem ::= "concretizing"
-
-  syntax KItem ::= concretize(Usize)
-  rule concretize(u(_)) => .K
-
-  syntax KItem ::= "concretizeEnd"
-  rule concretizeEnd => .K
-
-  syntax K ::= concretizeKeys(Map)  [function, functional]
-  rule concretizeKeys(K:Usize |-> _:KItem M:Map)
-      => concretize(K) ~> concretizeKeys(M)
-    [simplification]
-  rule concretizeKeys(M:Map) => concretizeEnd
-  */
 
   syntax Singleton ::= "singleton"
   syntax KItem ::= "concretizing"
@@ -318,7 +277,5 @@ module EXECUTION
   imports EXECUTION-HELPERS
   imports INSTRUMENTATION
   imports INVARIANT
-  imports INIT-LOOP-PARTS
-  imports COUNT-CAN-SIGN-PARTS
   imports PERFORM-PARTS
 endmodule
