@@ -50,7 +50,7 @@ module PROOF-DISCARD-ACTION
         ActionLastIndex0,
         ActionData0,
         ActionSigners0,
-        u(1))
+        expand(expanded))
     ensures invariant(
         NumUsers,
         UserIdToAddress,
@@ -62,5 +62,5 @@ module PROOF-DISCARD-ACTION
         ?ActionLastIndex1:Usize,
         ?ActionData1:Map,
         ?ActionSigners1:Map,
-        u(-1))  // TODO: Unsigned, should use other convention.
+        usesExpanded)
 endmodule

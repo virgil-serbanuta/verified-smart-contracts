@@ -30,7 +30,7 @@ module PERFORM-PARTS
       numProposers:Usize,
       userIdToRole:Map,
       quorum:Usize,
-      expand:Int)
+      handling:PropertyHandling)
     [function, functional]
   syntax TTCell ::= performLhs(
       action:Action,
@@ -81,7 +81,7 @@ module PERFORM-PARTS
           u(NumProposers:Int),
           UserIdToRole:Map,
           u(Quorum:Int),
-          1)
+          expand(expanded))
 
   rule performEnsures(
           u(NumUsers:Int) #as UNumUsers:Usize,
@@ -111,12 +111,12 @@ module PERFORM-PARTS
       andBool valuesAreOfType(AddressToUserId, rUsize)
       andBool valuesAreKResult(AddressToUserId)
       andBool valuesAreNotEmpty(AddressToUserId, rUsize)
-      andBool unusedIdsInMapValues(add(UNumUsers, u(1)), AddressToUserId, -1)
+      andBool unusedIdsInMapValues(add(UNumUsers, u(1)), AddressToUserId, usesExpanded)
 
       andBool valuesAreOfType(UserIdToRole, rUserRole)
       andBool valuesAreKResult(UserIdToRole)
       andBool valuesAreNotEmpty(UserIdToRole, rUserRole)
-      andBool unusedIdsInMapKeys(add(UNumUsers, u(1)), keysMap(UserIdToRole), u(-1))
+      andBool unusedIdsInMapKeys(add(UNumUsers, u(1)), keysMap(UserIdToRole), usesExpanded)
 
       andBool NumUsers >=Int 0 // TODO: Strict >?
       andBool NumBoardMembers >=Int 0
@@ -137,7 +137,7 @@ module PERFORM-PARTS
           u(NumProposers:Int),
           UserIdToRole:Map,
           u(Quorum:Int),
-          Expand:Int)
+          Handling:PropertyHandling)
     => true
       andBool notBool u(0) in_keys(UserIdToAddress)
       andBool notBool u(0) in_keys(UserIdToRole)
@@ -145,12 +145,12 @@ module PERFORM-PARTS
       andBool valuesAreOfType(AddressToUserId, rUsize)
       andBool valuesAreKResult(AddressToUserId)
       andBool valuesAreNotEmpty(AddressToUserId, rUsize)
-      andBool unusedIdsInMapValues(add(UNumUsers, u(1)), AddressToUserId, Expand)
+      andBool unusedIdsInMapValues(add(UNumUsers, u(1)), AddressToUserId, Handling)
 
       andBool valuesAreOfType(UserIdToRole, rUserRole)
       andBool valuesAreKResult(UserIdToRole)
       andBool valuesAreNotEmpty(UserIdToRole, rUserRole)
-      andBool unusedIdsInMapKeys(add(UNumUsers, u(1)), keysMap(UserIdToRole), u(Expand))
+      andBool unusedIdsInMapKeys(add(UNumUsers, u(1)), keysMap(UserIdToRole), Handling)
 
       andBool allValuesBecomeKeys(UserIdToAddress, AddressToUserId)
 

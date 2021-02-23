@@ -83,7 +83,7 @@ module PROOF-PERFORM-ACTION-ENDPOINT
         ActionLastIndex0:Usize,
         ActionData0:Map,
         ActionSigners0:Map,
-        u(1))
+        expand(expanded))
     ensures invariantDebug(
         ?NumUsers1:Usize,
         ?UserIdToAddress1:Map,
@@ -95,5 +95,5 @@ module PROOF-PERFORM-ACTION-ENDPOINT
         ?ActionLastIndex1:Usize,
         ?ActionData1:Map,
         ?ActionSigners1:Map,
-        u(-1))  // TODO: Unsigned, should use other convention.
+        usesExpanded)
 endmodule

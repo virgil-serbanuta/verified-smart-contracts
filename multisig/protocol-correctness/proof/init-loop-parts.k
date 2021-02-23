@@ -164,7 +164,7 @@ module INIT-LOOP-PARTS
                         UserIdToAddress0,
                         AddressToUserId0,
                         UserIdToRole0,
-                        1)
+                        expand(expanded))
 
   syntax Bool ::= initLoopEnsures(
       numUsers:Usize,
@@ -187,7 +187,7 @@ module INIT-LOOP-PARTS
                   UserIdToAddress,
                   AddressToUserId,
                   UserIdToRole,
-                  -1)
+                  usesExpanded)
       andBool pListLen(Addresses)
                   +Int countMapValues(UserIdToRole0, BoardMember)
               ==Int countMapValues(UserIdToRole, BoardMember)
@@ -197,14 +197,14 @@ module INIT-LOOP-PARTS
       userIdToAddress:Map,
       addressToUserId:Map,
       userIdToRole:Map,
-      expand:Int)  [function, functional]
+      handling:PropertyHandling)  [function, functional]
 
   rule initLoopInvariant(
       NumUsers:Usize,
       UserIdToAddress:Map,
       AddressToUserId:Map,
       UserIdToRole:Map,
-      Expand:Int)
+      Handling:PropertyHandling)
     => true
       andBool notBool u(0) in_keys(UserIdToAddress)
       andBool notBool u(0) in_keys(UserIdToRole)
@@ -215,12 +215,12 @@ module INIT-LOOP-PARTS
       andBool valuesAreOfType(AddressToUserId, rUsize)
       andBool valuesAreKResult(AddressToUserId)
       andBool valuesAreNotEmpty(AddressToUserId, rUsize)
-      andBool unusedIdsInMapValues(add(NumUsers, u(1)), AddressToUserId, Expand)
+      andBool unusedIdsInMapValues(add(NumUsers, u(1)), AddressToUserId, Handling)
 
       andBool valuesAreOfType(UserIdToRole, rUserRole)
       andBool valuesAreKResult(UserIdToRole)
       andBool valuesAreNotEmpty(UserIdToRole, rUserRole)
-      andBool unusedIdsInMapKeys(add(NumUsers, u(1)), keysMap(UserIdToRole), u(Expand))
+      andBool unusedIdsInMapKeys(add(NumUsers, u(1)), keysMap(UserIdToRole), Handling)
 
       andBool 0 ==Int countMapValues(UserIdToRole, Proposer)
 endmodule

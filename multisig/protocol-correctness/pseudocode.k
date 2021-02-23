@@ -1064,6 +1064,7 @@ module MAP-UTILS
 
   rule splitMap(Key:KItem, M:Map, _Value:KItem, _Remainder:Map) => stuck
     requires notBool Key in_keys(M)
+  /*
   rule splitMap(Key:KItem, (Key |-> _:KItem) _:Map, _Value:KItem, _Remainder:Map)
       => endSplitMap
     [simplification(30)]
@@ -1076,6 +1077,7 @@ module MAP-UTILS
     requires Key in_keys(M)
     ensures M ==K (Key |-> Value Remainder)
     [simplification(50)]
+  */
 
   /*
   syntax Map ::= splitMap(key:KItem, Map, Map)  [function, functional]

@@ -15,6 +15,13 @@ module EXECUTION-HELPERS
 
   imports PSEUDOCODE
 
+  // Expand and PropertyHandling form a stupid trick used to control symbolic
+  // function application.
+  // Any function that receives them as an argument should not depend on them,
+  // i.e it should have the same value for all possible PropertyHandling values.
+  syntax Expand ::= "expanded" | expand(Expand)
+  syntax PropertyHandling ::= "usesExpanded" | Expand
+
   syntax Int ::= pListLen(ExpressionList)  [function, functional, smtlib(pListLen)]
   rule pListLen([.]) => 0
   rule pListLen([_:Expression, Es:ExpressionCSV]) => 1 +Int pListLen([Es])
@@ -128,87 +135,66 @@ module EXECUTION-HELPERS
   rule (A:Int +Int I:Int) +Int B:Int => (A +Int B) +Int I [simplification, concrete(I), symbolic(A,B)]
   //rule (X:Int +Int Y:Int) +Int Z:Int => X +Int (Y +Int Z) [simplification, concrete(Y), concrete(Z)]
 
-  // expand is a stupid trick used to control symbolic function application.
-  syntax Bool ::= unusedIdsInMapKeys(lastIndex:Usize, Map, expand:Usize)  [function, functional]
+  syntax Bool ::= unusedIdsInMapKeys(lastIndex:Usize, Map, expand:PropertyHandling)  [function, functional]
 
-  rule unusedIdsInMapKeys(LastIndex:Usize, M:Map, u(Expand:Int))
-      => #unusedIdsInMapKeys(LastIndex, M, Expand)
-  /*
-  rule unusedIdsInMapKeys(_, _, _)
-      => true
-    //[simplification]
-  */
+  rule unusedIdsInMapKeys(_:Usize, .Map, _:PropertyHandling) => true
 
-  syntax Bool ::= #unusedIdsInMapKeys(lastIndex:Usize, Map, expand:Int)  [function, functional]
-
-  /*
-  rule #unusedIdsInMapKeys(_LastIndex:Usize, .Set, _Expand:Int) => true
-  rule #unusedIdsInMapKeys(u(LastIndex:Int), SetItem(u(K:Int)) S:Set, Expand:Int)
-    => LastIndex >Int K
-        andBool #unusedIdsInMapKeys(u(LastIndex), S, Expand)
-  */
-
-  rule #unusedIdsInMapKeys(_:Usize, .Map, _:Int) => true
-
-  rule #unusedIdsInMapKeys(u(LastIndex:Int), U:Usize |-> _:KItem M:Map, Expand:Int)
-    => #unusedIdsInMapKeys(u(LastIndex), M, Expand) 
+  rule unusedIdsInMapKeys(u(LastIndex:Int), U:Usize |-> _:KItem M:Map, Handling:PropertyHandling)
+    => unusedIdsInMapKeys(u(LastIndex), M, Handling)
       andBool LastIndex >Int usizeToInt(U)
-    [simplification(30), label(xyzzya)]
+    [simplification(30)]
 
 
-  rule #unusedIdsInMapKeys(u(LastIndex:Int +Int 4), M:Map, 0)
+  rule unusedIdsInMapKeys(u(LastIndex:Int +Int 4), M:Map, expanded)
     => true
-    requires #unusedIdsInMapKeys(u(LastIndex +Int 3), M, 0)
+    requires unusedIdsInMapKeys(u(LastIndex +Int 3), M, expanded)
     [simplification]
 
 
-  rule #unusedIdsInMapKeys(LastIndex:Usize, M:Map, Expand:Int)
+  rule unusedIdsInMapKeys(LastIndex:Usize, M:Map, expand(Expand:Expand))
     => notBool LastIndex in_keys(M)
-      andBool #unusedIdsInMapKeys(add(LastIndex, u(1)), M, Expand -Int 1)
-    requires Expand >Int 0
-    [simplification, label(xyzzyb)]
+      andBool unusedIdsInMapKeys(add(LastIndex, u(1)), M, Expand)
+    [simplification]
 
-  rule #unusedIdsInMapKeys(LastIndex:Usize, M:Map, -1)
+  rule unusedIdsInMapKeys(LastIndex:Usize, M:Map, usesExpanded)
     => true
-    requires #unusedIdsInMapKeys(LastIndex, M, 0)
-    [simplification, label(xyzzyc)]
+    requires unusedIdsInMapKeys(LastIndex, M, expanded)
+    [simplification]
 
-  rule #unusedIdsInMapKeys(LastIndex:Usize, M:Map, -1)
+  rule unusedIdsInMapKeys(LastIndex:Usize, M:Map, usesExpanded)
     => true
     requires notBool LastIndex in_keys(M)
-      andBool #unusedIdsInMapKeys(add(LastIndex, u(1)), M, 0)
-    [simplification, label(xyzzyd)]
+      andBool unusedIdsInMapKeys(add(LastIndex, u(1)), M, expanded)
+    [simplification]
 
-  rule #unusedIdsInMapKeys(LastIndex:Usize, M:Map, -1)
+  rule unusedIdsInMapKeys(LastIndex:Usize, M:Map, usesExpanded)
     => true
     requires notBool LastIndex in_keys(M)
       andBool notBool add(LastIndex, u(1)) in_keys(M)
-      andBool #unusedIdsInMapKeys(add(LastIndex, u(2)), M, 0)
-    [simplification, label(xyzzye)]
+      andBool unusedIdsInMapKeys(add(LastIndex, u(2)), M, expanded)
+    [simplification]
 
-
-  syntax Bool ::= unusedIdsInMapValues(lastIndex:Usize, Map, expand:Int)  [function, functional]
-  rule unusedIdsInMapValues(_, .Map, _) => true
-  rule unusedIdsInMapValues(u(LastIndex), _:KItem |-> Value M:Map, E:Int)
-      => unusedIdsInMapValues(u(LastIndex), M, E)
+  syntax Bool ::= unusedIdsInMapValues(lastIndex:Usize, Map, handling:PropertyHandling)  [function, functional]
+  rule unusedIdsInMapValues(_:Usize, .Map, _:PropertyHandling) => true
+  rule unusedIdsInMapValues(u(LastIndex), _:KItem |-> Value M:Map, Handling:PropertyHandling)
+      => unusedIdsInMapValues(u(LastIndex), M, Handling)
       andBool LastIndex >Int usizeToInt(Value)
     [simplification(10)]
-  rule unusedIdsInMapValues(LastIndex:Usize, M:Map, E:Int)
-      => unusedIdsInMapValues(LastIndex, M, 0)
-    requires E >Int 0
+  rule unusedIdsInMapValues(LastIndex:Usize, M:Map, expand(_:Expand))
+      => unusedIdsInMapValues(LastIndex, M, expanded)
 
-  rule unusedIdsInMapValues(u(LastIndex +Int 3), M:Map, _:Int)
+  rule unusedIdsInMapValues(u(LastIndex +Int 3), M:Map, _:PropertyHandling)
       => true
-    requires unusedIdsInMapValues(u(LastIndex +Int 2), M, 0)
+    requires unusedIdsInMapValues(u(LastIndex +Int 2), M, expanded)
     [simplification]
 
-  rule unusedIdsInMapValues(LastIndex:Usize, M:Map, -1)
+  rule unusedIdsInMapValues(LastIndex:Usize, M:Map, usesExpanded)
       => true
-    requires unusedIdsInMapValues(sub(LastIndex, u(1)), M, 0)
+    requires unusedIdsInMapValues(sub(LastIndex, u(1)), M, expanded)
     [simplification]
-  rule unusedIdsInMapValues(LastIndex:Usize, M:Map, -1)
+  rule unusedIdsInMapValues(LastIndex:Usize, M:Map, usesExpanded)
       => true
-    requires unusedIdsInMapValues(LastIndex, M, 0)
+    requires unusedIdsInMapValues(LastIndex, M, expanded)
     [simplification]
 
   syntax Map ::= keysMap(Map)  [function, functional]

@@ -47,7 +47,7 @@ module PROOF-PROPOSE-REMOVE-USER
         ActionLastIndex0:Usize,
         ActionData0:Map,
         ActionSigners0:Map,
-        u(1))
+        expand(expanded))
     ensures invariant(
         NumUsers:Usize,
         UserIdToAddress:Map,
@@ -59,5 +59,5 @@ module PROOF-PROPOSE-REMOVE-USER
         ?ActionLastIndex1:Usize,
         ?ActionData1:Map,
         ?ActionSigners1:Map,
-        u(-1))  // TODO: Unsigned, should use other convention.
+        usesExpanded)
 endmodule

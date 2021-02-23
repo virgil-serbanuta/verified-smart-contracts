@@ -70,7 +70,7 @@ module INVARIANT
       actionLastIndex:Usize,
       actionData:Map,
       actionSigners:Map,
-      expandActionLastIndex:Usize)  [function, functional]
+      handling:PropertyHandling)  [function, functional]
 
   rule invariant(
       u(NumUsers:Int),
@@ -83,7 +83,7 @@ module INVARIANT
       ActionLastIndex:Usize,
       ActionData:Map,
       ActionSigners:Map,
-      u(ExpandActionLastIndex):Usize)
+      Handling:PropertyHandling)
     => true
       andBool notBool u(0) in_keys(UserIdToAddress)
       andBool notBool u(0) in_keys(UserIdToRole)
@@ -94,15 +94,15 @@ module INVARIANT
       andBool valuesAreOfType(AddressToUserId, rUsize)
       andBool valuesAreKResult(AddressToUserId)
       andBool valuesAreNotEmpty(AddressToUserId, rUsize)
-      andBool unusedIdsInMapValues(add(u(NumUsers), u(1)), AddressToUserId, ExpandActionLastIndex)
+      andBool unusedIdsInMapValues(add(u(NumUsers), u(1)), AddressToUserId, Handling)
 
       andBool valuesAreOfType(UserIdToRole, rUserRole)
       andBool valuesAreKResult(UserIdToRole)
       andBool valuesAreNotEmpty(UserIdToRole, rUserRole)
-      andBool unusedIdsInMapKeys(add(u(NumUsers), u(1)), keysMap(UserIdToRole), u(ExpandActionLastIndex))
+      andBool unusedIdsInMapKeys(add(u(NumUsers), u(1)), keysMap(UserIdToRole), Handling)
 
-      andBool unusedIdsInMapKeys(add(ActionLastIndex, u(1)), keysMap(ActionData), u(ExpandActionLastIndex))
-      andBool unusedIdsInMapKeys(add(ActionLastIndex, u(1)), keysMap(ActionSigners), u(ExpandActionLastIndex))
+      andBool unusedIdsInMapKeys(add(ActionLastIndex, u(1)), keysMap(ActionData), Handling)
+      andBool unusedIdsInMapKeys(add(ActionLastIndex, u(1)), keysMap(ActionSigners), Handling)
       andBool maxMapKey(ActionLastIndex, keysMap(ActionData))
       andBool maxMapKey(ActionLastIndex, keysMap(ActionSigners))
 
@@ -134,7 +134,7 @@ module INVARIANT
       actionLastIndex:Usize,
       actionData:Map,
       actionSigners:Map,
-      expandActionLastIndex:Usize)  [function, functional]
+      handling:PropertyHandling)  [function, functional]
 
   rule invariantDebug(
       _NumUsers:Usize,
@@ -147,11 +147,11 @@ module INVARIANT
       ActionLastIndex:Usize,
       ActionData:Map,
       ActionSigners:Map,
-      ExpandActionLastIndex:Usize)
+      Handling:PropertyHandling)
     => notBool u(0) in_keys(UserIdToAddress)
       andBool notBool u(0) in_keys(UserIdToRole)  // +
       andBool allValuesBecomeKeys(AddressToUserId, UserIdToAddress)  // +
-      andBool unusedIdsInMapKeys(add(ActionLastIndex, u(1)), keysMap(ActionData), ExpandActionLastIndex)
+      andBool unusedIdsInMapKeys(add(ActionLastIndex, u(1)), keysMap(ActionData), Handling)
       //-
       // andBool unusedIdsInMapKeys(add(ActionLastIndex, u(1)), keysMap(ActionSigners), ExpandActionLastIndex)
       // andBool maxMapKey(ActionLastIndex, keysMap(ActionData))

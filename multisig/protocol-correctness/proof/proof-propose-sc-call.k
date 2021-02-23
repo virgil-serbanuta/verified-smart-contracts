@@ -51,7 +51,7 @@ module PROOF-PROPOSE-SC-CALL
             ActionLastIndex0:Usize,
             ActionData0:Map,
             ActionSigners0:Map,
-            u(1))
+            expand(expanded))
         andBool isKResult(Args)
     ensures invariant(
             NumUsers:Usize,
@@ -64,5 +64,5 @@ module PROOF-PROPOSE-SC-CALL
             ?ActionLastIndex1:Usize,
             ?ActionData1:Map,
             ?ActionSigners1:Map,
-            u(-1))  // TODO: Unsigned, should use other convention.
+            usesExpanded)
 endmodule

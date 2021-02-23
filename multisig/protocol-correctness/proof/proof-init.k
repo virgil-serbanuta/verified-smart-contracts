@@ -54,7 +54,7 @@ module PROOF-INIT
           ?ActionLastIndex,
           ?ActionData,
           ?ActionSigners,
-          u(-1))
+          usesExpanded)
       orBool invariantState(
                 ?NumUsers:Usize,
                 ?UserIdToAddress:Map,
