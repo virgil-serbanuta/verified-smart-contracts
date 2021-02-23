@@ -649,11 +649,6 @@ module PSEUDOCODE-MAP-UTILS
   imports MAP-UTILS
   imports PSEUDOCODE-TYPE-REFLECTION
 
-  syntax KItem ::= nullableMapLookup(key:KItem, Map, ReflectionType)
-
-  rule nullableMapLookup(K:KItem, M:Map, T:ReflectionType)
-        => cast(orElse(mapLookup(K, M), defaultValue(T)), T)
-
 endmodule
 
 module PSEUDOCODE-CONFIGURATION
