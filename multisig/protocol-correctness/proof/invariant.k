@@ -85,10 +85,6 @@ module INVARIANT
       ActionSigners:Map,
       u(ExpandActionLastIndex):Usize)
     => true
-      andBool unusedIdsInMapKeys(add(ActionLastIndex, u(1)), keysMap(ActionData), u(ExpandActionLastIndex))
-      andBool unusedIdsInMapKeys(add(ActionLastIndex, u(1)), keysMap(ActionSigners), u(ExpandActionLastIndex))
-      andBool maxMapKey(ActionLastIndex, keysMap(ActionData))
-      andBool maxMapKey(ActionLastIndex, keysMap(ActionSigners))
 
       andBool valuesAreExpressionListOfUsize(ActionSigners)
       andBool valuesAreKResult(ActionSigners)
