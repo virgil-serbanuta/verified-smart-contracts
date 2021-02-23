@@ -305,12 +305,6 @@ module PSEUDOCODE-EXTERNAL
   rule endpointToInstruction(Tag:EndpointTag()) => runInstruction(Tag();)
   rule endpointToInstruction(Tag:EndpointTag(Es:ArgumentCSV)) => runInstruction(Tag(Es);)
 
-  rule  <k>
-            runExternalCall(from A:Address run Call:EndpointCall;)
-            => endpointToInstruction(Call) ~> clearExternalCallEnv
-        ...</k>
-        <caller-address> uninitialized => A </caller-address>
-
 endmodule
 
 module PSEUDOCODE-MEMORY
