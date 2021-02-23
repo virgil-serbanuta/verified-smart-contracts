@@ -13,15 +13,6 @@ module PERFORM-PARTS
       userIdToRole:Map,
       quorum:Usize)
     [function, functional]
-  syntax Bool ::= performEnsures(
-      numUsers:Usize,
-      userIdToAddress:Map,
-      addressToUserId:Map,
-      numBoardMembers:Usize,
-      numProposers:Usize,
-      userIdToRole:Map,
-      quorum:Usize)
-    [function, functional]
   syntax Bool ::= performInvariant(
       numUsers:Usize,
       userIdToAddress:Map,
@@ -73,25 +64,6 @@ module PERFORM-PARTS
           u(Quorum:Int))
     => true
       andBool isKResult(Action)
-      andBool performInvariant(
-          UNumUsers:Usize,
-          UserIdToAddress:Map,
-          AddressToUserId:Map,
-          u(NumBoardMembers:Int),
-          u(NumProposers:Int),
-          UserIdToRole:Map,
-          u(Quorum:Int),
-          1)
-
-  rule performEnsures(
-          u(NumUsers:Int) #as UNumUsers:Usize,
-          UserIdToAddress:Map,
-          AddressToUserId:Map,
-          u(NumBoardMembers:Int),
-          u(NumProposers:Int),
-          UserIdToRole:Map,
-          u(_Quorum:Int))
-    => true
 
   rule performInvariant(
           u(NumUsers:Int) #as UNumUsers:Usize,
