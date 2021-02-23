@@ -103,30 +103,7 @@ module PERFORM-PARTS
           u(Quorum:Int),
           Expand:Int)
     => true
-      andBool notBool u(0) in_keys(UserIdToAddress)
-      andBool notBool u(0) in_keys(UserIdToRole)
 
-      andBool valuesAreOfType(AddressToUserId, rUsize)
-      andBool valuesAreKResult(AddressToUserId)
-      andBool valuesAreNotEmpty(AddressToUserId, rUsize)
-      andBool unusedIdsInMapValues(add(UNumUsers, u(1)), AddressToUserId, Expand)
-
-      andBool valuesAreOfType(UserIdToRole, rUserRole)
-      andBool valuesAreKResult(UserIdToRole)
-      andBool valuesAreNotEmpty(UserIdToRole, rUserRole)
-      andBool unusedIdsInMapKeys(add(UNumUsers, u(1)), keysMap(UserIdToRole), u(Expand))
-
-      andBool allValuesBecomeKeys(UserIdToAddress, AddressToUserId)
-
-      andBool NumUsers >=Int 0 // TODO: Strict >?
-      andBool NumBoardMembers >=Int 0
-      andBool NumProposers >=Int 0
-
-      andBool Quorum <=Int NumBoardMembers
-      andBool (NumBoardMembers +Int NumProposers >Int 0)
-
-      andBool NumBoardMembers ==Int countMapValues(UserIdToRole, BoardMember)
-      andBool NumProposers ==Int countMapValues(UserIdToRole, Proposer)
   rule performLhs(
           Action:Action,
           K:K,
