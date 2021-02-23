@@ -36,7 +36,6 @@ module INVARIANT
           <action-state>
             <actions>
               <action-data>ActionData</action-data>
-              <action-signers>ActionSigners</action-signers>
             </actions>
           </action-state>
         </multisig-state>

@@ -659,7 +659,6 @@ module PSEUDOCODE-CONFIGURATION
             <action-state>
               <actions>
                 <action-data>.Map</action-data>
-                <action-signers>.Map</action-signers>
               </actions>
             </action-state>
           </multisig-state>
