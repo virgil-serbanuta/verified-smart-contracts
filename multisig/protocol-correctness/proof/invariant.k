@@ -124,7 +124,7 @@ module INVARIANT
       andBool NumBoardMembers ==Int countMapValues(UserIdToRole, BoardMember)
       andBool NumProposers ==Int countMapValues(UserIdToRole, Proposer)
 
-
+  // TODO: Delete.
   syntax Bool ::= invariantDebug(
       numUsers:Usize,
       userIdToAddress:Map,
