@@ -101,55 +101,6 @@ module PERFORM-PARTS
           UserIdToRole:Map,
           u(Quorum:Int),
           usesExpanded)
-  /*
-  rule performEnsures(
-          u(NumUsers:Int),
-          UserIdToAddress:Map,
-          AddressToUserId:Map,
-          u(NumBoardMembers:Int),
-          u(NumProposers:Int),
-          UserIdToRole:Map,
-          u(Quorum:Int))
-    => true*/
-      /*
-      andBool performInvariant(
-          UNumUsers:Usize,
-          UserIdToAddress:Map,
-          AddressToUserId:Map,
-          u(NumBoardMembers:Int),
-          u(NumProposers:Int),
-          UserIdToRole:Map,
-          u(Quorum:Int),
-          u(-1))
-      */
-      /*
-      andBool notBool u(0) in_keys(UserIdToAddress)
-      andBool notBool u(0) in_keys(UserIdToRole)
-
-      andBool allValuesBecomeKeys(AddressToUserId, UserIdToAddress)
-      andBool allValuesBecomeKeys(UserIdToAddress, AddressToUserId)
-
-      andBool valuesAreOfType(AddressToUserId, rUsize)
-      andBool valuesAreKResult(AddressToUserId)
-      andBool valuesAreNotEmpty(AddressToUserId, rUsize)
-      andBool unusedIdsInMapValues(NumUsers +Int 1, AddressToUserId, usesExpanded)
-      andBool valuesAreDistinct(AddressToUserId)
-
-      andBool valuesAreOfType(UserIdToRole, rUserRole)
-      andBool valuesAreKResult(UserIdToRole)
-      andBool valuesAreNotEmpty(UserIdToRole, rUserRole)
-      andBool unusedIdsInMapKeys(NumUsers +Int 1, keysMap(UserIdToRole), usesExpanded)
-
-      andBool NumUsers >=Int 0 // TODO: Strict >?
-      andBool NumBoardMembers >=Int 0
-      andBool NumProposers >=Int 0
-
-      andBool Quorum <=Int NumBoardMembers
-      andBool (NumBoardMembers +Int NumProposers >Int 0)
-
-      andBool NumBoardMembers ==Int countMapValues(UserIdToRole, BoardMember)
-      andBool NumProposers ==Int countMapValues(UserIdToRole, Proposer)
-      */
 
   rule performInvariant(
           u(NumUsers:Int),

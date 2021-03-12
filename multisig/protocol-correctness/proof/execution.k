@@ -161,21 +161,31 @@ module EXECUTION-HELPERS
       =>  valueNotInMapValues(u(Index), M)  // TODO: Check before wrapping
           andBool noReusedIndexValue(Index +Int 1, M, Expand)
     [simplification(50)]
-  rule noReusedIndexValue(Index:Int, M:Map, usesExpanded)
-      => true
-    requires noReusedIndexValue(Index, M, expanded)
-    [simplification(50)]
-  rule noReusedIndexValue(Index:Int, M:Map, usesExpanded)
-      =>  true
-    requires valueNotInMapValues(u(Index), M)
-          andBool noReusedIndexValue(Index +Int 1, M, expanded)
-    [simplification(50)]
 
   rule noReusedIndexValue(X:Int +Int 4, M:Map, _:PropertyHandling)
       => true
     requires noReusedIndexValue(X +Int 3, M, expanded)
     [simplification]
 
+  rule noReusedIndexValue(Index:Int, M:Map, usesExpanded)
+      => true
+    requires noReusedIndexValue(Index, M, expanded)
+    [simplification(50)]
+  rule noReusedIndexValue(X:Int, M:Map, usesExpanded)
+      => true
+    requires noReusedIndexValue(X, M, expand(expanded))
+    [simplification]
+
+  rule noReusedIndexValue(Index:Int, M:Map, usesExpanded)
+      =>  true
+    requires valueNotInMapValues(u(Index), M)
+          andBool noReusedIndexValue(Index +Int 1, M, expanded)
+    [simplification(50)]
+  rule noReusedIndexValue(X:Int +Int 1, M:Map, usesExpanded)
+      => true
+    requires noReusedIndexValue(X +Int 2, M, expanded)
+      andBool valueNotInMapValues(u(X +Int 1), M)
+    [simplification]
   rule noReusedIndexValue(X:Int +Int 2, M:Map, usesExpanded)
       => true
     requires noReusedIndexValue(X +Int 3, M, expanded)
@@ -190,15 +200,6 @@ module EXECUTION-HELPERS
     requires noReusedIndexValue(X +Int 3, M, expanded)
       andBool valueNotInMapValues(u(X +Int 1), M)
       andBool valueNotInMapValues(u(X +Int 2), M)
-    [simplification]
-  rule noReusedIndexValue(X:Int +Int 1, M:Map, usesExpanded)
-      => true
-    requires noReusedIndexValue(X +Int 2, M, expanded)
-      andBool valueNotInMapValues(u(X +Int 1), M)
-    [simplification, label(xyzzy)]
-  rule noReusedIndexValue(X:Int, M:Map, usesExpanded)
-      => true
-    requires noReusedIndexValue(X, M, expand(expanded))
     [simplification]
 
   syntax Bool ::= allValuesBecomeKeys(Map, Map)  [function, functional]
@@ -217,6 +218,16 @@ module EXECUTION-HELPERS
   rule #allValuesBecomeKeys(M:Map, _ |-> _ N:Map) => true
     requires #allValuesBecomeKeys(M, N)
     [simplification]
+
+  syntax Bool ::= mapsAreReverse(Map, Map) [function, functional]
+  syntax Bool ::= mapsAreReverseHalf(Map, Map) [function, functional]
+
+  rule mapsAreReverse(M:Map, N:Map)
+      => mapsAreReverseHalf(M, N) andBool mapsAreReverseHalf(N, M)
+
+  rule mapsAreReverseHalf(.Map, _:Map) => true
+  rule mapsAreReverseHalf(K:KItem |-> V:KItem M:Map, N:Map)
+      => V in_keys(N) andBool N[V] ==K K andBool mapsAreReverseHalf(M, N)
 
   rule X:Int -Int X:Int => 0  [simplification]
   // Int addition normalization
@@ -309,11 +320,6 @@ module EXECUTION-HELPERS
 
   syntax Int ::= countMapValues(Map, KItem)  [function, functional, smtlib(countMapValues)]
   rule countMapValues(.Map, _) => 0
-  // rule countMapValues((_ |-> V) M:Map, V:KItem) => 1 +Int countMapValues(M, V)
-  //   [simplification]
-  // rule countMapValues((_ |-> U) M:Map, V:KItem) => countMapValues(M, V)
-  //   requires notBool (U ==K V)
-  //   [simplification]
   rule countMapValues((_ |-> U) M:Map, V:KItem) => countMapValues(M, V) +Int countValue(U, V)
     [simplification]
 
@@ -342,7 +348,9 @@ module EXECUTION-HELPERS
       => true
     requires X >=Int 0
     [simplification]
-  rule countMapValues(_, _) +Int countMapValues(_, _) +Int countValue(_, _) +Int 1 >Int 0 => true  [simplification]
+  rule countMapValues(_, _) +Int countMapValues(_, _) +Int countValue(_, _) +Int 1 >Int 0
+      => true
+    [simplification]
 
 endmodule
 
@@ -350,45 +358,6 @@ module INSTRUMENTATION
   imports MAP
 
   imports PSEUDOCODE
-  /*
-  syntax KItem ::= "iCallGetUserId"
-
-  syntax Bool ::= isCallGetUserId(KItem)  [function, functional]
-  rule isCallGetUserId(call(getUserId(_))) => true
-  rule isCallGetUserId(_) => false  [owise]
-
-  // Does not split properly, leaves a remainder
-  rule  <k> call(getUserId(A:Address)) ... </k>
-        <caller-address> B:Address </caller-address>
-        <last-instrumented> .K => iCallGetUserId </last-instrumented>
-    requires A ==K B
-    [priority(10)]
-  rule  <k> call(getUserId(A:Address)) ... </k>
-        <caller-address> B:Address </caller-address>
-        <last-instrumented> .K => iCallGetUserId </last-instrumented>
-    requires notBool (A ==K B)
-    [priority(10)]
-  rule  <k> X:KItem ... </k>
-        <last-instrumented> iCallGetUserId => .K </last-instrumented>
-    requires notBool isCallGetUserId(X)
-    [priority(10)]
-  */
-
-  /*
-  syntax KItem ::= "concretizing"
-
-  syntax KItem ::= concretize(Usize)
-  rule concretize(u(_)) => .K
-
-  syntax KItem ::= "concretizeEnd"
-  rule concretizeEnd => .K
-
-  syntax K ::= concretizeKeys(Map)  [function, functional]
-  rule concretizeKeys(K:Usize |-> _:KItem M:Map)
-      => concretize(K) ~> concretizeKeys(M)
-    [simplification]
-  rule concretizeKeys(M:Map) => concretizeEnd
-  */
 
   syntax Singleton ::= "singleton"
   syntax KItem ::= "concretizing"
@@ -396,9 +365,13 @@ module INSTRUMENTATION
   syntax IntVarList ::= vars(Int, IntVarList)
                     |   ".IntVarList"
 
-  // TODO: use lazyConcretizeKeys
-  rule  <k> (.K => concretized(concretizeKeys(UserIdToAddress, vars(?_, vars(?_, .IntVarList))))
-                ~> concretized(concretizeKeys(UserIdToRole, vars(?_, vars(?_, .IntVarList))))
+  syntax Bool ::= isLazyConcretizeKeys(KItem)  [function, functional]
+  rule isLazyConcretizeKeys(lazyConcretizeKeys(_:Map)) => true
+  rule isLazyConcretizeKeys(_:KItem) => false  [owise]
+
+  rule  <k> (.K =>  (  lazyConcretizeKeys(UserIdToAddress)
+                    ~> lazyConcretizeKeys(UserIdToRole)
+                    )
             )
             ~> void ~> evaluateReturnValue
         ...</k>
@@ -410,6 +383,7 @@ module INSTRUMENTATION
         <last-instrumented> (concretizing ~> .K) => .K </last-instrumented>
     requires true
         andBool notBool (K ==K concretized(singleton))
+        andBool notBool isLazyConcretizeKeys(K)
         andBool notBool (K ==K void)
     [priority(20)]
 
@@ -442,11 +416,8 @@ module INSTRUMENTATION
   rule  <k> (.K => splitAction(A))
             ~> pushContext ~> (.K => splitting-action) ~> call(performAction(A:Action))
         ...</k>
-        <last-instrumented> .K => (splitting-action ~> .K) </last-instrumented>
     [priority(10)]
   rule  <k> (splitting-action => .K) ...</k>
-        // TODO: I don't think I need <last-instrumented> here.
-        <last-instrumented> (splitting-action ~> .K) => .K </last-instrumented>
     [priority(20)]
 
   syntax KItem ::= splitAction(Action)
@@ -480,10 +451,8 @@ module INSTRUMENTATION
         ...</k>
         <address-to-user-id>AddressToUserId:Map</address-to-user-id>
         <caller-address>A2:Address</caller-address>
-        <last-instrumented> splitting-action => splitting-delete-caller ...</last-instrumented>
     [priority(10)]
   rule  <k> (splitting-delete-caller => .K) ...</k>
-        <last-instrumented> (splitting-delete-caller ~> .K) => .K </last-instrumented>
     [priority(20)]
 
   syntax KItem ::= "splitting-delete-address-to-user-id"
@@ -499,18 +468,15 @@ module INSTRUMENTATION
             ~> call(performAction(RemoveUser(A:Address)))
         ...</k>
         <address-to-user-id>AddressToUserId:Map</address-to-user-id>
-        <last-instrumented> splitting-delete-caller => splitting-delete-address-to-user-id ...</last-instrumented>
     requires A in_keys(AddressToUserId)
     [priority(10)]
   rule  <k> (splitting-delete-caller => .K)
             ~> call(performAction(RemoveUser(A:Address)))
         ...</k>
         <address-to-user-id>AddressToUserId:Map</address-to-user-id>
-        <last-instrumented> splitting-delete-caller => .K ...</last-instrumented>
     requires notBool (A in_keys(AddressToUserId))
     [priority(10)]
   rule  <k> (splitting-delete-address-to-user-id => .K) ...</k>
-        <last-instrumented> (splitting-delete-address-to-user-id ~> .K) => .K </last-instrumented>
     [priority(20)]
 
   syntax KItem ::= "splitting-user-id-to-role"
@@ -535,7 +501,6 @@ module INSTRUMENTATION
         <num-board-members>u(NumBoardMembers:Int)</num-board-members>
         <num-proposers>u(NumProposers:Int)</num-proposers>
         <quorum>u(Quorum:Int)</quorum>
-        <last-instrumented> splitting-delete-address-to-user-id => splitting-user-id-to-role ...</last-instrumented>
     requires UserId in_keys(UserIdToRole)
     [priority(10)]
   rule  <k> (splitting-delete-address-to-user-id => .K)
@@ -543,11 +508,9 @@ module INSTRUMENTATION
         ...</k>
         <address-to-user-id> A |-> UserId:KItem _AddressToUserId:Map</address-to-user-id>
         <user-roles>UserIdToRole:Map</user-roles>
-        <last-instrumented> splitting-delete-address-to-user-id => .K ...</last-instrumented>
     requires notBool (UserId in_keys(UserIdToRole))
     [priority(10)]
   rule  <k> (splitting-user-id-to-role => .K) ...</k>
-        <last-instrumented> (splitting-user-id-to-role ~> .K) => .K </last-instrumented>
     [priority(20)]
 
   syntax KItem ::= concretizeValue(KItem)
@@ -572,7 +535,6 @@ module INSTRUMENTATION
                         _CodeMetadata:CodeMetadata,
                         Arguments:ExpressionList)))
         ...</k>
-        <last-instrumented> splitting-action => .K ...</last-instrumented>
     [priority(10)]
   rule  concretize-sc-deploy => .K
     [priority(20)]
@@ -615,7 +577,6 @@ module INSTRUMENTATION
         <address-to-user-id>AddressToUserId:Map</address-to-user-id>
         <user-roles> UserIdToRole:Map </user-roles>
         <caller-address>A2:Address</caller-address>
-        <last-instrumented> splitting-action => .K ...</last-instrumented>
     [priority(10)]
   rule  splitting-add-proposer-in-keys-atuid => .K
     [priority(20)]
@@ -624,26 +585,6 @@ endmodule
 
 module EXECUTION-BOOL
   imports BOOL
-
-  // rule notBool B:Bool => false
-  //   requires B
-  //   [simplification]
-  // rule notBool B:Bool => true
-  //   requires (B ==K false)
-  //   [simplification]
-
-  // rule B1:Bool andBool B2:Bool => B2
-  //   requires B1
-  //   [simplification]
-  // rule B1:Bool andBool B2:Bool => B1
-  //   requires B2
-  //   [simplification]
-  // rule B1:Bool andBool _:Bool => false
-  //   requires notBool B1
-  //   [simplification]
-  // rule _:Bool andBool B2:Bool => false
-  //   requires notBool B2
-  //   [simplification]
 
   rule B1:Bool orBool _:Bool => true
     requires B1
