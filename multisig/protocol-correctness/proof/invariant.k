@@ -1,6 +1,65 @@
+module INVARIANT-HELPERS
+  imports EXECUTION-HELPERS
+
+  syntax Bool ::= addressToUserIdInvariant(addressToUserId:Map)
+    [function, functional]
+
+  rule addressToUserIdInvariant(.Map) => true
+
+  rule addressToUserIdInvariant(_:KItem |-> V:KItem AddressToUserId:Map)
+    => true
+      andBool valueOfType(V, rUsize)  // valuesAreOfType(AddressToUserId, rUsize)
+      andBool isKResult(V)  // valuesAreKResult(AddressToUserId)
+      andBool valueIsNotEmpty(V, rUsize)  // valuesAreNotEmpty(AddressToUserId, rUsize)
+      andBool valueNotInMapValues(V, AddressToUserId)  // valuesAreDistinct(AddressToUserId)
+
+      andBool addressToUserIdInvariant(AddressToUserId)
+    [simplification]
+
+
+  syntax Bool ::= userIdToRoleInvariant(userIdToRole:Map)
+    [function, functional]
+
+  rule userIdToRoleInvariant(.Map) => true
+
+  rule userIdToRoleInvariant(_:KItem |-> V:KItem UserIdToRole:Map)
+    => true
+      andBool valueOfType(V, rUserRole)  // valuesAreOfType(UserIdToRole, rUserRole)
+      andBool isKResult(V)  // valuesAreKResult(UserIdToRole)
+      andBool valueIsNotEmpty(V, rUserRole)  // valuesAreNotEmpty(UserIdToRole, rUserRole)
+
+      andBool userIdToRoleInvariant(UserIdToRole:Map)
+    [simplification]
+
+
+  syntax Bool ::= actionDataInvariant(actionData:Map)
+    [function, functional]
+  rule actionDataInvariant(.Map) => true
+  rule actionDataInvariant(_:KItem |-> V:KItem ActionData:Map)
+    => true
+      andBool valueOfType(V, rAction) // valuesAreOfType(ActionData, rAction)
+      andBool isKResult(V)  // valuesAreKResult(ActionData)
+
+      andBool actionDataInvariant(ActionData)
+    [simplification]
+
+
+  syntax Bool ::= actionSignersInvariant(actionSigners:Map)
+    [function, functional]
+  rule actionSignersInvariant(.Map) => true
+  rule actionSignersInvariant(_:KItem |-> V:KItem ActionSigners:Map)
+    => true
+      andBool isExpressionList(V) andBool listElementsAreUsize(V) // valuesAreExpressionListOfUsize(ActionSigners)
+      andBool isKResult(V)  // valuesAreKResult(ActionSigners)
+
+      andBool actionSignersInvariant(ActionSigners)
+    [simplification]
+endmodule
+
 module INVARIANT
   imports EXECUTION-HELPERS
   imports PSEUDOCODE
+  imports INVARIANT-HELPERS
 
   syntax StateCell ::= invariantState(
       numUsers:Usize,
@@ -88,19 +147,22 @@ module INVARIANT
       andBool notBool u(0) in_keys(UserIdToAddress)
       andBool notBool u(0) in_keys(UserIdToRole)
 
-      andBool allValuesBecomeKeys(AddressToUserId, UserIdToAddress)  // not in the perform invariant
+      andBool allValuesBecomeKeys(AddressToUserId, UserIdToAddress)
       andBool allValuesBecomeKeys(UserIdToAddress, AddressToUserId)
 
-      andBool valuesAreOfType(AddressToUserId, rUsize)
-      andBool valuesAreKResult(AddressToUserId)
-      andBool valuesAreNotEmpty(AddressToUserId, rUsize)
+      andBool addressToUserIdInvariant(AddressToUserId)
+      // andBool valuesAreOfType(AddressToUserId, rUsize)
+      // andBool valuesAreKResult(AddressToUserId)
+      // andBool valuesAreNotEmpty(AddressToUserId, rUsize)
+      // andBool valuesAreDistinct(AddressToUserId)
+      // TODO: Is unusedIdsInMapValues the same as noReusedIndexValue?
       andBool unusedIdsInMapValues(NumUsers +Int 1, AddressToUserId, Handling)
       andBool noReusedIndexValue(NumUsers +Int 1, AddressToUserId, Handling)
-      andBool valuesAreDistinct(AddressToUserId)
 
-      andBool valuesAreOfType(UserIdToRole, rUserRole)
-      andBool valuesAreKResult(UserIdToRole)
-      andBool valuesAreNotEmpty(UserIdToRole, rUserRole)
+      andBool userIdToRoleInvariant(UserIdToRole)
+      // andBool valuesAreOfType(UserIdToRole, rUserRole)
+      // andBool valuesAreKResult(UserIdToRole)
+      // andBool valuesAreNotEmpty(UserIdToRole, rUserRole)
       andBool unusedIdsInMapKeys(NumUsers +Int 1, keysMap(UserIdToRole), Handling)
 
       andBool unusedIdsInMapKeys(ActionLastIndex +Int 1, keysMap(ActionData), Handling)
@@ -108,11 +170,13 @@ module INVARIANT
       andBool maxMapKey(u(ActionLastIndex), keysMap(ActionData))
       andBool maxMapKey(u(ActionLastIndex), keysMap(ActionSigners))
 
-      andBool valuesAreExpressionListOfUsize(ActionSigners)
-      andBool valuesAreKResult(ActionSigners)
+      andBool actionSignersInvariant(ActionSigners)
+      // andBool valuesAreExpressionListOfUsize(ActionSigners)
+      // andBool valuesAreKResult(ActionSigners)
 
-      andBool valuesAreOfType(ActionData, rAction)
-      andBool valuesAreKResult(ActionData)
+      andBool actionDataInvariant(ActionData)
+      // andBool valuesAreOfType(ActionData, rAction)
+      // andBool valuesAreKResult(ActionData)
 
       andBool NumUsers >=Int 0 // TODO: Strict >?
       andBool NumBoardMembers >=Int 0
