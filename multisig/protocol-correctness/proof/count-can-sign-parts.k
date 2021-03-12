@@ -1,5 +1,6 @@
 module COUNT-CAN-SIGN-PARTS
   imports EXECUTION-HELPERS
+  imports INVARIANT-HELPERS
   imports PSEUDOCODE
 
 
@@ -137,8 +138,7 @@ module COUNT-CAN-SIGN-PARTS
         andBool listElementsAreUsize(SignerIds)
         andBool (notBool result in_keys(Variables))
         andBool (notBool user_role in_keys(Variables))
-        andBool valuesAreOfType(UserIdToRole, rUserRole)
-        andBool valuesAreKResult(UserIdToRole)
+        andBool userIdToRoleInvariant(UserIdToRole)
 
   syntax Bool ::= countCanSignEnsures(
             count:Usize,

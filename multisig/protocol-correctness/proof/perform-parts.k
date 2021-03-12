@@ -1,6 +1,7 @@
 module PERFORM-PARTS
 
   imports EXECUTION-HELPERS
+  imports INVARIANT-HELPERS
   imports PSEUDOCODE
 
   syntax Bool ::= performRequires(
@@ -102,6 +103,7 @@ module PERFORM-PARTS
           u(Quorum:Int),
           usesExpanded)
 
+  // TODO: Use the main invariant.
   rule performInvariant(
           u(NumUsers:Int),
           UserIdToAddress:Map,
@@ -118,16 +120,18 @@ module PERFORM-PARTS
       andBool allValuesBecomeKeys(AddressToUserId, UserIdToAddress)
       andBool allValuesBecomeKeys(UserIdToAddress, AddressToUserId)
 
-      andBool valuesAreOfType(AddressToUserId, rUsize)
-      andBool valuesAreKResult(AddressToUserId)
-      andBool valuesAreNotEmpty(AddressToUserId, rUsize)
+      andBool addressToUserIdInvariant(AddressToUserId)
+      // andBool valuesAreOfType(AddressToUserId, rUsize)
+      // andBool valuesAreKResult(AddressToUserId)
+      // andBool valuesAreNotEmpty(AddressToUserId, rUsize)
+      // andBool valuesAreDistinct(AddressToUserId)
       andBool unusedIdsInMapValues(NumUsers +Int 1, AddressToUserId, Handling)
       andBool noReusedIndexValue(NumUsers +Int 1, AddressToUserId, Handling)
-      andBool valuesAreDistinct(AddressToUserId)
 
-      andBool valuesAreOfType(UserIdToRole, rUserRole)
-      andBool valuesAreKResult(UserIdToRole)
-      andBool valuesAreNotEmpty(UserIdToRole, rUserRole)
+      andBool userIdToRoleInvariant(UserIdToRole)
+      // andBool valuesAreOfType(UserIdToRole, rUserRole)
+      // andBool valuesAreKResult(UserIdToRole)
+      // andBool valuesAreNotEmpty(UserIdToRole, rUserRole)
       andBool unusedIdsInMapKeys(NumUsers +Int 1, keysMap(UserIdToRole), Handling)
 
       andBool NumUsers >=Int 0 // TODO: Strict >?
