@@ -196,8 +196,6 @@ module PSEUDOCODE-TYPE-REFLECTION
 
   syntax KItem ::= cast(KItem, ReflectionType)  [strict(1)]
 
-  syntax KResult ::= Maybe
-
   /*
   rule cast(nothing, _:ReflectionType) => nothing
   rule cast(just(K:KItem) => K, _:ReflectionType)
@@ -240,6 +238,10 @@ module PSEUDOCODE-TYPE-REFLECTION
   rule defaultValue(rBoxedBytes) => bytes("")
   rule defaultValue(rBigUint) => big(0)
   rule defaultValue(rCodeMetadata) => CodeMetadata::DEFAULT
+
+  syntax Bool ::= isDefaultValue(KItem, ReflectionType)  [function, functional]
+  rule isDefaultValue(K:KItem, T:ReflectionType) => K ==K defaultValue(T)
+    [owise]  // allow overriding
 
   syntax Bool ::= valueOfType(KItem, ReflectionType)  [function, functional]
   rule valueOfType(V:KItem, rUsize) => isUsize(V)
@@ -371,7 +373,7 @@ module PSEUDOCODE-EXPRESSION
   imports PSEUDOCODE-COMMON
   imports PSEUDOCODE-SYNTAX
 
-  rule add(u(A:Int), u(B:Int)) => u(A +Int B)  // TODO: The other functions
+  rule add(u(A:Int), u(B:Int)) => u(A +Int B)
   rule sub(u(A:Int), u(B:Int)) => u(A -Int B)
 
   context evaluate(! {HOLE:Expression => evaluate(HOLE)}:>Expression)
@@ -1004,14 +1006,16 @@ module PSEUDOCODE-FUNCTIONS
   rule call(pushList([Es:ExpressionCSV], E:Expression))
         => [#pushList(Es, E)]
 
-  syntax ExpressionCSV ::= #pushList(ExpressionCSV, Expression)  [function, functional]
+  syntax ExpressionCSV ::= #pushList(ExpressionCSV, Expression)
+    [function, functional]
 
   rule #pushList(., E:Expression)
         => E, .
   rule #pushList(E:Expression , Es:ExpressionCSV, E2:Expression)
         => prepend(#pushList(Es, E2), E)
 
-  syntax ExpressionCSV ::= prepend(ExpressionCSV, Expression)  [function, functional]
+  syntax ExpressionCSV ::= prepend(ExpressionCSV, Expression)
+    [function, functional]
   rule prepend(Es:ExpressionCSV, E:Expression) => E , Es
 
   rule call(sendTx(_To:Address, _Amount:BigUint, _Data:BoxedBytes))
@@ -1058,7 +1062,8 @@ module MAP-UTILS
   imports MAYBE
   imports PSEUDOCODE-COMMON
 
-  syntax KItem ::= splitMap(key:KItem, toSplit:Map, value:KItem, remainder:Map)  [function, functional]
+  syntax KItem ::= splitMap(key:KItem, toSplit:Map, value:KItem, remainder:Map)
+    [function, functional]
   syntax KItem ::= "endSplitMap"
   rule endSplitMap => .K
 
@@ -1171,14 +1176,6 @@ module MAP-UTILS
     ensures false
     [owise]
 
-  /*
-  rule X:KItem in_keys((X |-> _:KItem _:Map) #as _:Map) => true
-    [simplification]
-  rule X:KItem in_keys((Y:KItem |-> _:KItem M:Map) #as _:Map)
-        => X in_keys(M)
-    requires notBool (X ==K Y)
-    [simplification]
-  */
   rule X:KItem in_keys((Y:KItem |-> _:KItem M:Map) #as _:Map)
         => X ==K Y orBool X in_keys(M)
     [simplification]
@@ -1196,10 +1193,10 @@ module PSEUDOCODE-MAP-UTILS
   syntax KItem ::= nullableMapSet(key:KItem, value:KItem, Map, ReflectionType)
   rule nullableMapSet(Key:KItem, Value:KItem, M:Map, T:ReflectionType)
         => mapDelete(Key, M)
-    requires Value ==K defaultValue(T)
+    requires isDefaultValue(Value, T)
   rule nullableMapSet(Key:KItem, Value:KItem, M:Map, T:ReflectionType)
         => mapSet(Key, Value, M)
-    requires notBool (Value ==K defaultValue(T))
+    requires notBool isDefaultValue(Value, T)
 
 endmodule
 
