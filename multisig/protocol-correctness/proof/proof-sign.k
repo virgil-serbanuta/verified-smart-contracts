@@ -8,12 +8,30 @@ module PROOF-SIGN
                 setActionSignerIDs(ActionId, signer_ids);
               )
           </k>
-          invariantState(ActionSigners0:Map)
+          <state>
+            <multisig-state>
+              <action-signers>ActionSigners0</action-signers>
+            </multisig-state>
+            <pseudocode-state>
+              <variables>.Map</variables>
+              <stack> .List </stack>
+            </pseudocode-state>
+          </state>
         </TT></T>
       =>
         <T><TT>
           <k> .K </k>
-          invariantState(?ActionSigners1:Map):StateCell
+          <state>
+            <multisig-state>
+              <action-signers>?ActionSigners1</action-signers>
+            </multisig-state>
+            <pseudocode-state>
+              <variables>.Map</variables>
+              <stack> .List </stack>
+            </pseudocode-state>
+          </state>
         </TT></T>
-    requires invariant(ActionSigners0:Map)
+    requires true
+      andBool valuesAreExpressionListOfUsize(ActionSigners0)
+      andBool valuesAreKResult(ActionSigners0)
 endmodule
