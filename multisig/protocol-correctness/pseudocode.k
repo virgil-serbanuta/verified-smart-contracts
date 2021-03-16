@@ -505,7 +505,6 @@ module PSEUDOCODE-FUNCTIONS
             <stack> (.List => ListItem(stackEntry(S, V))) ... </stack>
           </pseudocode-state>
           _:ExternalCallEnvCell
-          _:ProofStateCell
         </state>
 
   rule  <k> (evaluate(E:Expression) => E) ~> popContext ... </k>
@@ -527,7 +526,6 @@ module PSEUDOCODE-FUNCTIONS
             <stack> (ListItem(stackEntry(S:MultisigStateCell, V:Map)) => .List) ... </stack>
           </pseudocode-state>
           _:ExternalCallEnvCell
-          _:ProofStateCell
         </state>
 
   rule <k> error ~> (evaluateReturnValue => .K) ... </k>
@@ -759,45 +757,8 @@ module PSEUDOCODE-CONFIGURATION
             <caller-address>uninitialized</caller-address>
           </external-call-env>
 
-          <proof-state>
-            <last-instrumented> .K </last-instrumented>
-          </proof-state>
         </state>
     </TT>
   </T>
 
-  syntax StateCell ::= "initialState"   [function]
-  rule initialState =>
-      <state>
-        <multisig-state>
-          <users>
-            <num-users>uninitialized</num-users>
-            <user-id-to-address>.Map</user-id-to-address>
-            <address-to-user-id>.Map</address-to-user-id>
-          </users>
-          <board-state>
-            <num-board-members>uninitialized</num-board-members>
-            <num-proposers>u(0)</num-proposers>
-            <user-roles>.Map</user-roles>
-            <quorum>uninitialized</quorum>
-          </board-state>
-          <action-state>
-            <action-last-index>u(0)</action-last-index>
-            <actions>
-              <action-data>.Map</action-data>
-              <action-signers>.Map</action-signers>
-            </actions>
-          </action-state>
-        </multisig-state>
-        <pseudocode-state>
-          <variables>.Map</variables>
-          <stack> .List </stack>
-        </pseudocode-state>
-        <external-call-env>
-          <caller-address>uninitialized</caller-address>
-        </external-call-env>
-        <proof-state>
-          <last-instrumented> .K </last-instrumented>
-        </proof-state>
-      </state>
 endmodule

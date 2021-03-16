@@ -54,9 +54,6 @@ module INVARIANT
         <external-call-env>
           <caller-address>uninitialized</caller-address>
         </external-call-env>
-        <proof-state>
-          <last-instrumented> .K </last-instrumented>
-        </proof-state>
       </state>
 
   syntax Bool ::= invariant(
