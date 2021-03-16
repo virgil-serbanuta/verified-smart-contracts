@@ -198,11 +198,6 @@ module PSEUDOCODE-TYPE-REFLECTION
 
   syntax KResult ::= Maybe
 
-  /*
-  rule cast(nothing, _:ReflectionType) => nothing
-  rule cast(just(K:KItem) => K, _:ReflectionType)
-  */
-
   rule cast(value(K:KItem) => K, _:ReflectionType)
 
   rule cast(U:Usize, rUsize) => U
@@ -280,24 +275,9 @@ module PSEUDOCODE-EXTERNAL
   imports PSEUDOCODE-CONFIGURATION
   imports PSEUDOCODE-SYNTAX
 
-  rule runExternalCalls(C:ExternalCommand) => runExternalCall(C)
-  rule runExternalCalls(C:ExternalCommand Cs:ExternalCommands)
-      => runExternalCall(C) ~> runExternalCalls(Cs)
-
   syntax KItem ::= "clearExternalCallEnv"
 
-  rule (evaluate(E:Expression) => .K) ~> clearExternalCallEnv
-    requires isKResult(E)
-
-  rule (E:Expression => .K) ~> clearExternalCallEnv
-    requires isKResult(E)
-
-  rule  <k> (error => .K) ~> clearExternalCallEnv ...</k>
-
   syntax KItem ::= endpointToInstruction(EndpointCall)
-  rule endpointToInstruction(Tag:EndpointTag()) => runInstruction(Tag();)
-  rule endpointToInstruction(Tag:EndpointTag(Es:ArgumentCSV)) => runInstruction(Tag(Es);)
-
 endmodule
 
 module PSEUDOCODE-MEMORY

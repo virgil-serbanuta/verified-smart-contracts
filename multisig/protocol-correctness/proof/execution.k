@@ -10,10 +10,6 @@ module EXECUTION-HELPERS
 
   imports PSEUDOCODE
 
-  syntax Int ::= pListLen(ExpressionList)  [function, functional]
-  rule pListLen([.]) => 0
-  rule pListLen([_:Expression, Es:ExpressionCSV]) => 1 +Int pListLen([Es])
-
   syntax Bool ::= listElementsAreUsize(KItem)  [function, functional]
   rule listElementsAreUsize([.]) => true
   rule listElementsAreUsize([E:Expression, Es:ExpressionCSV])
