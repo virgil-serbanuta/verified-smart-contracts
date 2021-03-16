@@ -28,21 +28,8 @@ module INVARIANT
     =>
       <state>
         <multisig-state>
-          <users>
-            <num-users>NumUsers</num-users>
-            <user-id-to-address>UserIdToAddress</user-id-to-address>
-            <address-to-user-id>AddressToUserId</address-to-user-id>
-          </users>
-          <board-state>
-            <num-board-members>NumBoardMembers</num-board-members>
-            <num-proposers>NumProposers</num-proposers>
-            <user-roles>UserIdToRole</user-roles>
-            <quorum>Quorum</quorum>
-          </board-state>
           <action-state>
-            <action-last-index>ActionLastIndex</action-last-index>
             <actions>
-              <action-data>ActionData</action-data>
               <action-signers>ActionSigners</action-signers>
             </actions>
           </action-state>
@@ -51,9 +38,6 @@ module INVARIANT
           <variables>.Map</variables>
           <stack> .List </stack>
         </pseudocode-state>
-        <external-call-env>
-          <caller-address>uninitialized</caller-address>
-        </external-call-env>
       </state>
 
   syntax Bool ::= invariant(

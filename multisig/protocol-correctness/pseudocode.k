@@ -285,8 +285,6 @@ module PSEUDOCODE-EXTERNAL
       => runExternalCall(C) ~> runExternalCalls(Cs)
 
   syntax KItem ::= "clearExternalCallEnv"
-  rule  <k> clearExternalCallEnv => .K ... </k>
-        <caller-address> _ => uninitialized </caller-address>
 
   rule (evaluate(E:Expression) => .K) ~> clearExternalCallEnv
     requires isKResult(E)
@@ -299,12 +297,6 @@ module PSEUDOCODE-EXTERNAL
   syntax KItem ::= endpointToInstruction(EndpointCall)
   rule endpointToInstruction(Tag:EndpointTag()) => runInstruction(Tag();)
   rule endpointToInstruction(Tag:EndpointTag(Es:ArgumentCSV)) => runInstruction(Tag(Es);)
-
-  rule  <k>
-            runExternalCall(from A:Address run Call:EndpointCall;)
-            => endpointToInstruction(Call) ~> clearExternalCallEnv
-        ...</k>
-        <caller-address> uninitialized => A </caller-address>
 
 endmodule
 
@@ -504,7 +496,6 @@ module PSEUDOCODE-FUNCTIONS
             <variables> V:Map => .Map </variables>
             <stack> (.List => ListItem(stackEntry(S, V))) ... </stack>
           </pseudocode-state>
-          _:ExternalCallEnvCell
         </state>
 
   rule  <k> (evaluate(E:Expression) => E) ~> popContext ... </k>
@@ -525,7 +516,6 @@ module PSEUDOCODE-FUNCTIONS
             <variables> _ => V </variables>
             <stack> (ListItem(stackEntry(S:MultisigStateCell, V:Map)) => .List) ... </stack>
           </pseudocode-state>
-          _:ExternalCallEnvCell
         </state>
 
   rule <k> error ~> (evaluateReturnValue => .K) ... </k>
@@ -682,19 +672,6 @@ module MAP-UTILS
     ensures false
     [owise]
 
-  /*
-  rule X:KItem in_keys((X |-> _:KItem _:Map) #as _:Map) => true
-    [simplification]
-  rule X:KItem in_keys((Y:KItem |-> _:KItem M:Map) #as _:Map)
-        => X in_keys(M)
-    requires notBool (X ==K Y)
-    [simplification]
-  */
-  /*
-  rule X:KItem in_keys((Y:KItem |-> _:KItem M:Map) #as _:Map)
-        => X ==K Y orBool X in_keys(M)
-    [simplification, label(xyzzy)]
-    */
 endmodule
 
 module PSEUDOCODE-MAP-UTILS
@@ -730,21 +707,8 @@ module PSEUDOCODE-CONFIGURATION
 
         <state>
           <multisig-state>
-            <users>
-              <num-users>uninitialized</num-users>
-              <user-id-to-address>.Map</user-id-to-address>
-              <address-to-user-id>.Map</address-to-user-id>
-            </users>
-            <board-state>
-              <num-board-members>uninitialized</num-board-members>
-              <num-proposers>u(0)</num-proposers>
-              <user-roles>.Map</user-roles>
-              <quorum>uninitialized</quorum>
-            </board-state>
             <action-state>
-              <action-last-index>u(0)</action-last-index>
               <actions>
-                <action-data>.Map</action-data>
                 <action-signers>.Map</action-signers>
               </actions>
             </action-state>
@@ -753,10 +717,6 @@ module PSEUDOCODE-CONFIGURATION
             <variables>.Map</variables>
             <stack> .List </stack>
           </pseudocode-state>
-          <external-call-env>
-            <caller-address>uninitialized</caller-address>
-          </external-call-env>
-
         </state>
     </TT>
   </T>
