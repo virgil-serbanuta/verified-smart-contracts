@@ -1,7 +1,5 @@
 require "../pseudocode.k"
 require "invariant.k"
-require "init-loop-parts.k"
-require "count-can-sign-parts.k"
 
 module EXECUTION-SYNTAX
   imports PSEUDOCODE-SYNTAX
@@ -134,6 +132,4 @@ endmodule
 module EXECUTION
   imports EXECUTION-HELPERS
   imports INVARIANT
-  imports INIT-LOOP-PARTS
-  imports COUNT-CAN-SIGN-PARTS
 endmodule
