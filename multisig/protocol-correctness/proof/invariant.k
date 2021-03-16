@@ -2,37 +2,13 @@ module INVARIANT
   imports EXECUTION-HELPERS
   imports PSEUDOCODE
 
-  syntax StateCell ::= invariantState(
-      numUsers:Usize,
-      userIdToAddress:Map,
-      addressToUserId:Map,
-      numBoardMembers:Usize,
-      numProposers:Usize,
-      userIdToRole:Map,
-      quorum:Usize,
-      actionLastIndex:Usize,
-      actionData:Map,
-      actionSigners:Map)  [function, functional]
+  syntax StateCell ::= invariantState(actionSigners:Map)  [function, functional]
 
-  rule invariantState(
-      NumUsers:Usize,
-      UserIdToAddress:Map,
-      AddressToUserId:Map,
-      NumBoardMembers:Usize,
-      NumProposers:Usize,
-      UserIdToRole:Map,
-      Quorum:Usize,
-      ActionLastIndex:Usize,
-      ActionData:Map,
-      ActionSigners:Map)
+  rule invariantState(ActionSigners:Map)
     =>
       <state>
         <multisig-state>
-          <action-state>
-            <actions>
-              <action-signers>ActionSigners</action-signers>
-            </actions>
-          </action-state>
+          <action-signers>ActionSigners</action-signers>
         </multisig-state>
         <pseudocode-state>
           <variables>.Map</variables>
@@ -40,31 +16,9 @@ module INVARIANT
         </pseudocode-state>
       </state>
 
-  syntax Bool ::= invariant(
-      numUsers:Usize,
-      userIdToAddress:Map,
-      addressToUserId:Map,
-      numBoardMembers:Usize,
-      numProposers:Usize,
-      userIdToRole:Map,
-      quorum:Usize,
-      actionLastIndex:Usize,
-      actionData:Map,
-      actionSigners:Map,
-      expandActionLastIndex:Usize)  [function, functional]
+  syntax Bool ::= invariant(actionSigners:Map)  [function, functional]
 
-  rule invariant(
-      _NumUsers:Usize,
-      UserIdToAddress:Map,
-      AddressToUserId:Map,
-      u(_NumBoardMembers:Int),
-      u(_NumProposers:Int),
-      UserIdToRole:Map,
-      u(_Quorum:Int),
-      ActionLastIndex:Usize,
-      ActionData:Map,
-      ActionSigners:Map,
-      ExpandActionLastIndex:Usize)
+  rule invariant(ActionSigners:Map)
     => true
       andBool valuesAreExpressionListOfUsize(ActionSigners)
       andBool valuesAreKResult(ActionSigners)

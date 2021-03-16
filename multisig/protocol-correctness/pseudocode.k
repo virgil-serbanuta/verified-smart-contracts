@@ -707,11 +707,7 @@ module PSEUDOCODE-CONFIGURATION
 
         <state>
           <multisig-state>
-            <action-state>
-              <actions>
-                <action-signers>.Map</action-signers>
-              </actions>
-            </action-state>
+            <action-signers>.Map</action-signers>
           </multisig-state>
           <pseudocode-state>
             <variables>.Map</variables>
