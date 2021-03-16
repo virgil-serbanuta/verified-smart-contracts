@@ -114,4 +114,50 @@ module PROOF-PERFORM-ACTION-ENDPOINT
         ?ActionData1:Map,
         ?ActionSigners1:Map,
         usesExpanded)
+
+  claim <T><TT>
+          <k> call(userRoleCanPropose(U:UserRole)) ~> K:K
+          </k>
+          State:StateCell
+        </TT></T>
+      =>
+        <T><TT>
+          <k> true ~> K </k>
+          State:StateCell
+        </TT></T>
+    requires notBool U ==K None
+
+  claim <T><TT>
+          <k> call(userRoleCanPropose(U:UserRole)) ~> K:K
+          </k>
+          State:StateCell
+        </TT></T>
+      =>
+        <T><TT>
+          <k> false ~> K </k>
+          State
+        </TT></T>
+    requires U ==K None
+
+  claim <T><TT>
+          <k> call(getActionSignerIds(ActionId:Usize)) ~> K:K
+          </k>
+          invariantState(
+              NumUsers:Usize,
+              UserIdToAddress:Map,
+              AddressToUserId:Map,
+              NumBoardMembers:Usize,
+              NumProposers:Usize,
+              UserRoles:Map,
+              Quorum:Usize,
+              ActionLastIndex:Usize,
+              ActionData:Map,
+              ActionSigners:Map) #as State:StateCell
+        </TT></T>
+      =>
+        <T><TT>
+          <k> ActionSigners[ActionId] orDefault [.] ~> K </k>
+          State
+        </TT></T>
+
 endmodule
