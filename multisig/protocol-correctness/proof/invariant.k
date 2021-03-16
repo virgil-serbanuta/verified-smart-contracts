@@ -286,6 +286,7 @@ module INVARIANT
     => isKResult(Es)
     [simplification]
 
+  // TODO: This is wrong, although it works in practice.
   rule listElementsAreUsize([#listSwapRemove(Es:ExpressionCSV, _:Int)])
     => listElementsAreUsize([Es])
     [simplification]

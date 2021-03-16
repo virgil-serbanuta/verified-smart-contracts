@@ -321,7 +321,7 @@ module EXECUTION-HELPERS
   rule noMapKeyInList(.Map, _:ExpressionList) => true
   rule noMapKeyInList(.Map, [.]) => true
     [simplification]
-  rule noMapKeyInList(K:Expression |-> _:KItem M:Map, L:ExpressionList)
+  rule noMapKeyInList(K:KItem |-> _:KItem M:Map, L:ExpressionList)
     => true
       andBool notBool #listContains(L, K)
       andBool noMapKeyInList(M, L)
@@ -364,6 +364,19 @@ module EXECUTION-HELPERS
   rule countMapValues(_, _) >=Int 0 => true  [simplification]
 
   // TODO: Replace these with generic int rules.
+  rule countMapValues(_, _) +Int X:Int >=Int 0 => true
+    requires X >=Int 0
+    [simplification]
+  rule countMapValues(_, _) +Int X:Int >Int 0 => true
+    requires X >Int 0
+    [simplification]
+  rule countValue(_, _) +Int X:Int >=Int 0 => true
+    requires X >=Int 0
+    [simplification]
+  rule countValue(_, _) +Int X:Int >Int 0 => true
+    requires X >Int 0
+    [simplification]
+  /*
   rule countMapValues(_, _) +Int 1 >=Int 0 => true  [simplification]
   rule countMapValues(_, _) +Int 2 >=Int 0 => true  [simplification]
   rule countMapValues(_, _) +Int 1 +Int countMapValues(_, _) >Int 0 => true  [simplification]
@@ -379,6 +392,7 @@ module EXECUTION-HELPERS
   rule countMapValues(_, _) +Int countMapValues(_, _) +Int countValue(_, _) +Int 1 >Int 0
       => true
     [simplification]
+  */
 
 endmodule
 
