@@ -45,50 +45,7 @@ module EXECUTION-HELPERS
       => isKResult(V) andBool valuesAreKResult(M)
     [simplification]
 
-  syntax Bool ::= valuesAreOfType(Map, ReflectionType)  [function, functional]
-  rule valuesAreOfType(.Map, _:ReflectionType) => true
-  rule valuesAreOfType(_ |-> V M:Map, T:ReflectionType)
-      => valueOfType(V, T) andBool valuesAreOfType(M, T)
-  rule valuesAreOfType(_ |-> V M:Map, T:ReflectionType)
-      => valueOfType(V, T) andBool valuesAreOfType(M, T)
-    [simplification]
-
   rule X:Int -Int X:Int => 0  [simplification]
-  // rule false andBool _:Bool => false  [simplification]
-  // rule true andBool X:Bool => X  [simplification]
-  // rule _:Bool andBool false => false  [simplification]
-  // rule X:Bool andBool true => X  [simplification]
-
-  // rule {((X:KItem |-> Vx:KItem Mx:Map) #as _:Map) #Equals ((Y:KItem |-> Vy:KItem My:Map) #as _:Map)}
-  //       =>
-  //           ({X #Equals Y} #And {Vx #Equals Vy} #And {Mx #Equals My})
-  //           #Or (
-  //                 (#Not ({X #Equals Y}))
-  //                 #And ({My #Equals (X |-> Vx ?M)}
-  //                         #And {Mx #Equals (Y |-> Vy ?M)}
-  //                       )
-  //               )
-  //   [simplification]
-
-  syntax KItem ::= "iCallGetUserId"
-
-  syntax Bool ::= isCallGetUserId(KItem)  [function, functional]
-  rule isCallGetUserId(call(getUserId(_))) => true
-  rule isCallGetUserId(_) => false  [owise]
-
-  rule  <k> call(getUserId(A:Address)) ... </k>
-        <caller-address> A </caller-address>
-        <last-instrumented> .K => iCallGetUserId </last-instrumented>
-    [priority(10)]
-  rule  <k> call(getUserId(A:Address)) ... </k>
-        <caller-address> B:Address </caller-address>
-        <last-instrumented> .K => iCallGetUserId </last-instrumented>
-    requires notBool (A ==K B)
-    [priority(10)]
-  rule  <k> X:KItem ... </k>
-        <last-instrumented> iCallGetUserId => .K </last-instrumented>
-    requires notBool isCallGetUserId(X)
-    [priority(10)]
 
 endmodule
 
