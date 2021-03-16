@@ -613,17 +613,9 @@ module PSEUDOCODE-FUNCTIONS
 
   rule call(sign(ActionId:Usize)) =>
       runPseudoCode(
-        require(!isEmptyActionData(ActionId));
-        caller_address = getCaller();
-        caller_id = getUserId(caller_address);
-        caller_role = getUserIdToRole(caller_id);
-        require(canSign(caller_role));
-
+        caller_id = u(0);
         signer_ids = getActionSignerIds(ActionId);
-        if (!listContains(signer_ids, caller_id)) {
-          signer_ids = pushList(signer_ids, caller_id);
-          setActionSignerIDs(ActionId, signer_ids);
-        }
+        setActionSignerIDs(ActionId, signer_ids);
 
         ok(void);
       )

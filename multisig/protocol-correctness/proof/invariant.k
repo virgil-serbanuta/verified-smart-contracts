@@ -84,29 +84,12 @@ module INVARIANT
       ActionData:Map,
       ActionSigners:Map,
       ExpandActionLastIndex:Usize)
-    => notBool u(0) in_keys(UserIdToAddress)
-      andBool notBool u(0) in_keys(UserIdToRole)
-      andBool allValuesBecomeKeys(AddressToUserId, UserIdToAddress)
-      andBool unusedIdsInMap(add(ActionLastIndex, u(1)), keysMap(ActionData), ExpandActionLastIndex)
-      andBool unusedIdsInMap(add(ActionLastIndex, u(1)), keysMap(ActionSigners), ExpandActionLastIndex)
-      andBool maxMapKey(ActionLastIndex, keysMap(ActionData))
-      andBool maxMapKey(ActionLastIndex, keysMap(ActionSigners))
+    => true
+      // andBool unusedIdsInMap(add(ActionLastIndex, u(1)), keysMap(ActionSigners), ExpandActionLastIndex)
+      // andBool maxMapKey(ActionLastIndex, keysMap(ActionSigners))
 
       andBool valuesAreExpressionListOfUsize(ActionSigners)
       andBool valuesAreKResult(ActionSigners)
-
-      andBool valuesAreOfType(AddressToUserId, rUsize)
-      andBool valuesAreKResult(AddressToUserId)
-
-      andBool valuesAreOfType(UserIdToRole, rUserRole)
-      andBool valuesAreKResult(UserIdToRole)
-
-      andBool valuesAreOfType(ActionData, rAction)
-      andBool valuesAreKResult(ActionData)
-
-      //andBool 0 <=Int NumBoardMembers
-      //andBool 0 <Int NumBoardMembers +Int NumProposers
-      //andBool Quorum <=Int NumBoardMembers +Int NumProposers
 
 
   syntax Bool ::= invariantDebug(
