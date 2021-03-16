@@ -3,10 +3,9 @@ module PROOF-SIGN
   imports PSEUDOCODE
 
   claim <T><TT>
-          <k> runExternalCalls(
-                  (   from _:Address run sign(_ActionId:Usize);
-                      EC:ExternalCommands
-                  )
+          <k> runPseudoCode(
+                signer_ids = getActionSignerIds(ActionId:Usize);
+                setActionSignerIDs(ActionId, signer_ids);
               )
           </k>
           invariantState(
@@ -23,7 +22,7 @@ module PROOF-SIGN
         </TT></T>
       =>
         <T><TT>
-          <k> runExternalCalls(EC) </k>
+          <k> .K </k>
           invariantState(
               NumUsers:Usize,
               UserIdToAddress:Map,
