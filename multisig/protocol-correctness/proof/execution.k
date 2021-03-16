@@ -33,7 +33,7 @@ module EXECUTION-HELPERS
 
   // Override the default behaviour.
   rule isDefaultValue(E:ExpressionList, rExpressionList)
-      => pListLen(E) >Int 0
+      => notBool (pListLen(E) >Int 0)
   rule pListLen([#pushList(_, _)]) >Int 0 => true
       [simplification]
 
@@ -325,6 +325,11 @@ module EXECUTION-HELPERS
     => true
       andBool notBool #listContains(L, K)
       andBool noMapKeyInList(M, L)
+    [simplification]
+  rule noMapKeyInList(M:Map, [#pushList(L:ExpressionCSV, E:Expression)])
+    => true
+    requires noMapKeyInList(M, [L])
+      andBool notBool E in_keys(M)
     [simplification]
 
   syntax Map ::= keysMap(Map)  [function, functional]
