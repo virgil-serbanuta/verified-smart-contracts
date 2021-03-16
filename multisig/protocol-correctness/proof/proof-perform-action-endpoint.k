@@ -152,12 +152,22 @@ module PROOF-PERFORM-ACTION-ENDPOINT
               Quorum:Usize,
               ActionLastIndex:Usize,
               ActionData:Map,
-              ActionSigners:Map) #as State:StateCell
+              ActionSigners:Map):StateCell
         </TT></T>
       =>
         <T><TT>
           <k> ActionSigners[ActionId] orDefault [.] ~> K </k>
-          State
+          invariantState(
+              NumUsers:Usize,
+              UserIdToAddress:Map,
+              AddressToUserId:Map,
+              NumBoardMembers:Usize,
+              NumProposers:Usize,
+              UserRoles:Map,
+              Quorum:Usize,
+              ActionLastIndex:Usize,
+              ActionData:Map,
+              ActionSigners:Map):StateCell
         </TT></T>
 
 endmodule
