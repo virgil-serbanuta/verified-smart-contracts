@@ -554,14 +554,6 @@ module PSEUDOCODE-FUNCTIONS
   syntax KItem ::= "plusOne"
   rule  (I:Usize ~> plusOne) => add(I, u(1))
 
-  rule  <k> (.K => pseudocodeMapSet(ActionId, A, M, rAction)) ~> call(setActionData(ActionId:Usize, A:Action)) ... </k>
-        <action-data> M:Map </action-data>
-  rule  <k> (M:Map ~> call(setActionData(_:Usize, _:Action))) => void ... </k>
-        <action-data> _:Map => M </action-data>
-
-  rule  <k> call(getActionData(ActionId:Usize)) => pseudocodeMapLookup(ActionId, M, rAction) ... </k>
-        <action-data> M:Map </action-data>
-
   rule  <k> (.K => pseudocodeMapSet(ActionId, Signers, M, rExpressionList))
             ~> call(setActionSignerIDs(ActionId:Usize, Signers:ExpressionList))
         ...</k>
@@ -570,247 +562,25 @@ module PSEUDOCODE-FUNCTIONS
   rule  <k> (M:Map ~> call(setActionSignerIDs(_:Usize, _:ExpressionList))) => void ... </k>
         <action-signers> _:Map => M </action-signers>
 
-  rule  <k> (.K => call(getActionData(ActionId))) ~> call(isEmptyActionData(ActionId:Usize)) ... </k>
-  rule  Action:Action ~> call(isEmptyActionData(_:Usize)) => Action ==K Nothing
-
-  rule  call(canSign(BoardMember)) => true
-  rule  call(canSign(_)) => false  [owise]
-
   rule  <k> call(getActionSignerIds(ActionId:Usize))
             => pseudocodeMapLookup(ActionId, M:Map, rExpressionList)
         ... </k>
         <action-signers> M:Map </action-signers>
 
-  rule call(listContains(Es:ExpressionList, E:Expression)) => #listContains(Es, E)
-
   syntax Bool ::= #listContains(ExpressionList, Expression)  [function, functional]
-
-  rule  #listContains([.], _) => false
-  rule  #listContains([E:Expression, _:ExpressionCSV], E) => true
-  rule  #listContains([_:Expression, Es:ExpressionCSV], X:Expression)
-          => #listContains([Es], X)  [owise]
-
-  rule call(listFind(Es:ExpressionList, E:Expression)) => #listFind(Es, E)
 
   syntax Usize ::= #listFind(ExpressionList, Expression)  [function, functional]
 
-  rule  #listFind([.], _) => u(-1)
-  rule  #listFind([X:Usize, _:ExpressionCSV], X) => u(0)
-  rule  #listFind([_:Usize, Es:ExpressionCSV], X:Usize) => add(#listFind([Es], X), u(1))  [owise]
-
-  /*
-  rule  call(listSwapRemove([_:Expression , L:ExpressionCSV], u(0))) => lastToStart(., L)
-  rule  call(listSwapRemove([E:Expression , L:ExpressionCSV], u(Index:Int)))
-        => call(listSwapRemove([L], u(Index -Int 1))) ~> pushListFreezer(E)
-    requires Index >Int 0
-
-  syntax KItem ::= pushListFreezer(Expression)
-  rule  [L:ExpressionCSV] ~> pushListFreezer(E:Expression) => [E , L]
-
-  syntax KItem ::= lastToStart(ExpressionCSV, ExpressionCSV)
-  syntax KItem ::= reverseExpressionCsv(ExpressionCSV, ExpressionCSV)
-
-  rule lastToStart(., .) => [.]
-  rule lastToStart(L1:ExpressionCSV, (E:Expression , L2:ExpressionCSV))
-        => lastToStart((E , L1), L2)
-  rule lastToStart(L1:ExpressionCSV, (E:Expression, .))
-        => reverseExpressionCsv(L1, .) ~> pushListFreezer(E)
-
-  rule reverseExpressionCsv(., L2:ExpressionCSV) => L2
-  rule reverseExpressionCsv((E:Expression , Es:ExpressionCSV), L2:ExpressionCSV) => reverseExpressionCsv(Es, (E , L2))
-  */
-
-  rule  call(listSwapRemove([L:ExpressionCSV], u(I:Int)))
-        => [#listSwapRemove(L, I)]
-        // TODO: require I >= 0
-
   syntax ExpressionCSV ::= #listSwapRemove(ExpressionCSV, Int)  [function, functional]
-  rule  #listSwapRemove(_:Expression , Es:ExpressionCSV, 0)
-        => lastToStart(., Es)
-  rule  #listSwapRemove(E:Expression , Es:ExpressionCSV, I:Int)
-        => E , #listSwapRemove(Es, I -Int 1)
-    requires I >Int 0
-  rule  #listSwapRemove(Es:ExpressionCSV, I:Int)
-        => Es
-    requires I <Int 0
 
   syntax ExpressionCSV ::= lastToStart(ExpressionCSV, ExpressionCSV)  [function, functional]
-  rule lastToStart(., .) => .:ExpressionCSV
-  rule lastToStart(L1:ExpressionCSV, (E:Expression, .))
-        => E , reverseExpressionCsv(L1, .)
-  rule lastToStart(L1:ExpressionCSV, (E:Expression , L2:ExpressionCSV))
-        => lastToStart((E , L1), L2)
 
   syntax ExpressionCSV ::= reverseExpressionCsv(ExpressionCSV, ExpressionCSV)  [function, functional]
-  rule reverseExpressionCsv(., L2:ExpressionCSV) => L2
-  rule reverseExpressionCsv((E:Expression , Es:ExpressionCSV), L2:ExpressionCSV) => reverseExpressionCsv(Es, (E , L2))
 
-  rule call(performActionFromId(ActionId:Usize))
-        => runPseudoCode(
-              action = getActionData(ActionId);
-              clearAction(ActionId);
-              performAction(action);
-
-        )
-
-  rule call(performAction(Nothing)) => evaluate(void)
-
-  rule call(performAction(AddBoardMember(BoardMemberAddress:Address)))
-        => runPseudoCode(
-              changeUserRole(BoardMemberAddress, BoardMember);
-        )
-
-  rule call(performAction(AddProposer(ProposerAddress:Address)))
-        => runPseudoCode(
-              changeUserRole(ProposerAddress, Proposer);
-        )
-
-  rule call(performAction(RemoveUser(UserAddress:Address)))
-        => runPseudoCode(
-              changeUserRole(UserAddress, None);
-              num_board_members = getNumBoardMembers();
-              num_proposers = getNumProposers();
-              require(num_board_members + num_proposers > u(0));
-              require(getQuorum() <= num_board_members);
-        )
-
-  rule call(performAction(ChangeQuorum(NewQuorum)))
-        => runPseudoCode(
-              require(NewQuorum <= getNumBoardMembers());
-              setQuorum(NewQuorum);
-        )
-
-  rule call(performAction(SendEgld(To:Address, Amount:BigUint, Data:BoxedBytes)))
-        => runPseudoCode(
-              sendTx(To, Amount, Data);
-        )
-
-  rule call(performAction(SCDeploy(
-            Amount:BigUint,
-            Code:BoxedBytes,
-            CodeMetadata:CodeMetadata,
-            Arguments:ExpressionList)))
-        => runPseudoCode(
-              gas_left = getGasLeft();
-              new_address = deployContract(gas_left, Amount, Code, CodeMetadata, Arguments);
-              [new_address, .];
-        )
-
-  rule call(performAction(SCCall(To:Address, Amount:BigUint, Function:BoxedBytes, [Arguments:ExpressionCSV])))
-        => runPseudoCode(
-              asyncCall(To, Amount, [Function , Arguments]);
-        )
-
-  rule call(clearAction(ActionId:Usize))
-        => runPseudoCode(
-              setActionData(ActionId, Nothing);
-              setActionSignerIDs(ActionId, [.]);
-        )
-
-  rule call(quorumReached(ActionId:Usize))
-        => runPseudoCode(
-              quorum = getQuorum();
-              valid_signers_count = getActionValidSignerCount(ActionId);
-              quorum <= valid_signers_count;
-        )
-
-  rule call(getActionValidSignerCount(ActionId:Usize))
-        => runPseudoCode(
-              signer_ids = getActionSignerIds(ActionId);
-              countCanSign(signer_ids);
-        )
-
-  rule call(countCanSign([.])) => evaluate(u(0))
-  rule call(countCanSign([SignerId:Usize , SignerIds:ExpressionCSV]))
-        => runPseudoCode(
-              result = u(0);
-              user_role = getUserIdToRole(SignerId);
-              if (userRoleCanSign(user_role)) {
-                result = u(1);
-              }
-              result + countCanSign([SignerIds]);
-        )
-  rule (.K => stuck) ~> call(countCanSign([E:Expression , _:ExpressionCSV]))
-    ensures notBool isUsize(E)
-    [owise]
-
-  rule call(changeUserRole(UserAddress:Address, NewRole:UserRole))
-        => runPseudoCode(
-          user_id = getOrCreateUser(UserAddress);
-          old_role = None;
-          if (!(user_id == u(0))) {
-            old_role = getUserIdToRole(user_id);
-          }
-          setUserIdToRole(user_id, NewRole);
-
-          if (old_role == BoardMember) {
-            if (!(NewRole == BoardMember)) {
-              setNumBoardMembers(getNumBoardMembers() - u(1));
-            }
-          } else {
-            if (NewRole == BoardMember) {
-              setNumBoardMembers(getNumBoardMembers() + u(1));
-            }
-          }
-
-          if (old_role == Proposer) {
-            if (!(NewRole == Proposer)) {
-              setNumProposers(getNumProposers() - u(1));
-            }
-          } else {
-            if (NewRole == Proposer) {
-              setNumProposers(getNumProposers() + u(1));
-            }
-          }
-        )
-
-  rule call(getOrCreateUser(Address:Address))
-        => runPseudoCode(
-              user_id = getUserId(Address);
-              if (user_id == u(0)) {
-                num_users = getNumUsers();
-                num_users = num_users + u(1);
-                setNumUsers(num_users);
-                user_id = num_users;
-                setUserId(Address, user_id);
-                setUserAddress(user_id, Address);
-              }
-              user_id;
-        )
-
-  rule call(pushList([Es:ExpressionCSV], E:Expression))
-        => [#pushList(Es, E)]
 
   syntax ExpressionCSV ::= #pushList(ExpressionCSV, Expression)  [function, functional]
 
-  rule #pushList(., E:Expression)
-        => E, .
-  rule #pushList(E:Expression , Es:ExpressionCSV, E2:Expression)
-        => prepend(#pushList(Es, E2), E)
-
   syntax ExpressionCSV ::= prepend(ExpressionCSV, Expression)  [function, functional]
-  rule prepend(Es:ExpressionCSV, E:Expression) => E , Es
-
-  rule call(sendTx(_To:Address, _Amount:BigUint, _Data:BoxedBytes))
-        => evaluate(void)
-
-  rule call(getGasLeft()) => evaluate(u(-1))
-
-  rule call(deployContract(
-            _GasLeft:Usize,
-            _Amount:BigUint,
-            _Code:BoxedBytes,
-            _:CodeMetadata,
-            Arguments:ExpressionList))
-        => evaluate(void)
-    requires isKResult(Arguments)
-
-  rule call(asyncCall(
-            _:Address,
-            _Amount:BigUint,
-            Arguments:ExpressionList))
-        => evaluate(void)
-    requires isKResult(Arguments)
 
 endmodule
 
