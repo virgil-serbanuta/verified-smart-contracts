@@ -1,5 +1,4 @@
 require "../pseudocode.k"
-require "invariant.k"
 
 module EXECUTION-SYNTAX
   imports PSEUDOCODE-SYNTAX
@@ -51,5 +50,4 @@ endmodule
 
 module EXECUTION
   imports EXECUTION-HELPERS
-  imports INVARIANT
 endmodule
