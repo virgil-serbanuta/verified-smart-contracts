@@ -26,12 +26,12 @@ module TRUSTED-PERFORM-ADD-PROPOSER-1
         performRhs(
             error,
             K,
-            u(?NumUsersFinal:Int),
-            ?UserIdToAddressFinal:Map,
-            ?AddressToUserIdFinal:Map,
-            u(?NumBoardMembersFinal:Int),
-            u(?NumProposersFinal:Int),
-            ?UserIdToRoleFinal:Map,
+            u(?_NumUsersFinal:Int),
+            ?_UserIdToAddressFinal:Map,
+            ?_AddressToUserIdFinal:Map,
+            u(?N_umBoardMembersFinal:Int),
+            u(?_NumProposersFinal:Int),
+            ?_UserIdToRoleFinal:Map,
             Quorum,
             ActionState,
             ?_Variables:Map,
@@ -49,14 +49,6 @@ module TRUSTED-PERFORM-ADD-PROPOSER-1
             Quorum)
         andBool notBool (ProposerAddress ==K CallerAddress)
         andBool Quorum ==K NumBoardMembers
-    ensures performEnsures(
-            u(?NumUsersFinal),
-            ?UserIdToAddressFinal,
-            ?AddressToUserIdFinal,
-            u(?NumBoardMembersFinal),
-            u(?NumProposersFinal),
-            ?UserIdToRoleFinal,
-            Quorum)
     [trusted]
 
 endmodule
@@ -89,12 +81,12 @@ module PROOF-PERFORM-ADD-PROPOSER-1
         performRhs(
             error,
             K,
-            u(?NumUsersFinal:Int),
-            ?UserIdToAddressFinal:Map,
-            ?AddressToUserIdFinal:Map,
-            u(?NumBoardMembersFinal:Int),
-            u(?NumProposersFinal:Int),
-            ?UserIdToRoleFinal:Map,
+            u(?_NumUsersFinal:Int),
+            ?_UserIdToAddressFinal:Map,
+            ?_AddressToUserIdFinal:Map,
+            u(?_NumBoardMembersFinal:Int),
+            u(?_NumProposersFinal:Int),
+            ?_UserIdToRoleFinal:Map,
             Quorum,
             ActionState,
             ?_Variables:Map,

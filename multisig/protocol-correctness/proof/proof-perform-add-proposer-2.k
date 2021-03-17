@@ -25,16 +25,16 @@ module TRUSTED-PERFORM-ADD-PROPOSER-2
         performRhs(
             error,
             K,
-            u(?NumUsersFinal:Int),
-            ?UserIdToAddressFinal:Map,
-            ?AddressToUserIdFinal:Map,
-            u(?NumBoardMembersFinal:Int),
-            u(?NumProposersFinal:Int),
-            ?UserIdToRoleFinal:Map,
+            u(?_NumUsersFinal:Int),
+            ?_UserIdToAddressFinal:Map,
+            ?_AddressToUserIdFinal:Map,
+            u(?_NumBoardMembersFinal:Int),
+            u(?_NumProposersFinal:Int),
+            ?_UserIdToRoleFinal:Map,
             Quorum,
             ActionState,
             ?_Variables:Map,
-            Stack:List,
+            .List, // TODO: Stack:List,
             CallerAddress)
       </T>
     requires performRequires(
@@ -47,14 +47,6 @@ module TRUSTED-PERFORM-ADD-PROPOSER-2
             UserIdToRole,
             Quorum)
         andBool Quorum ==K NumBoardMembers
-    ensures performEnsures(
-            u(?NumUsersFinal),
-            ?UserIdToAddressFinal,
-            ?AddressToUserIdFinal,
-            u(?NumBoardMembersFinal),
-            u(?NumProposersFinal),
-            ?UserIdToRoleFinal,
-            Quorum)
     [trusted]
 endmodule
 
@@ -85,12 +77,12 @@ module PROOF-PERFORM-ADD-PROPOSER-2
         performRhs(
             error,
             K,
-            u(?NumUsersFinal:Int),
-            ?UserIdToAddressFinal:Map,
-            ?AddressToUserIdFinal:Map,
-            u(?NumBoardMembersFinal:Int),
-            u(?NumProposersFinal:Int),
-            ?UserIdToRoleFinal:Map,
+            u(?_NumUsersFinal:Int),
+            ?_UserIdToAddressFinal:Map,
+            ?_AddressToUserIdFinal:Map,
+            u(?_NumBoardMembersFinal:Int),
+            u(?_NumProposersFinal:Int),
+            ?_UserIdToRoleFinal:Map,
             Quorum,
             ActionState,
             ?_Variables:Map,
