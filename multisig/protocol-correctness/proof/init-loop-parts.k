@@ -1,6 +1,7 @@
 module INIT-LOOP-PARTS
   imports PSEUDOCODE
   imports EXECUTION-HELPERS
+  imports INVARIANT-HELPERS
 
   syntax TTCell ::= initLoopLhs(
             prevIndex:Usize,
@@ -213,16 +214,18 @@ module INIT-LOOP-PARTS
       andBool allValuesBecomeKeys(AddressToUserId, UserIdToAddress)
       andBool allValuesBecomeKeys(UserIdToAddress, AddressToUserId)
 
-      andBool valuesAreOfType(AddressToUserId, rUsize)
-      andBool valuesAreKResult(AddressToUserId)
-      andBool valuesAreNotEmpty(AddressToUserId, rUsize)
-      andBool valuesAreDistinct(AddressToUserId)
+      andBool addressToUserIdInvariant(AddressToUserId)
+      // andBool valuesAreOfType(AddressToUserId, rUsize)
+      // andBool valuesAreKResult(AddressToUserId)
+      // andBool valuesAreNotEmpty(AddressToUserId, rUsize)
+      // andBool valuesAreDistinct(AddressToUserId)
       andBool noReusedIndexValue(NumUsers +Int 1, AddressToUserId, Handling)
       andBool unusedIdsInMapValues(NumUsers +Int 1, AddressToUserId, Handling)
 
-      andBool valuesAreOfType(UserIdToRole, rUserRole)
-      andBool valuesAreKResult(UserIdToRole)
-      andBool valuesAreNotEmpty(UserIdToRole, rUserRole)
+      andBool userIdToRoleInvariant(UserIdToRole)
+      // andBool valuesAreOfType(UserIdToRole, rUserRole)
+      // andBool valuesAreKResult(UserIdToRole)
+      // andBool valuesAreNotEmpty(UserIdToRole, rUserRole)
       andBool unusedIdsInMapKeys(NumUsers +Int 1, keysMap(UserIdToRole), Handling)
 
       andBool 0 ==Int countMapValues(UserIdToRole, Proposer)
