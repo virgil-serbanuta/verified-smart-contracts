@@ -36,6 +36,7 @@ module MAP-SEMANTICS
 
   syntax Int ::= mapCount(Map, MapElementProperty)  [function, functional, smtlib(mapCount)]
 
+  // TODO: Use this everywhere
   rule mapCount(.Map, _:MapElementProperty) => 0
   rule mapCount(K:KItem |-> V:KItem M:Map, Property:MapElementProperty)
       => countMapElementProperty(Property, K, V) +Int mapCount(M, Property)
