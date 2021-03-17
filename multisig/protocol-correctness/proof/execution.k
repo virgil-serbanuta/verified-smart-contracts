@@ -353,7 +353,7 @@ module EXECUTION-HELPERS
 
   syntax Int ::= countValue(KItem, KItem) [function, functional, smtlib(countMapValue)]
   rule countValue(V:KItem, V:KItem) => 1
-  rule countValue(V1:KItem, V2:KItem) => 0 [owise]
+  rule countValue(_:KItem, _:KItem) => 0 [owise]
   //  requires notBool (V1 ==K V2)
 
   rule 0 <=Int countValue(_:KItem, _:KItem) => true [simplification, smt-lemma]
