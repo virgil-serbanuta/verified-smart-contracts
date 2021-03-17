@@ -804,11 +804,11 @@ module PSEUDOCODE-FUNCTIONS
 
   rule call(listContains(Es:ExpressionList, E:Expression)) => #listContains(Es, E)
 
-  syntax Bool ::= #listContains(ExpressionList, Expression)  [function, functional]
+  syntax Bool ::= #listContains(ExpressionList, KItem)  [function, functional]
 
   rule  #listContains([.], _) => false
   rule  #listContains([E:Expression, _:ExpressionCSV], E) => true
-  rule  #listContains([_:Expression, Es:ExpressionCSV], X:Expression)
+  rule  #listContains([_:Expression, Es:ExpressionCSV], X:KItem)
           => #listContains([Es], X)  [owise]
 
   rule call(listFind(Es:ExpressionList, E:Expression)) => #listFind(Es, E)
@@ -1176,9 +1176,9 @@ module MAP-UTILS
     ensures false
     [owise]
 
-  rule X:KItem in_keys((Y:KItem |-> _:KItem M:Map) #as _:Map)
-        => X ==K Y orBool X in_keys(M)
-    [simplification]
+  // rule X:KItem in_keys((Y:KItem |-> _:KItem M:Map) #as _:Map)
+  //       => X ==K Y orBool X in_keys(M)
+  //   [simplification]
 endmodule
 
 module PSEUDOCODE-MAP-UTILS
