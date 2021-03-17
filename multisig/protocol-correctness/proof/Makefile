@@ -11,7 +11,8 @@ PROOF_DEBUGGERS = ${PROOFS:.k=.debugger}
 PROOFS0 = $(filter-out proof-init-loop.k, $(PROOFS))
 PROOF0_TIMESTAMPS = ${PROOFS0:.k=.timestamp}
 
-BACKEND_COMMAND = "/home/virgil/runtime-verification/kore/.build/kore/bin/kore-exec --smt-timeout 200"
+BACKEND_COMMAND = "kore-exec --smt-timeout 200"
+# BACKEND_COMMAND = "/home/virgil/runtime-verification/kore/.build/kore/bin/kore-exec --smt-timeout 200"
 
 .PHONY: clean ${PROOF_DEBUGGERS}
 
