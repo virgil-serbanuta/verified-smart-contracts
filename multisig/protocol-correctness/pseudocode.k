@@ -1176,9 +1176,9 @@ module MAP-UTILS
     ensures false
     [owise]
 
-  // rule X:KItem in_keys((Y:KItem |-> _:KItem M:Map) #as _:Map)
-  //       => X ==K Y orBool X in_keys(M)
-  //   [simplification]
+  rule X:KItem in_keys((Y:KItem |-> _:KItem M:Map) #as _:Map)
+        => X ==K Y orBool X in_keys(M)
+    [simplification]
 endmodule
 
 module PSEUDOCODE-MAP-UTILS
