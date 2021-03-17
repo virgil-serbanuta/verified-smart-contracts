@@ -22,7 +22,7 @@ module PROOF-CAN-PROPOSE-AND-EXECUTE
               AddressToUserId:Map,
               NumBoardMembers:Usize,
               NumProposers:Usize,
-              UserRoles:Map,
+              UserIdToRole:Map,
               Quorum:Usize,
               ActionLastIndex:Usize,
               ActionData:Map,
@@ -37,7 +37,7 @@ module PROOF-CAN-PROPOSE-AND-EXECUTE
               AddressToUserId:Map,
               NumBoardMembers:Usize,
               NumProposers:Usize,
-              UserRoles:Map,
+              UserIdToRole:Map,
               Quorum:Usize,
               add(ActionLastIndex, u(1)),
               ActionData:Map,
@@ -49,7 +49,7 @@ module PROOF-CAN-PROPOSE-AND-EXECUTE
           AddressToUserId:Map,
           NumBoardMembers:Usize,
           NumProposers:Usize,
-          UserRoles:Map,
+          UserIdToRole:Map,
           Quorum:Usize,
           ActionLastIndex:Usize,
           ActionData:Map,
@@ -59,11 +59,15 @@ module PROOF-CAN-PROPOSE-AND-EXECUTE
       andBool valuesAreOfType(UserIdToAddress, rAddress)
       andBool valuesAreKResult(UserIdToAddress)
 
-      andBool newUserIdToRoleInvariant(UserRoles, UserIdToAddress)
+      andBool newUserIdToRoleInvariant(UserIdToRole, UserIdToAddress)
       andBool userIdToAddressInvariant(UserIdToAddress, AddressToUserId)
       andBool mapsAreReverse(AddressToUserId, UserIdToAddress)
 
       andBool valuesAreNotEmpty(ActionData, rAction)
+
+      andBool mapCount(UserIdToRole, MEP.IsValue(BoardMember))
+          +Int mapCount(UserIdToRole, MEP.IsValue(Proposer))
+          >Int 0
 
     ensures invariant(  // TODO: I don't actually need the `ensures`
         NumUsers:Usize,
@@ -71,7 +75,7 @@ module PROOF-CAN-PROPOSE-AND-EXECUTE
         AddressToUserId:Map,
         NumBoardMembers:Usize,
         NumProposers:Usize,
-        UserRoles:Map,
+        UserIdToRole:Map,
         Quorum:Usize,
         add(ActionLastIndex, u(1)),
         ActionData:Map,
