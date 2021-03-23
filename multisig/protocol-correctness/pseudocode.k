@@ -323,14 +323,13 @@ module PSEUDOCODE-MEMORY
 
   context runInstruction(_:Variable = {HOLE => evaluate(HOLE)}:>Expression;)
 
-  rule  <k> (.K => mapSet(V, E, M)) ~> runInstruction(V:Variable = E:Expression;) ...</k>
-        <variables> M:Map </variables>
+  rule  <k> (runInstruction(V:Variable = E:Expression;) => evaluate(void)) ...</k>
+        <variables> M:Map => M[V <- E] </variables>
     requires isKResult(E)
-  rule <k> (M:Map ~> runInstruction(_ = _;)) => evaluate(void) ... </k>
-        <variables> _:Map => M </variables>
 
-  rule  <k> evaluate(V:Variable => E) ... </k>
-        <variables> V |-> E:Expression ... </variables>
+  rule  <k> evaluate(V:Variable => {M[V]}:>Expression) ... </k>
+        <variables> M:Map </variables>
+    requires V in_keys(M)
 endmodule
 
 module PSEUDOCODE-FOR
@@ -449,14 +448,18 @@ module PSEUDOCODE-DETAILS
 
   rule isKResult([Es:ExpressionCSV]) => isKResult(Es)
 
-  rule isKResult(Nothing) => true
-  rule isKResult(AddBoardMember(A:Address)) => isKResult(A)
-  rule isKResult(AddProposer(A:Address)) => isKResult(A)
-  rule isKResult(RemoveUser(A:Address)) => isKResult(A)
-  rule isKResult(ChangeQuorum(U:Usize)) => isKResult(U)
-  rule  isKResult(SendEgld(To:Address, Amount:BigUint, Data:BoxedBytes))
+  rule isKResult(A:Action) => isKResultAction(A)
+
+  syntax Bool ::= isKResultAction(Action)  [function, functional]
+
+  rule isKResultAction(Nothing) => true
+  rule isKResultAction(AddBoardMember(A:Address)) => isKResult(A)
+  rule isKResultAction(AddProposer(A:Address)) => isKResult(A)
+  rule isKResultAction(RemoveUser(A:Address)) => isKResult(A)
+  rule isKResultAction(ChangeQuorum(U:Usize)) => isKResult(U)
+  rule  isKResultAction(SendEgld(To:Address, Amount:BigUint, Data:BoxedBytes))
         => isKResult(To) andBool isKResult(Amount) andBool isKResult(Data)
-  rule  isKResult(SCDeploy(
+  rule  isKResultAction(SCDeploy(
                         Amount:BigUint,
                         Code:BoxedBytes,
                         CodeMetadata:CodeMetadata,
@@ -465,7 +468,7 @@ module PSEUDOCODE-DETAILS
             andBool isKResult(Code)
             andBool isKResult(CodeMetadata)
             andBool isKResult(Arguments)
-  rule isKResult(SCCall(
+  rule isKResultAction(SCCall(
                         To:Address,
                         Amount:BigUint,
                         Function:BoxedBytes,
