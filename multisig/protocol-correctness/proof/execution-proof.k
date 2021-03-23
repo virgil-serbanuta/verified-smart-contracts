@@ -1,11 +1,11 @@
 require "../pseudocode.k"
 require "invariant.k"
 
-module PROOF-EXECUTION-SYNTAX
+module EXECUTION-PROOF-SYNTAX
   imports PSEUDOCODE-SYNTAX
 endmodule
 
-module PROOF-EXECUTION-HELPERS
+module EXECUTION-PROOF-HELPERS
   imports MAP-SYMBOLIC
   imports SET
 
@@ -147,6 +147,9 @@ module PROOF-EXECUTION-HELPERS
   rule valueNotInMapValues(V1:KItem, (_:KItem |-> V2:KItem M:Map) #as _:Map)
       => (notBool (V1 ==K V2)) andBool valueNotInMapValues(V1, M)
     [simplification]
+  rule valueNotInMapValues(u(X:Int +Int 4), M:Map) => true
+    requires #noReusedIndexValue(X +Int 3, M, expanded)
+    [simplification]
 
   syntax Bool ::= noReusedIndexValue(Int, Map, PropertyHandling)  [function, functional]
   syntax Bool ::= #noReusedIndexValue(Int, Map, PropertyHandling)  [function, functional]
@@ -229,8 +232,11 @@ module PROOF-EXECUTION-HELPERS
     [simplification]
   rule mapIncluded(M:Map, M:Map) => true
     [simplification]
-  rule mapIncluded(M1:Map, (_:KItem |-> _:KItem) M2:Map) => true
+  rule mapIncluded(M1:Map, _:KItem |-> _:KItem M2:Map) => true
     requires M1 ==K M2
+    [simplification]
+  // Not sure why this does not work instead of the above:
+  rule mapIncluded(M:Map, _:KItem |-> _:KItem M:Map) => true
     [simplification]
 
   rule X:Int -Int X:Int => 0  [simplification]
@@ -363,6 +369,8 @@ module PROOF-EXECUTION-HELPERS
   rule countMapValues(_, _) >=Int 0 => true  [simplification]
 
   // TODO: Replace these with generic int rules.
+  rule 0 <=Int countMapValues(A, B) +Int X:Int => countMapValues(A, B) +Int X >=Int 0
+    [simplification]
   rule countMapValues(_, _) +Int X:Int >=Int 0 => true
     requires X >=Int 0
     [simplification]
@@ -428,7 +436,7 @@ module PROOF-INSTRUMENTATION
   rule branchK(false, _:K, K:K) => K
 endmodule
 
-module PROOF-EXECUTION-BOOL
+module EXECUTION-PROOF-BOOL
   imports BOOL
 
   rule B1:Bool orBool _:Bool => true
@@ -445,9 +453,9 @@ module PROOF-EXECUTION-BOOL
     [simplification]
 endmodule
 
-module PROOF-EXECUTION
-  imports PROOF-EXECUTION-BOOL
-  imports PROOF-EXECUTION-HELPERS
+module EXECUTION-PROOF
+  imports EXECUTION-PROOF-BOOL
+  imports EXECUTION-PROOF-HELPERS
   imports PROOF-INSTRUMENTATION
 
   imports INVARIANT

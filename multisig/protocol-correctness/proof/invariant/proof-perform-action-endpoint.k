@@ -115,6 +115,7 @@ module PROOF-PERFORM-ACTION-ENDPOINT
         ?ActionSigners1:Map,
         usesExpanded)
 
+/*
   claim <T><TT>
           <k> call(userRoleCanPropose(U:UserRole)) ~> K:K
           </k>
@@ -138,6 +139,7 @@ module PROOF-PERFORM-ACTION-ENDPOINT
           State
         </TT></T>
     requires U ==K None
+*/
 
   claim <T><TT>
           <k> call(getActionSignerIds(ActionId:Usize)) ~> K:K

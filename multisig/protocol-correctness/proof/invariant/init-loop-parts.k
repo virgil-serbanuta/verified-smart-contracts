@@ -1,6 +1,6 @@
 module INIT-LOOP-PARTS
   imports PSEUDOCODE
-  imports PROOF-EXECUTION-HELPERS
+  imports EXECUTION-PROOF-HELPERS
   imports INVARIANT-HELPERS
 
   syntax TTCell ::= initLoopLhs(

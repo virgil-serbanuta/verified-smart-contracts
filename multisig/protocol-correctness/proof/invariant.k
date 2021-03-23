@@ -1,5 +1,5 @@
 module INVARIANT-HELPERS
-  imports PROOF-EXECUTION-HELPERS
+  imports EXECUTION-PROOF-HELPERS
 
   syntax Bool ::= addressToUserIdInvariant(addressToUserId:Map)
     [function, functional]
@@ -57,7 +57,7 @@ module INVARIANT-HELPERS
 endmodule
 
 module INVARIANT
-  imports PROOF-EXECUTION-HELPERS
+  imports EXECUTION-PROOF-HELPERS
   imports PSEUDOCODE
   imports INVARIANT-HELPERS
 
@@ -73,6 +73,19 @@ module INVARIANT
       actionData:Map,
       actionSigners:Map)  [function, functional]
 
+  syntax StateCell ::= invariantStateStack(
+      numUsers:Usize,
+      userIdToAddress:Map,
+      addressToUserId:Map,
+      numBoardMembers:Usize,
+      numProposers:Usize,
+      userIdToRole:Map,
+      quorum:Usize,
+      actionLastIndex:Usize,
+      actionData:Map,
+      actionSigners:Map,
+      stack:List)  [function, functional]
+
   rule invariantState(
       NumUsers:Usize,
       UserIdToAddress:Map,
@@ -84,6 +97,32 @@ module INVARIANT
       ActionLastIndex:Usize,
       ActionData:Map,
       ActionSigners:Map)
+    =>
+      invariantStateStack(
+          NumUsers,
+          UserIdToAddress,
+          AddressToUserId,
+          NumBoardMembers,
+          NumProposers,
+          UserIdToRole,
+          Quorum,
+          ActionLastIndex,
+          ActionData,
+          ActionSigners,
+          .List)
+
+  rule invariantStateStack(
+      NumUsers:Usize,
+      UserIdToAddress:Map,
+      AddressToUserId:Map,
+      NumBoardMembers:Usize,
+      NumProposers:Usize,
+      UserIdToRole:Map,
+      Quorum:Usize,
+      ActionLastIndex:Usize,
+      ActionData:Map,
+      ActionSigners:Map,
+      Stack:List)
     =>
       <state>
         <multisig-state>
@@ -108,7 +147,7 @@ module INVARIANT
         </multisig-state>
         <pseudocode-state>
           <variables>.Map</variables>
-          <stack> .List </stack>
+          <stack> Stack </stack>
         </pseudocode-state>
         <external-call-env>
           <caller-address>uninitialized</caller-address>

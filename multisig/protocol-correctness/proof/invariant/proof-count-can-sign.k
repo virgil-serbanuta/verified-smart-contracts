@@ -1,5 +1,5 @@
 module TRUSTED-COUNT-CAN-SIGN
-  imports INVARIANT-EXECUTION
+  imports COUNT-CAN-SIGN-PARTS
 
   claim <T> countCanSignLhs(
                 SignerIds:ExpressionList,

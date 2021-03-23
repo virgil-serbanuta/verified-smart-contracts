@@ -1,11 +1,11 @@
-require "../proof-execution.k"
+require "../execution-proof.k"
 
 require "count-can-sign-parts.k"
 require "init-loop-parts.k"
 require "perform-parts.k"
 
 module INVARIANT-EXECUTION-SYNTAX
-  imports PROOF-EXECUTION-SYNTAX
+  imports EXECUTION-PROOF-SYNTAX
 endmodule
 
 // TODO: Delete.
@@ -24,34 +24,30 @@ module INVARIANT-INSTRUMENTATION
   imports PSEUDOCODE
 
   syntax Singleton ::= "singleton"
-  syntax KItem ::= "concretizing"
 
   syntax IntVarList ::= vars(Int, IntVarList)
                     |   ".IntVarList"
 
   syntax Bool ::= isLazyConcretize(KItem)  [function, functional]
+  rule isLazyConcretize(lazyConcretizeKeysFreezer) => true
   rule isLazyConcretize(lazyConcretizeKeys(_:Map)) => true
   rule isLazyConcretize(lazyConcretizeValues(_:Map)) => true
   rule isLazyConcretize(_:KItem) => false  [owise]
 
-  rule  <k> (.K =>  (  lazyConcretizeKeys(UserIdToAddress)
-                    ~> lazyConcretizeKeys(UserIdToRole)
-                    ~> lazyConcretizeValues(AddressToUserId)
-                    )
-            )
-            ~> void ~> evaluateReturnValue
-        ...</k>
-        <user-id-to-address> UserIdToAddress:Map </user-id-to-address>
-        <address-to-user-id> AddressToUserId:Map </address-to-user-id>
-        <user-roles> UserIdToRole:Map </user-roles>
-        <last-instrumented> .K => (concretizing ~> .K) </last-instrumented>
+  rule  nullableMapLookup(_:KItem, M:Map, _:ReflectionType)
+        ~> (.K => lazyConcretizeKeys(M))
+        ~> K:KItem
+    requires notBool isLazyConcretize(K)
+     [priority(20)]
+  rule (E:Expression => .K) ~> lazyConcretizeKeys(_) ~> (.K => E)
     [priority(20)]
-  rule  <k> K:KItem ... </k>
-        <last-instrumented> (concretizing ~> .K) => .K </last-instrumented>
-    requires true
-        andBool notBool (K ==K concretized(singleton))
-        andBool notBool isLazyConcretize(K)
-        andBool notBool (K ==K void)
+
+  rule  nullableMapSet(_:KItem, _:KItem, _:Map, _:ReflectionType)  // This may be needed only for addressToUserID, in init.
+        ~> (.K => lazyConcretizeKeysFreezer)
+        ~> K:KItem
+    requires notBool isLazyConcretize(K)
+    [priority(20)]
+  rule (M:Map ~> lazyConcretizeKeysFreezer) => (lazyConcretizeKeys(M) ~> M)
     [priority(20)]
 
   syntax Singleton ::= concretizeKeys(Map, IntVarList)  [function, functional]
@@ -74,6 +70,8 @@ module INVARIANT-INSTRUMENTATION
 
   syntax KItem ::= concretized(Singleton)
   rule concretized(singleton) => .K
+
+  syntax KItem ::= "lazyConcretizeKeysFreezer"
 
   syntax KItem ::= lazyConcretizeKeys(Map)
   rule lazyConcretizeKeys(M:Map) => concretized(concretizeKeys(M, vars(?_, vars(?_, .IntVarList))))
@@ -249,7 +247,7 @@ module INVARIANT-INSTRUMENTATION
 endmodule
 
 module INVARIANT-EXECUTION
-  imports PROOF-EXECUTION
+  imports EXECUTION-PROOF
 
   imports INVARIANT-INSTRUMENTATION
 
