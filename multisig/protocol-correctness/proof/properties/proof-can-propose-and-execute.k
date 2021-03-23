@@ -1,3 +1,4 @@
+require "../invariant/proof-count-can-sign.k"
 require "../map/proof-map-semantics.k"
 require "proof-board-members-sign-for.k"
 
@@ -7,6 +8,7 @@ module PROOF-CAN-PROPOSE-AND-EXECUTE
   imports PSEUDOCODE
   imports TRUSTED-BOARD-MEMBERS-SIGN-FOR
 
+  imports TRUSTED-COUNT-CAN-SIGN
   imports TRUSTED-MAP-SEMANTICS
 
   claim <T><TT>
@@ -68,18 +70,5 @@ module PROOF-CAN-PROPOSE-AND-EXECUTE
       andBool mapCount(UserIdToRole, MEP.IsValue(BoardMember))
           +Int mapCount(UserIdToRole, MEP.IsValue(Proposer))
           >Int 0
-
-    ensures invariant(  // TODO: I don't actually need the `ensures`
-        NumUsers:Usize,
-        UserIdToAddress:Map,
-        AddressToUserId:Map,
-        NumBoardMembers:Usize,
-        NumProposers:Usize,
-        UserIdToRole:Map,
-        Quorum:Usize,
-        add(ActionLastIndex, u(1)),
-        ActionData:Map,
-        ActionSigners:Map,
-        usesExpanded)
 
 endmodule

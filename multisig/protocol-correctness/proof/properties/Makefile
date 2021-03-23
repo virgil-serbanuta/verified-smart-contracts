@@ -11,6 +11,9 @@ include ../proof-dependency.mak
 MAP_DIR := ../map
 include $(MAP_DIR)/map.mak
 
+INVARIANT_DIR := ../invariant
+include $(INVARIANT_DIR)/invariant.mak
+
 PROPERTIES_DIR := .
 include properties.mak
 

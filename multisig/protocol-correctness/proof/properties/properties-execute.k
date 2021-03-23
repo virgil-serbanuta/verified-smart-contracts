@@ -1,12 +1,15 @@
-require "../proof-execution.k"
+require "../execution-proof.k"
+require "../invariant/invariant-execution.k"
+// TODO: Rename to map-execution
 require "../map/map-execute.k"
 
 module PROPERTIES-EXECUTE-SYNTAX
-  imports PROOF-EXECUTION-SYNTAX
+  imports EXECUTION-PROOF-SYNTAX
 endmodule
 
 module PROPERTIES-EXECUTE
-  imports PROOF-EXECUTION
+  imports EXECUTION-PROOF
+  imports INVARIANT-EXECUTION
   imports MAP-EXECUTE
 
   syntax KItem ::= allBoardMembersSignFor(actionId:Usize)
@@ -165,6 +168,13 @@ module PROPERTIES-EXECUTE
       andBool V in_keys(AddressToUserId) andBool AddressToUserId[V] ==K K  // mapsAreReverseHalf(UserIdToAddress, AddressToUserId)
 
       andBool userIdToAddressInvariant(UserIdToAddress, AddressToUserId)
+    [simplification]
+
+  rule A:Int <=Int countCanSignFunction(L:ExpressionList, K:KItem |-> BoardMember M:Map) => true
+    requires true
+        andBool A <=Int countMapValues(M, BoardMember) +Int 1
+        andBool countMapValues(M, BoardMember) +Int 1
+                ==K countCanSignFunction(L:ExpressionList, K |-> BoardMember M:Map)
     [simplification]
 
 endmodule
