@@ -15,7 +15,7 @@ module TRUSTED-COUNT-CAN-SIGN
                 ExternalCallEnv:ExternalCallEnvCell)
         </T>
       => <T> countCanSignRhs(
-                u(countCanSignFunction(SignerIds, UserIdToRole)),
+                u(countCanSignFunction(SignerIds, opaque(UserIdToRole))),
                 K,
                 Users,
                 NumBoardMembers,

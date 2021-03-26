@@ -56,9 +56,9 @@ module PROOF-PERFORM-ACTION
   claim
       <T><TT>
         <k>
-          splitAction ( A )
+          splitAction ( A:Action )
           ~> splitting-action
-          ~> call ( performAction ( A:Action ) )
+          ~> call ( performAction ( A ) )
           ~> popContext
           ~> evaluateReturnValue
           ~> popContext
@@ -79,9 +79,22 @@ module PROOF-PERFORM-ACTION
             ActionLastIndex0:Usize,
             ActionData0:Map,
             ActionSigners0:Map,
+            CallerAddress:Address,
             ListItem(stackEntry(_:MultisigStateCell, _:Map))
               ListItem(stackEntry(_:MultisigStateCell, _:Map))
-              ListItem(stackEntry(_:MultisigStateCell, _:Map)))
+              ListItem(stackEntry(
+                invariantMultisigState(
+                    NumUsersS:Usize,
+                    UserIdToAddressS:Map,
+                    AddressToUserIdS:Map,
+                    NumBoardMembersS:Usize,
+                    NumProposersS:Usize,
+                    UserRolesS:Map,
+                    QuorumS:Usize,
+                    ActionLastIndexS:Usize,
+                    ActionDataS:Map,
+                    ActionSignersS:Map):MultisigStateCell,
+                .Map)))
       </TT></T>
     =>
       <T><TT>
@@ -97,33 +110,46 @@ module PROOF-PERFORM-ACTION
             ?ActionLastIndex1:Usize,
             ?ActionData1:Map,
             ?ActionSigners1:Map,
+            CallerAddress:Address,
             .List):StateCell
       </TT></T>
     requires true
       andBool invariant(
-        NumUsers:Usize,
-        UserIdToAddress:Map,
-        AddressToUserId:Map,
-        NumBoardMembers:Usize,
-        NumProposers:Usize,
-        UserRoles:Map,
-        Quorum:Usize,
-        ActionLastIndex0:Usize,
-        ActionData0:Map,
-        ActionSigners0:Map,
-        expand(expanded))
+          NumUsers:Usize,
+          UserIdToAddress:Map,
+          AddressToUserId:Map,
+          NumBoardMembers:Usize,
+          NumProposers:Usize,
+          UserRoles:Map,
+          Quorum:Usize,
+          ActionLastIndex0:Usize,
+          ActionData0:Map,
+          ActionSigners0:Map,
+          expand(expanded))
+      andBool invariant(
+          NumUsersS:Usize,
+          UserIdToAddressS:Map,
+          AddressToUserIdS:Map,
+          NumBoardMembersS:Usize,
+          NumProposersS:Usize,
+          UserRolesS:Map,
+          QuorumS:Usize,
+          ActionLastIndexS:Usize,
+          ActionDataS:Map,
+          ActionSignersS:Map,
+          expanded)
       andBool isKResult(A)
     ensures true
       andBool invariant(
-        ?NumUsers1:Usize,
-        ?UserIdToAddress1:Map,
-        ?AddressToUserId1:Map,
-        ?NumBoardMembers1:Usize,
-        ?NumProposers1:Usize,
-        ?UserRoles1:Map,
-        ?Quorum1:Usize,
-        ?ActionLastIndex1:Usize,
-        ?ActionData1:Map,
-        ?ActionSigners1:Map,
-        usesExpanded)
+          ?NumUsers1:Usize,
+          ?UserIdToAddress1:Map,
+          ?AddressToUserId1:Map,
+          ?NumBoardMembers1:Usize,
+          ?NumProposers1:Usize,
+          ?UserRoles1:Map,
+          ?Quorum1:Usize,
+          ?ActionLastIndex1:Usize,
+          ?ActionData1:Map,
+          ?ActionSigners1:Map,
+          usesExpanded)
 endmodule

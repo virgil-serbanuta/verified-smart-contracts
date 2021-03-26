@@ -73,6 +73,18 @@ module INVARIANT
       actionData:Map,
       actionSigners:Map)  [function, functional]
 
+  syntax MultisigStateCell ::= invariantMultisigState(
+      numUsers:Usize,
+      userIdToAddress:Map,
+      addressToUserId:Map,
+      numBoardMembers:Usize,
+      numProposers:Usize,
+      userIdToRole:Map,
+      quorum:Usize,
+      actionLastIndex:Usize,
+      actionData:Map,
+      actionSigners:Map)  [function, functional]
+
   syntax StateCell ::= invariantStateStack(
       numUsers:Usize,
       userIdToAddress:Map,
@@ -84,6 +96,7 @@ module INVARIANT
       actionLastIndex:Usize,
       actionData:Map,
       actionSigners:Map,
+      callerAddress:KItem,
       stack:List)  [function, functional]
 
   rule invariantState(
@@ -109,6 +122,7 @@ module INVARIANT
           ActionLastIndex,
           ActionData,
           ActionSigners,
+          uninitialized,
           .List)
 
   rule invariantStateStack(
@@ -122,9 +136,45 @@ module INVARIANT
       ActionLastIndex:Usize,
       ActionData:Map,
       ActionSigners:Map,
+      CallerAddress:KItem,
       Stack:List)
     =>
       <state>
+        invariantMultisigState(
+            NumUsers,
+            UserIdToAddress,
+            AddressToUserId,
+            NumBoardMembers,
+            NumProposers,
+            UserIdToRole,
+            Quorum,
+            ActionLastIndex,
+            ActionData,
+            ActionSigners):MultisigStateCell
+        <pseudocode-state>
+          <variables>.Map</variables>
+          <stack> Stack </stack>
+        </pseudocode-state>
+        <external-call-env>
+          <caller-address>CallerAddress</caller-address>
+        </external-call-env>
+        <proof-state>
+          <last-instrumented> .K </last-instrumented>
+        </proof-state>
+      </state>
+
+  rule invariantMultisigState(
+      NumUsers:Usize,
+      UserIdToAddress:Map,
+      AddressToUserId:Map,
+      NumBoardMembers:Usize,
+      NumProposers:Usize,
+      UserIdToRole:Map,
+      Quorum:Usize,
+      ActionLastIndex:Usize,
+      ActionData:Map,
+      ActionSigners:Map)
+    =>
         <multisig-state>
           <users>
             <num-users>NumUsers</num-users>
@@ -145,18 +195,7 @@ module INVARIANT
             </actions>
           </action-state>
         </multisig-state>
-        <pseudocode-state>
-          <variables>.Map</variables>
-          <stack> Stack </stack>
-        </pseudocode-state>
-        <external-call-env>
-          <caller-address>uninitialized</caller-address>
-        </external-call-env>
-        <proof-state>
-          <last-instrumented> .K </last-instrumented>
-        </proof-state>
-      </state>
-
+      
   syntax Bool ::= invariant(
       numUsers:Usize,
       userIdToAddress:Map,

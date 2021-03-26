@@ -80,8 +80,7 @@ module INVARIANT-INSTRUMENTATION
   rule lazyConcretizeValues(M:Map) => concretized(concretizeValues(M, vars(?_, vars(?_, .IntVarList))))
 
   syntax KItem ::= "splitting-action"
-  rule  <k> (.K => splitAction(A))
-            ~> pushContext ~> (.K => splitting-action) ~> call(performAction(A:Action))
+  rule  <k> pushContext ~> (.K => splitAction(A) ~> splitting-action) ~> call(performAction(A:Action))
         ...</k>
     [priority(10)]
   rule  <k> (splitting-action => .K) ...</k>
@@ -110,14 +109,14 @@ module INVARIANT-INSTRUMENTATION
   syntax KItem ::= "splitting-delete-caller"
   rule  <k> (
               splitting-action
-              =>  splitEquality(A1, A2)
+              =>  splitEquality(A1, A2)  // TODO: remove
                   ~> splitBoolean(A1 in_keys(AddressToUserId))
                   ~> splitting-delete-caller
             )
             ~> call(performAction(RemoveUser(A1:Address)))
         ...</k>
         <address-to-user-id>AddressToUserId:Map</address-to-user-id>
-        <caller-address>A2:Address</caller-address>
+        <caller-address>A2:KItem</caller-address>
     [priority(10)]
   rule  <k> (splitting-delete-caller => .K) ...</k>
     [priority(20)]
@@ -239,7 +238,7 @@ module INVARIANT-INSTRUMENTATION
         ...</k>
         <address-to-user-id>AddressToUserId:Map</address-to-user-id>
         <user-roles> UserIdToRole:Map </user-roles>
-        <caller-address>A2:Address</caller-address>
+        <caller-address>A2:KItem</caller-address>
     [priority(10)]
   rule  splitting-add-proposer-in-keys-atuid => .K
     [priority(20)]

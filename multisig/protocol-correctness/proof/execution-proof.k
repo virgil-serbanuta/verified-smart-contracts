@@ -1,5 +1,6 @@
 require "../pseudocode.k"
 require "invariant.k"
+require "map/map-execute.k"
 
 module EXECUTION-PROOF-SYNTAX
   imports PSEUDOCODE-SYNTAX
@@ -10,6 +11,7 @@ module EXECUTION-PROOF-HELPERS
   imports SET
 
   imports PSEUDOCODE
+  imports MAP-EXECUTE
 
   // Expand and PropertyHandling form a stupid trick used to control symbolic
   // function application.
@@ -406,13 +408,26 @@ module EXECUTION-PROOF-HELPERS
   rule canSignFunction(Role:UserRole) => Role ==K BoardMember
 
   syntax Int ::= countCanSignFunction(signerIDs:ExpressionList, userIdToRole:Map)  [function, functional]
+  syntax Int ::= #countCanSignFunction(userID:Usize, signerIDs:ExpressionList, userIdToRole:Map, value:KItem)  [function, functional]
   rule countCanSignFunction([.], _:Map) => 0
   rule countCanSignFunction([UserId:Usize, Es:ExpressionCSV], UserId |-> Role:UserRole M:Map)
-      => 1 +Int countCanSignFunction([Es], M)
+      => 1 +Int countCanSignFunction([Es], M)  // Remove UserId from the map since each user is counted at most once.
     requires canSignFunction(Role)
   rule countCanSignFunction([_:Expression, Es:ExpressionCSV], M)
       => countCanSignFunction([Es], M)
     [owise]
+
+  rule countCanSignFunction([UserId:Usize, Es:ExpressionCSV], concat(UserId1:KItem, Role:UserRole, M:Map))
+    => #countCanSignFunction(UserId, [Es], concat(UserId1, Role, M), concat(UserId1, Role, M)[UserId] orDefault None)
+    [simplification]
+  rule #countCanSignFunction(UserId:Usize, Es:ExpressionList, M:Map, Value:UserRole)
+      => 1 +Int countCanSignFunction(Es, M[UserId <- undef])
+    requires canSignFunction(Value)
+    [simplification]
+  rule #countCanSignFunction(_:Usize, Es:ExpressionList, M:Map, Value:UserRole)
+      => countCanSignFunction(Es, M)
+    requires notBool canSignFunction(Value)
+    [simplification]
 
 endmodule
 
