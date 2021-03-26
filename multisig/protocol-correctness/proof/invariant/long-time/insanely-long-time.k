@@ -60,7 +60,7 @@ claim
   <T>
     <TT>
       <k>
-        call ( performAction ( RemoveUser ( address ( Var0 ) ) ) ) ~> popContext ~> evaluateReturnValue ~> popContext ~> evaluateReturnValue ~> popContext ~> evaluateReturnValue ~> clearExternalCallEnv ~> runExternalCalls ( EC ) ~> .K
+        endSplitMap ~> call ( performAction ( RemoveUser ( address ( Var0 ) ) ) ) ~> popContext ~> evaluateReturnValue ~> popContext ~> evaluateReturnValue ~> popContext ~> evaluateReturnValue ~> clearExternalCallEnv ~> runExternalCalls ( EC ) ~> .K
       </k>
       <state>
         <multisig-state>
