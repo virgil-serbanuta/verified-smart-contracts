@@ -40,7 +40,7 @@ module PROOF-CAN-PROPOSE-AND-EXECUTE
               NumBoardMembers:Usize,
               NumProposers:Usize,
               UserIdToRole:Map,
-              Quorum:Usize,
+              u(0),
               add(ActionLastIndex, u(1)),
               ActionData:Map,
               ActionSigners:Map):StateCell

@@ -68,9 +68,9 @@ module TRUSTED-BOARD-MEMBERS-SIGN-FOR
             ActionIndex |-> ?Signatures ActionSigners,
             usesExpanded)
 
-        andBool countCanSignFunction(?Signatures, UserRoles)
+        andBool countCanSignFunction(?Signatures, opaque(UserRoles))
                 ==Int countMapValues(PartialUserRoles, BoardMember)
-                      +Int countCanSignFunction(Signatures, UserRoles)
+                      +Int countCanSignFunction(Signatures, opaque(UserRoles))
     [trusted]
 endmodule
 
@@ -132,16 +132,19 @@ module PROOF-BOARD-MEMBERS-SIGN-FOR
         andBool valuesAreNotEmpty(ActionData, rAction)
         andBool noMapKeyInList(PartialUserRoles, Signatures)
     ensures invariant(
-        NumUsers,
-        UserIdToAddress,
-        AddressToUserId,
-        NumBoardMembers,
-        NumProposers,
-        UserRoles,
-        Quorum,
-        ActionLastIndex,
-        ActionData,
-        ActionIndex |-> ?Signatures ActionSigners,
-        usesExpanded)
+            NumUsers,
+            UserIdToAddress,
+            AddressToUserId,
+            NumBoardMembers,
+            NumProposers,
+            UserRoles,
+            Quorum,
+            ActionLastIndex,
+            ActionData,
+            ActionIndex |-> ?Signatures ActionSigners,
+            usesExpanded)
+        andBool countCanSignFunction(?Signatures, opaque(UserRoles))
+                ==Int countMapValues(PartialUserRoles, BoardMember)
+                      +Int countCanSignFunction(Signatures, opaque(UserRoles))
 
 endmodule
