@@ -5,6 +5,56 @@ module MAP-EXECUTE
   imports MAP
   imports INT
 
+  // The Haskell backend does not send functions applied to things
+  // that can be bottom to the SMT solver, even if the side condition restricts
+  // the arguments to non-bottom things.
+  //
+  // A (K |-> V M:Map) map representation is bottom if `K in_keys(M)`, hence
+  // the function-based representation below. This means that whatever function
+  // is using these can manipulate them only through simplification rules.
+  syntax Map  ::= opaque(Map)  [function, functional]
+                | concat(key:KItem, value:KItem, Map)  [function, functional, no-evaluators]
+                | extractMap(Map)   [function, functional]
+  rule opaque(K:KItem |-> V:KItem M:Map) => concat(K, V, opaque(M))
+    ensures notBool K in_keys(M)
+    [simplification]
+  rule extractMap(opaque(M:Map)) => M
+    [simplification]
+  rule extractMap(concat(K:KItem, V:KItem, M:Map)) => K |-> V extractMap(M)
+    [simplification]
+
+  rule K:KItem in_keys(opaque(M)) => K in_keys(M)
+    [simplification]
+  rule K1:KItem in_keys(concat(K2:KItem, _:KItem, M:Map))
+      => K1 ==K K2 orBool K1 in_keys(M)
+    [simplification]
+
+  rule opaque(M:Map)[K:KItem] orDefault V:KItem => M[K] orDefault V
+    [simplification]
+  rule concat(K2:KItem, V2:KItem, _:Map)[K1:KItem] orDefault _:KItem
+      => V2
+    requires K1 ==K K2
+    [simplification(20)]
+  rule concat(K2:KItem, _:KItem, M:Map)[K1:KItem] orDefault V1:KItem
+      => M[K1] orDefault V1
+    requires notBool (K1 ==K K2)
+    [simplification(20)]
+  // TODO: Is this needed? Is this good?
+  rule concat(K2:KItem, V2:KItem, M:Map)[K1:KItem] orDefault V1:KItem
+      => extractMap(concat(K2:KItem, V2:KItem, M:Map))[K1:KItem] orDefault V1:KItem
+    requires K1 ==K K2
+    [simplification(50)]
+
+  rule opaque(M:Map)[K:KItem <- undef] => opaque(M[K <- undef])
+    [simplification]
+  rule concat(K2:KItem, _:KItem, M:Map)[K1:KItem <- undef] => M
+    requires K1 ==K K2
+    [simplification]
+  rule concat(K2:KItem, V2:KItem, M:Map)[K1:KItem <- undef]
+      => concat(K2, V2, M[K1 <- undef])
+    requires notBool (K1 ==K K2)
+    [simplification]
+
   syntax MapElementProperty ::= "MEP.AlwaysFalse"
                               | "MEP.AlwaysTrue"
                               | "MEP.AnyProperty"
