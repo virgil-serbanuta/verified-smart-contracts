@@ -330,7 +330,7 @@ module UNSIGN-INSTRUMENTATION
                         ~>  branchK(
                               CallerAddress in_keys(AddressToUserId),
                               splitUnsign2(ActionId),
-                              .K
+                              unsign-new.k
                             ),
                     .K
                 )
@@ -344,7 +344,7 @@ module UNSIGN-INSTRUMENTATION
               ~>  branchK(
                       AddressToUserId[CallerAddress] in_keys(UserIdToRole),
                       splitUnsign3(ActionId),
-                      .K
+                      unsign-no-role.k
                   )
         ... </k>
         <address-to-user-id> AddressToUserId:Map </address-to-user-id>

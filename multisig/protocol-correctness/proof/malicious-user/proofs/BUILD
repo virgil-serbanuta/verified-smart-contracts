@@ -141,8 +141,8 @@ kprove_test(
   ],
   semantics = "//protocol-correctness/proof/malicious-user:malicious-user-execute",
   timeout = "eternal",
-  breadth = "1",
-  # depth = ~
+  breadth = "9",
+  # depth = ~39
 )
 
 kprove_test(
@@ -156,26 +156,26 @@ kprove_test(
       "//protocol-correctness/proof/functions:trusted-unsign-not-signed",
       "//protocol-correctness/proof/functions:trusted-unsign-no-signers",
       "//protocol-correctness/proof/functions:trusted-unsign-Proposer",
-      "//protocol-correctness/proof/functions:trusted-unsign-no-role",
-      "//protocol-correctness/proof/functions:trusted-unsign-no-user",
+      "//protocol-correctness/proof/functions:trusted-unsign-no-role-marker",
+      "//protocol-correctness/proof/functions:trusted-unsign-no-user-marker",
   ],
   semantics = "//protocol-correctness/proof/malicious-user:malicious-user-execute",
   timeout = "eternal",
-  breadth = "1",
-  # depth = ~
+  breadth = "10",
+  # depth = ~57
 )
 
 kprove_test(
   name = "proof-discard-action",
   srcs = ["proof-discard-action.k"],
   trusted = [
-      "//protocol-correctness/proof/functions:trusted-discard-action-has-signers"
-      "//protocol-correctness/proof/functions:trusted-discard-action-no-role"
-      "//protocol-correctness/proof/functions:trusted-discard-action-no-signers"
-      "//protocol-correctness/proof/functions:trusted-discard-action-no-signers-no-action"
-      "//protocol-correctness/proof/functions:trusted-discard-action-no-user"
-      "//protocol-correctness/proof/functions:trusted-discard-action-no-valid-signers"
-      "//protocol-correctness/proof/functions:trusted-discard-action-no-valid-signers-no-action"
+      "//protocol-correctness/proof/functions:trusted-discard-action-has-signers",
+      "//protocol-correctness/proof/functions:trusted-discard-action-no-role",
+      "//protocol-correctness/proof/functions:trusted-discard-action-no-signers",
+      "//protocol-correctness/proof/functions:trusted-discard-action-no-signers-no-action",
+      "//protocol-correctness/proof/functions:trusted-discard-action-no-user",
+      "//protocol-correctness/proof/functions:trusted-discard-action-no-valid-signers",
+      "//protocol-correctness/proof/functions:trusted-discard-action-no-valid-signers-no-action",
   ],
   semantics = "//protocol-correctness/proof/malicious-user:malicious-user-execute",
   timeout = "eternal",

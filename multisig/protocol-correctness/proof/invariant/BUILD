@@ -82,9 +82,9 @@ kprove_test(
       # ":trusted-perform-parts-add-proposer",
       # ":trusted-perform-parts-change-quorum-with-quorum",
       # ":trusted-perform-parts-change-quorum-no-quorum",
-      # ":trusted-perform-parts-New",
+      ":trusted-perform-parts-New",
       ":trusted-perform-parts-no-quorum",
-      # ":trusted-perform-parts-None",
+      ":trusted-perform-parts-None",
       ":trusted-perform-parts-Nothing",
       # ":trusted-perform-parts-remove-user",
       # ":trusted-perform-parts-sc-call",
@@ -92,6 +92,8 @@ kprove_test(
       # ":trusted-perform-parts-send-egld",
   ],
   semantics = ":invariant-execution",
+  breadth = "30",  # 28?
+  #depth ???
 )
 
 kprove_test(
@@ -752,8 +754,8 @@ kprove_test(
       "//protocol-correctness/proof/functions:trusted-unsign-not-signed",
       "//protocol-correctness/proof/functions:trusted-unsign-no-signers",
       "//protocol-correctness/proof/functions:trusted-unsign-Proposer",
-      "//protocol-correctness/proof/functions:trusted-unsign-no-role",
-      "//protocol-correctness/proof/functions:trusted-unsign-no-user",
+      "//protocol-correctness/proof/functions:trusted-unsign-no-role-marker",
+      "//protocol-correctness/proof/functions:trusted-unsign-no-user-marker",
   ],
   semantics = ":invariant-execution",
   timeout = "eternal",
@@ -765,13 +767,13 @@ kprove_test(
   name = "proof-discard-action",
   srcs = ["proof-discard-action.k"],
   trusted = [
-      "//protocol-correctness/proof/functions:trusted-discard-action-has-signers"
-      "//protocol-correctness/proof/functions:trusted-discard-action-no-role"
-      "//protocol-correctness/proof/functions:trusted-discard-action-no-signers"
-      "//protocol-correctness/proof/functions:trusted-discard-action-no-signers-no-action"
-      "//protocol-correctness/proof/functions:trusted-discard-action-no-user"
-      "//protocol-correctness/proof/functions:trusted-discard-action-no-valid-signers"
-      "//protocol-correctness/proof/functions:trusted-discard-action-no-valid-signers-no-action"
+      "//protocol-correctness/proof/functions:trusted-discard-action-has-signers",
+      "//protocol-correctness/proof/functions:trusted-discard-action-no-role",
+      "//protocol-correctness/proof/functions:trusted-discard-action-no-signers",
+      "//protocol-correctness/proof/functions:trusted-discard-action-no-signers-no-action",
+      "//protocol-correctness/proof/functions:trusted-discard-action-no-user",
+      "//protocol-correctness/proof/functions:trusted-discard-action-no-valid-signers",
+      "//protocol-correctness/proof/functions:trusted-discard-action-no-valid-signers-no-action",
   ],
   semantics = ":invariant-execution",
   timeout = "eternal",

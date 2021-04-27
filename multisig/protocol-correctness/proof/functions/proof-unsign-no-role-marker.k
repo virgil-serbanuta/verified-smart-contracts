@@ -1,18 +1,18 @@
 //@ proof
-module PROOF-UNSIGN-NO-USER
+module PROOF-UNSIGN-NO-ROLE-MARKER
   imports FUNCTIONS-EXECUTE
 //@ trusted
-// module TRUSTED-UNSIGN-NO-USER
+// module TRUSTED-UNSIGN-NO-ROLE-MARKER
   // imports EXECUTION-PROOF
 //@ end
 
   claim <T><TT>
-          <k> unsign-new.k ~> call(unsign(ActionId:Usize)) ~> K:K
+          <k> unsign-no-role.k ~> call(unsign(ActionId:Usize)) ~> K:K
           </k>
           invariantStateFull(
               NumUsers:Usize,
               UserIdToAddress:Map,
-              AddressToUserId:Map,
+              (CallerAddress |-> UserId:Usize _AddressToUserId:Map) #as AddressToUserId:Map,
               NumBoardMembers:Usize,
               NumProposers:Usize,
               UserIdToRole:Map,
@@ -49,9 +49,8 @@ module PROOF-UNSIGN-NO-USER
     requires true
       andBool isKResult(Action)
       andBool valueIsNotEmpty(Action, rAction)
-      andBool notBool u(0) in_keys(UserIdToRole)
 
-      andBool notBool CallerAddress in_keys(AddressToUserId)
+      andBool notBool UserId in_keys(UserIdToRole)
     ensures true
     //@ proof
     //@ trusted

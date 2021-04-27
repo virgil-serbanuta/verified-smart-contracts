@@ -980,6 +980,13 @@ kprove_test(
 )
 
 kprove_test(
+  name = "proof-unsign-no-role-marker",
+  srcs = ["proof-unsign-no-role-marker.k"],
+  semantics = ":functions-execute",
+  timeout = "moderate",
+)
+
+kprove_test(
   name = "proof-unsign-no-signers",
   srcs = ["proof-unsign-no-signers.k"],
   semantics = ":functions-execute",
@@ -989,6 +996,16 @@ kprove_test(
 kprove_test(
   name = "proof-unsign-no-user",
   srcs = ["proof-unsign-no-user.k"],
+  semantics = ":functions-execute",
+  timeout = "moderate",
+)
+
+kprove_test(
+  name = "proof-unsign-no-user-marker",
+  srcs = ["proof-unsign-no-user-marker.k"],
+  trusted = [
+      ":trusted-unsign-no-user",
+  ],
   semantics = ":functions-execute",
   timeout = "moderate",
 )
@@ -1631,6 +1648,12 @@ ktrusted(
 )
 
 ktrusted(
+  name = "trusted-unsign-no-role-marker",
+  srcs = ["proof-unsign-no-role-marker.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
   name = "trusted-unsign-no-signers",
   srcs = ["proof-unsign-no-signers.k"],
   visibility = ["//visibility:public"],
@@ -1639,6 +1662,12 @@ ktrusted(
 ktrusted(
   name = "trusted-unsign-no-user",
   srcs = ["proof-unsign-no-user.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-unsign-no-user-marker",
+  srcs = ["proof-unsign-no-user-marker.k"],
   visibility = ["//visibility:public"],
 )
 

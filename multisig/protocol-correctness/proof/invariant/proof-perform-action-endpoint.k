@@ -1,5 +1,8 @@
 //@ proof
 require "trusted-perform-parts-1.k"  //@ Bazel remove
+require "trusted-perform-parts-New.k"  //@ Bazel remove
+require "trusted-perform-parts-no-quorum.k"  //@ Bazel remove
+require "trusted-perform-parts-None.k"  //@ Bazel remove
 require "trusted-perform-parts-Nothing.k"  //@ Bazel remove
 
 module PROOF-PERFORM-ACTION-ENDPOINT
@@ -7,7 +10,9 @@ module PROOF-PERFORM-ACTION-ENDPOINT
 
   imports TRUSTED-PERFORM-PARTS-1
   imports TRUSTED-PERFORM-PARTS-2
+  imports TRUSTED-PERFORM-PARTS-NEW
   imports TRUSTED-PERFORM-PARTS-NO-QUORUM
+  imports TRUSTED-PERFORM-PARTS-NONE
   imports TRUSTED-PERFORM-PARTS-NOTHING
 //@ trusted
 // module TRUSTED-PERFORM-ACTION-ENDPOINT

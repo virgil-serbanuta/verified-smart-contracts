@@ -37,9 +37,11 @@ module CONCRETIZE-INSTRUMENTATION
   rule concretizeExpressionList([_:Expression , L:ExpressionCSV], X:Int)
       => concretizeExpressionList([L], X -Int 1)
     requires X >Int 0
+    [label(concretizeListElement)]
   rule concretizeExpressionList([_:ExpressionCSV], X:Int)
       => .K
     requires X <=Int 0
+    [label(concretizeListEnd)]
 
   syntax Expression ::= expressionListGetOrDefault(ExpressionList, Int, Expression)  [function, functional]
   rule expressionListGetOrDefault([.], _:Int, Default:Expression) => Default
@@ -135,6 +137,11 @@ module PROOF-INSTRUMENTATION
   rule branchK(true, K:K, _:K) => K  [label(branchKTrue)]
   rule branchK(false, _:K, K:K) => K  [label(branchKFalse)]
 
+  syntax KItem ::= "unsign-new.k"
+  syntax KItem ::= "unsign-no-role.k"
+
+  rule unsign-new.k => .K
+  rule unsign-no-role.k => .K
 endmodule
 
 module EXECUTION-PROOF-BOOL

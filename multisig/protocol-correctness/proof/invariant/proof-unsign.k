@@ -5,8 +5,8 @@ require "../functions/trusted-unsign-other-signers-first.k"  //@ Bazel remove
 require "../functions/trusted-unsign-not-signed.k"  //@ Bazel remove
 require "../functions/trusted-unsign-no-signers.k"  //@ Bazel remove
 require "../functions/trusted-unsign-Proposer.k"  //@ Bazel remove
-require "../functions/trusted-unsign-no-role.k"  //@ Bazel remove
-require "../functions/trusted-unsign-no-user.k"  //@ Bazel remove
+require "../functions/trusted-unsign-no-role-marker.k"  //@ Bazel remove
+require "../functions/trusted-unsign-no-user-marker.k"  //@ Bazel remove
 
 module PROOF-UNSIGN
   imports INVARIANT-EXECUTION
@@ -19,8 +19,8 @@ module PROOF-UNSIGN
   imports TRUSTED-UNSIGN-NOT-SIGNED
   imports TRUSTED-UNSIGN-NO-SIGNERS
   imports TRUSTED-UNSIGN-PROPOSER
-  imports TRUSTED-UNSIGN-NO-ROLE
-  imports TRUSTED-UNSIGN-NO-USER
+  imports TRUSTED-UNSIGN-NO-ROLE-MARKER
+  imports TRUSTED-UNSIGN-NO-USER-MARKER
 
   claim <T><TT>
           <k> runExternalCalls(
@@ -30,13 +30,13 @@ module PROOF-UNSIGN
               )
           </k>
           invariantState(
-              NumUsers:Usize,
+              u(NumUsers:Int),
               UserIdToAddress:Map,
               AddressToUserId:Map,
-              NumBoardMembers:Usize,
-              NumProposers:Usize,
+              u(NumBoardMembers:Int),
+              u(NumProposers:Int),
               UserRoles:Map,
-              Quorum:Usize,
+              u(Quorum:Int),
               ActionLastIndex0:Usize,
               ActionData0:Map,
               ActionSigners0:Map,
@@ -46,40 +46,40 @@ module PROOF-UNSIGN
         <T><TT>
           <k> runExternalCalls(EC) </k>
           invariantState(
-              NumUsers:Usize,
-              UserIdToAddress:Map,
-              AddressToUserId:Map,
-              NumBoardMembers:Usize,
-              NumProposers:Usize,
-              UserRoles:Map,
-              Quorum:Usize,
+              u(NumUsers),
+              UserIdToAddress,
+              AddressToUserId,
+              u(NumBoardMembers),
+              u(NumProposers),
+              UserRoles,
+              u(Quorum),
               ?ActionLastIndex1:Usize,
               ?ActionData1:Map,
               ?ActionSigners1:Map,
               PerformedActions:List):StateCell
         </TT></T>
     requires invariant(
-        NumUsers:Usize,
-        UserIdToAddress:Map,
-        AddressToUserId:Map,
-        NumBoardMembers:Usize,
-        NumProposers:Usize,
-        UserRoles:Map,
-        Quorum:Usize,
-        ActionLastIndex0:Usize,
-        ActionData0:Map,
-        ActionSigners0:Map,
+        u(NumUsers),
+        UserIdToAddress,
+        AddressToUserId,
+        u(NumBoardMembers),
+        u(NumProposers),
+        UserRoles,
+        u(Quorum),
+        ActionLastIndex0,
+        ActionData0,
+        ActionSigners0,
         expand(expanded))
     ensures invariant(
-        NumUsers:Usize,
-        UserIdToAddress:Map,
-        AddressToUserId:Map,
-        NumBoardMembers:Usize,
-        NumProposers:Usize,
-        UserRoles:Map,
-        Quorum:Usize,
-        ?ActionLastIndex1:Usize,
-        ?ActionData1:Map,
-        ?ActionSigners1:Map,
+        u(NumUsers),
+        UserIdToAddress,
+        AddressToUserId,
+        u(NumBoardMembers),
+        u(NumProposers),
+        UserRoles,
+        u(Quorum),
+        ?ActionLastIndex1,
+        ?ActionData1,
+        ?ActionSigners1,
         usesExpanded)
 endmodule

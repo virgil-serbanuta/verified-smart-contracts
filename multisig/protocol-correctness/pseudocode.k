@@ -1041,7 +1041,7 @@ module PSEUDOCODE-FUNCTIONS
   rule #pushList(E:Expression , Es:ExpressionCSV, E2:Expression)
         => prepend(#pushList(Es, E2), E)
 
-  rule {.:ExpressionCSV #Equals pushList(_, _)} => #Top  [simplification, smt-lemma]
+  rule .:ExpressionCSV ==K pushList(_, _) => false  [simplification, smt-lemma]
 
   syntax ExpressionCSV ::= prepend(ExpressionCSV, Expression)
     [function, functional]

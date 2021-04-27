@@ -1,8 +1,9 @@
 //@ proof
-module PROOF-UNSIGN-NO-USER
+module PROOF-UNSIGN-NO-USER-MARKER
   imports FUNCTIONS-EXECUTE
+  imports TRUSTED-UNSIGN-NO-USER
 //@ trusted
-// module TRUSTED-UNSIGN-NO-USER
+// module TRUSTED-UNSIGN-NO-USER-MARKER
   // imports EXECUTION-PROOF
 //@ end
 

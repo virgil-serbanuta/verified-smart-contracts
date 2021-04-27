@@ -30,7 +30,7 @@ module MALICIOUS-USER-INVARIANT-FUNCTIONS
     [simplification]
 
   syntax Bool ::= oneElementList(element:KItem, ExpressionList) [function, functional]
-  rule oneElementList(E:Expression, L:ExpressionList) => L ==K E
+  rule oneElementList(E:Expression, L:ExpressionList) => L ==K [E, .]
   rule oneElementList(_, _) => false [owise]
 endmodule
 
