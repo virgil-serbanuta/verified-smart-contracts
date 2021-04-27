@@ -109,6 +109,10 @@ module EXECUTION-PROOF-HELPERS
           andBool listElementsAreDistinct([Es])
   rule listElementsAreDistinct(_:KItem) => false
     [owise]
+  rule listElementsAreDistinct([#pushList(L:ExpressionCSV, E:Expression)])
+      => true
+    requires notBool #listContains([L], E)
+    [simplification]
 
   syntax Bool ::= valuesAreExpressionListOfUsize(Map)  [function, functional]
   rule valuesAreExpressionListOfUsize(.Map) => true

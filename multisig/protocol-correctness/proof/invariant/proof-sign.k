@@ -1,10 +1,10 @@
-require "../functions/trusted-sign-empty-action.k"
-require "../functions/trusted-sign-caller-not-user.k"
-require "../functions/trusted-sign-caller-none.k"
-require "../functions/trusted-sign-caller-proposer.k"
-require "../functions/trusted-sign-no-signers.k"
-require "../functions/trusted-sign-existing-signers-in-list.k"
-require "../functions/trusted-sign-existing-signers-not-in-list.k"
+require "../functions/trusted-sign-empty-action.k"  //@ Bazel remove
+require "../functions/trusted-sign-caller-not-user.k"  //@ Bazel remove
+require "../functions/trusted-sign-caller-none.k"  //@ Bazel remove
+require "../functions/trusted-sign-caller-proposer.k"  //@ Bazel remove
+require "../functions/trusted-sign-no-signers.k"  //@ Bazel remove
+require "../functions/trusted-sign-existing-signers-in-list.k"  //@ Bazel remove
+require "../functions/trusted-sign-existing-signers-not-in-list.k"  //@ Bazel remove
 
 module PROOF-SIGN
   imports INVARIANT-EXECUTION

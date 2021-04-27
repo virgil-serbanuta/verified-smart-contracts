@@ -30,7 +30,7 @@ module MALICIOUS-USER-INVARIANT-FUNCTIONS
     [simplification]
 
   syntax Bool ::= oneElementList(element:KItem, ExpressionList) [function, functional]
-  rule oneElementList(E:Expression, [E, .]) => true
+  rule oneElementList(E:Expression, L:ExpressionList) => L ==K E
   rule oneElementList(_, _) => false [owise]
 endmodule
 
@@ -93,6 +93,8 @@ endmodule
 module MALICIOUS-USER-HELPERS
   imports PSEUDOCODE-SYNTAX
 
+  syntax KResult
+
   syntax KItem ::= runExternalCallsFromUser(Address, steps:Int)
 
   rule runExternalCallsFromUser(_:Address, Steps:Int) => .K
@@ -121,13 +123,15 @@ module MALICIOUS-USER-HELPERS
             ?_Upgradeable:Bool,
             ?_Payable:Bool,
             ?_Readable:Bool,
-            ?_Args:ExpressionList);)
+            ?Args:ExpressionList);)
+    ensures isKResult(?Args)
   rule  runExternalCallFromUser(A:Address)
         => runExternalCall(from A run proposeSCCall(
             ?_To:Address,
             ?_Amount:BigUint,
             ?_Function:BoxedBytes,
-            ?_Args:ExpressionList);)
+            ?Args:ExpressionList);)
+    ensures isKResult(?Args)
   rule  runExternalCallFromUser(A:Address)
         => runExternalCall(from A run sign(?_ActionId:Usize);)
   rule  runExternalCallFromUser(A:Address)

@@ -77,14 +77,15 @@ kprove_test(
   srcs = ["proof-perform-action-endpoint.k"],
   trusted = [
       ":trusted-perform-parts-1",
+      ":trusted-perform-parts-2",
       #":trusted-perform-parts-add-board-member",
       # ":trusted-perform-parts-add-proposer",
       # ":trusted-perform-parts-change-quorum-with-quorum",
       # ":trusted-perform-parts-change-quorum-no-quorum",
       # ":trusted-perform-parts-New",
-      # ":trusted-perform-parts-no-quorum",
+      ":trusted-perform-parts-no-quorum",
       # ":trusted-perform-parts-None",
-      # ":trusted-perform-parts-Nothing",
+      ":trusted-perform-parts-Nothing",
       # ":trusted-perform-parts-remove-user",
       # ":trusted-perform-parts-sc-call",
       # ":trusted-perform-parts-sc-deploy",
@@ -112,6 +113,28 @@ kprove_test(
   semantics = ":invariant-execution",
   timeout = "eternal",
   breadth = "7",
+  #depth ???
+)
+
+kprove_test(
+  name = "proof-perform-parts-2",
+  srcs = ["proof-perform-parts-2.k"],
+  trusted = [
+      ":trusted-perform-parts-add-board-member",
+      ":trusted-perform-parts-add-proposer-signers",
+      ":trusted-perform-parts-add-proposer-no-signers",
+      ":trusted-perform-parts-change-quorum",
+      ":trusted-perform-parts-New",
+      ":trusted-perform-parts-no-quorum",
+      ":trusted-perform-parts-None",
+      ":trusted-perform-parts-remove-user",
+      ":trusted-perform-parts-sc-call",
+      ":trusted-perform-parts-sc-deploy",
+      ":trusted-perform-parts-send-egld",
+  ],
+  semantics = ":invariant-execution",
+  timeout = "eternal",
+  breadth = "1",
   #depth ???
 )
 
@@ -174,8 +197,8 @@ kprove_test(
 )
 
 kprove_test(
-  name = "proof-perform-parts-nothing",
-  srcs = ["proof-perform-parts-nothing.k"],
+  name = "proof-perform-parts-Nothing",
+  srcs = ["proof-perform-parts-Nothing.k"],
   trusted = [
       "//protocol-correctness/proof/functions:trusted-perform-action-endpoint-nothing",
   ],
@@ -607,7 +630,153 @@ kprove_test(
   ],
   semantics = ":invariant-execution",
   timeout = "eternal",
-  breadth = "4" # 0
+  breadth = "4", # 0
+)
+
+kprove_test(
+  name = "proof-propose-add-proposer",
+  srcs = ["proof-propose-add-proposer.k"],
+  trusted = [
+      "//protocol-correctness/proof/functions:trusted-propose-action-BoardMember",
+      "//protocol-correctness/proof/functions:trusted-propose-action-Proposer",
+      "//protocol-correctness/proof/functions:trusted-propose-action-error-no-user",
+      "//protocol-correctness/proof/functions:trusted-propose-action-error-no-role",
+  ],
+  semantics = ":invariant-execution",
+  timeout = "eternal",
+  breadth = "6",
+  # depth = ~38
+)
+
+kprove_test(
+  name = "proof-propose-remove-user",
+  srcs = ["proof-propose-remove-user.k"],
+  trusted = [
+      "//protocol-correctness/proof/functions:trusted-propose-action-BoardMember",
+      "//protocol-correctness/proof/functions:trusted-propose-action-Proposer",
+      "//protocol-correctness/proof/functions:trusted-propose-action-error-no-user",
+      "//protocol-correctness/proof/functions:trusted-propose-action-error-no-role",
+  ],
+  semantics = ":invariant-execution",
+  timeout = "eternal",
+  breadth = "6",
+  # depth = ~38
+)
+
+kprove_test(
+  name = "proof-propose-change-quorum",
+  srcs = ["proof-propose-change-quorum.k"],
+  trusted = [
+      "//protocol-correctness/proof/functions:trusted-propose-action-BoardMember",
+      "//protocol-correctness/proof/functions:trusted-propose-action-Proposer",
+      "//protocol-correctness/proof/functions:trusted-propose-action-error-no-user",
+      "//protocol-correctness/proof/functions:trusted-propose-action-error-no-role",
+  ],
+  semantics = ":invariant-execution",
+  timeout = "eternal",
+  breadth = "6",
+  # depth = ~38
+)
+
+kprove_test(
+  name = "proof-propose-send-egld",
+  srcs = ["proof-propose-send-egld.k"],
+  trusted = [
+      "//protocol-correctness/proof/functions:trusted-propose-action-BoardMember",
+      "//protocol-correctness/proof/functions:trusted-propose-action-Proposer",
+      "//protocol-correctness/proof/functions:trusted-propose-action-error-no-user",
+      "//protocol-correctness/proof/functions:trusted-propose-action-error-no-role",
+  ],
+  semantics = ":invariant-execution",
+  timeout = "eternal",
+  breadth = "6",
+  # depth = ~38
+)
+
+kprove_test(
+  name = "proof-propose-sc-deploy",
+  srcs = ["proof-propose-sc-deploy.k"],
+  trusted = [
+      "//protocol-correctness/proof/functions:trusted-propose-sc-deploy-BoardMember",
+      "//protocol-correctness/proof/functions:trusted-propose-sc-deploy-Proposer",
+      "//protocol-correctness/proof/functions:trusted-propose-sc-deploy-error-no-user",
+      "//protocol-correctness/proof/functions:trusted-propose-sc-deploy-error-no-role",
+  ],
+  semantics = ":invariant-execution",
+  timeout = "eternal",
+  breadth = "6",
+  # depth = ~30
+)
+
+kprove_test(
+  name = "proof-propose-sc-call",
+  srcs = ["proof-propose-sc-call.k"],
+  trusted = [
+      "//protocol-correctness/proof/functions:trusted-propose-action-BoardMember",
+      "//protocol-correctness/proof/functions:trusted-propose-action-Proposer",
+      "//protocol-correctness/proof/functions:trusted-propose-action-error-no-user",
+      "//protocol-correctness/proof/functions:trusted-propose-action-error-no-role",
+  ],
+  semantics = ":invariant-execution",
+  timeout = "eternal",
+  breadth = "6",
+  # depth = ~38
+)
+
+kprove_test(
+  name = "proof-sign",
+  srcs = ["proof-sign.k"],
+  trusted = [
+      "//protocol-correctness/proof/functions:trusted-sign-empty-action",
+      "//protocol-correctness/proof/functions:trusted-sign-caller-not-user",
+      "//protocol-correctness/proof/functions:trusted-sign-caller-none",
+      "//protocol-correctness/proof/functions:trusted-sign-caller-proposer",
+      "//protocol-correctness/proof/functions:trusted-sign-no-signers",
+      "//protocol-correctness/proof/functions:trusted-sign-existing-signers-in-list",
+      "//protocol-correctness/proof/functions:trusted-sign-existing-signers-not-in-list",
+  ],
+  semantics = ":invariant-execution",
+  timeout = "eternal",
+  breadth = "1",
+  # depth = ~
+)
+
+kprove_test(
+  name = "proof-unsign",
+  srcs = ["proof-unsign.k"],
+  trusted = [
+      "//protocol-correctness/proof/functions:trusted-unsign-no-action",
+      "//protocol-correctness/proof/functions:trusted-unsign-only-signer",
+      "//protocol-correctness/proof/functions:trusted-unsign-other-signers-not-first",
+      "//protocol-correctness/proof/functions:trusted-unsign-other-signers-first",
+      "//protocol-correctness/proof/functions:trusted-unsign-not-signed",
+      "//protocol-correctness/proof/functions:trusted-unsign-no-signers",
+      "//protocol-correctness/proof/functions:trusted-unsign-Proposer",
+      "//protocol-correctness/proof/functions:trusted-unsign-no-role",
+      "//protocol-correctness/proof/functions:trusted-unsign-no-user",
+  ],
+  semantics = ":invariant-execution",
+  timeout = "eternal",
+  breadth = "1",
+  # depth = ~
+)
+
+kprove_test(
+  name = "proof-discard-action",
+  srcs = ["proof-discard-action.k"],
+  trusted = [
+      "//protocol-correctness/proof/functions:trusted-discard-action-has-signers"
+      "//protocol-correctness/proof/functions:trusted-discard-action-no-role"
+      "//protocol-correctness/proof/functions:trusted-discard-action-no-signers"
+      "//protocol-correctness/proof/functions:trusted-discard-action-no-signers-no-action"
+      "//protocol-correctness/proof/functions:trusted-discard-action-no-user"
+      "//protocol-correctness/proof/functions:trusted-discard-action-no-valid-signers"
+      "//protocol-correctness/proof/functions:trusted-discard-action-no-valid-signers-no-action"
+  ],
+  semantics = ":invariant-execution",
+  timeout = "eternal",
+  breadth = "1",
+  # depth = ~
 )
 
 ktrusted(
@@ -838,11 +1007,11 @@ ktrusted(
   visibility = ["//visibility:public"],
 )
 
-# ktrusted(
-#   name = "trusted-perform-parts-Nothing",
-#   srcs = ["proof-perform-parts-Nothing.k"],
-#   visibility = ["//visibility:public"],
-# )
+ktrusted(
+  name = "trusted-perform-parts-Nothing",
+  srcs = ["proof-perform-parts-Nothing.k"],
+  visibility = ["//visibility:public"],
+)
 
 ktrusted(
   name = "trusted-perform-parts-remove-user",
@@ -889,6 +1058,12 @@ ktrusted(
 ktrusted(
   name = "trusted-perform-parts-1",
   srcs = ["proof-perform-parts-1.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-perform-parts-2",
+  srcs = ["proof-perform-parts-2.k"],
   visibility = ["//visibility:public"],
 )
 

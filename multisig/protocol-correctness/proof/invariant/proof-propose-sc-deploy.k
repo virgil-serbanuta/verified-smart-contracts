@@ -1,9 +1,9 @@
-require "../functions/functions-execute.k"
+require "../functions/functions-execute.k"  //@ Bazel remove
 
-require "../functions/trusted-propose-sc-deploy-BoardMember.k"
-require "../functions/trusted-propose-sc-deploy-Proposer.k"
-require "../functions/trusted-propose-sc-deploy-error-no-user.k"
-require "../functions/trusted-propose-sc-deploy-error-no-role.k"
+require "../functions/trusted-propose-sc-deploy-BoardMember.k"  //@ Bazel remove
+require "../functions/trusted-propose-sc-deploy-Proposer.k"  //@ Bazel remove
+require "../functions/trusted-propose-sc-deploy-error-no-user.k"  //@ Bazel remove
+require "../functions/trusted-propose-sc-deploy-error-no-role.k"  //@ Bazel remove
 
 module PROOF-PROPOSE-SC-DEPLOY
   imports INVARIANT-EXECUTION

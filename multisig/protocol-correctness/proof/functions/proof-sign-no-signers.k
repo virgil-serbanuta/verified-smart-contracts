@@ -49,7 +49,7 @@ module PROOF-SIGN-NO-SIGNERS
       andBool notBool u(0) in_keys(UserIdToRole)
       andBool actionDataInvariant(ActionData)
       andBool userIdToRoleInvariant(UserIdToRole)
-      andBool unusedIdsInMapKeys(ActionLastIndex +Int 1, keysMap(ActionData), Handling)
+      andBool unusedIdsInMapKeys(ActionLastIndex +Int 1, keysMap(ActionData), usesExpanded)
 
       andBool ActionId in_keys(ActionData)
       andBool notBool ActionId in_keys(ActionSigners)

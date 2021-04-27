@@ -1,12 +1,12 @@
-require "../functions/trusted-unsign-no-action.k"
-require "../functions/trusted-unsign-only-signer.k"
-require "../functions/trusted-unsign-other-signers-not-first.k"
-require "../functions/trusted-unsign-other-signers-first.k"
-require "../functions/trusted-unsign-not-signed.k"
-require "../functions/trusted-unsign-no-signers.k"
-require "../functions/trusted-unsign-Proposer.k"
-require "../functions/trusted-unsign-no-role.k"
-require "../functions/trusted-unsign-no-user.k"
+require "../functions/trusted-unsign-no-action.k"  //@ Bazel remove
+require "../functions/trusted-unsign-only-signer.k"  //@ Bazel remove
+require "../functions/trusted-unsign-other-signers-not-first.k"  //@ Bazel remove
+require "../functions/trusted-unsign-other-signers-first.k"  //@ Bazel remove
+require "../functions/trusted-unsign-not-signed.k"  //@ Bazel remove
+require "../functions/trusted-unsign-no-signers.k"  //@ Bazel remove
+require "../functions/trusted-unsign-Proposer.k"  //@ Bazel remove
+require "../functions/trusted-unsign-no-role.k"  //@ Bazel remove
+require "../functions/trusted-unsign-no-user.k"  //@ Bazel remove
 
 module PROOF-UNSIGN
   imports INVARIANT-EXECUTION

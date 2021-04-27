@@ -1469,8 +1469,8 @@ ktrusted(
 )
 
 ktrusted(
-  name = "trusted-perform-action-endpoint-nothing",
-  srcs = ["proof-perform-action-endpoint-nothing.k"],
+  name = "trusted-perform-action-endpoint-Nothing",
+  srcs = ["proof-perform-action-endpoint-Nothing.k"],
   visibility = ["//visibility:public"],
 )
 
@@ -1552,3 +1552,122 @@ ktrusted(
   visibility = ["//visibility:public"],
 )
 
+ktrusted(
+  name = "trusted-propose-sc-deploy-BoardMember",
+  srcs = ["proof-propose-sc-deploy-BoardMember.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-propose-sc-deploy-Proposer",
+  srcs = ["proof-propose-sc-deploy-Proposer.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-propose-sc-deploy-error-no-role",
+  srcs = ["proof-propose-sc-deploy-error-no-role.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-propose-sc-deploy-error-no-user",
+  srcs = ["proof-propose-sc-deploy-error-no-user.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-sign-caller-none",
+  srcs = ["proof-sign-caller-none.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-sign-caller-not-user",
+  srcs = ["proof-sign-caller-not-user.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-sign-caller-proposer",
+  srcs = ["proof-sign-caller-proposer.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-sign-empty-action",
+  srcs = ["proof-sign-empty-action.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-sign-existing-signers-in-list",
+  srcs = ["proof-sign-existing-signers-in-list.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-sign-existing-signers-not-in-list",
+  srcs = ["proof-sign-existing-signers-not-in-list.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-sign-no-signers",
+  srcs = ["proof-sign-no-signers.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-unsign-no-action",
+  srcs = ["proof-unsign-no-action.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-unsign-no-role",
+  srcs = ["proof-unsign-no-role.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-unsign-no-signers",
+  srcs = ["proof-unsign-no-signers.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-unsign-no-user",
+  srcs = ["proof-unsign-no-user.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-unsign-not-signed",
+  srcs = ["proof-unsign-not-signed.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-unsign-only-signer",
+  srcs = ["proof-unsign-only-signer.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-unsign-other-signers-first",
+  srcs = ["proof-unsign-other-signers-first.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-unsign-other-signers-not-first",
+  srcs = ["proof-unsign-other-signers-not-first.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-unsign-Proposer",
+  srcs = ["proof-unsign-Proposer.k"],
+  visibility = ["//visibility:public"],
+)

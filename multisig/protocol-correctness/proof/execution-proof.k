@@ -41,7 +41,7 @@ module CONCRETIZE-INSTRUMENTATION
       => .K
     requires X <=Int 0
 
-  syntax Expression ::= expressionListGetOrDefault(ExpressionList, Int, Expression)  [function]
+  syntax Expression ::= expressionListGetOrDefault(ExpressionList, Int, Expression)  [function, functional]
   rule expressionListGetOrDefault([.], _:Int, Default:Expression) => Default
   rule expressionListGetOrDefault([_:ExpressionCSV], X:Int, Default:Expression) => Default
     requires X <Int 0
