@@ -92,6 +92,7 @@ endmodule
 
 module MALICIOUS-USER-HELPERS
   imports PSEUDOCODE-SYNTAX
+  imports CONCRETIZE-INSTRUMENTATION
 
   syntax KResult
 
@@ -117,20 +118,27 @@ module MALICIOUS-USER-HELPERS
         => runExternalCall(from A run proposeSendEgld(
             ?_To:Address, ?_Amount:BigUint, ?_Data:BoxedBytes);)
   rule  runExternalCallFromUser(A:Address)
-        => runExternalCall(from A run proposeSCDeploy(
-            ?_Amount:BigUint,
-            ?_Code:BoxedBytes,
-            ?_Upgradeable:Bool,
-            ?_Payable:Bool,
-            ?_Readable:Bool,
-            ?Args:ExpressionList);)
+        =>  concretizeValue(?Amount)
+            ~> concretizeValue(?Code)
+            ~> concretizeValue(?Args)
+            ~> runExternalCall(from A run proposeSCDeploy(
+                  ?Amount:BigUint,
+                  ?Code:BoxedBytes,
+                  ?_Upgradeable:Bool,
+                  ?_Payable:Bool,
+                  ?_Readable:Bool,
+                  ?Args:ExpressionList);)
     ensures isKResult(?Args)
   rule  runExternalCallFromUser(A:Address)
-        => runExternalCall(from A run proposeSCCall(
-            ?_To:Address,
-            ?_Amount:BigUint,
-            ?_Function:BoxedBytes,
-            ?Args:ExpressionList);)
+        => concretizeValue(?To)
+            ~> concretizeValue(?Amount)
+            ~> concretizeValue(?Function)
+            ~> concretizeValue(?Args)
+            ~> runExternalCall(from A run proposeSCCall(
+                ?To:Address,
+                ?Amount:BigUint,
+                ?Function:BoxedBytes,
+                ?Args:ExpressionList);)
     ensures isKResult(?Args)
   rule  runExternalCallFromUser(A:Address)
         => runExternalCall(from A run sign(?_ActionId:Usize);)

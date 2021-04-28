@@ -49,7 +49,7 @@ module PROOF-PROPOSE-SC-DEPLOY
               NumProposers,
               UserRoles,
               Quorum,
-              ?ActionLastIndex:Usize,
+              u(?ActionLastIndex:Int),
               ?ActionData:Map,
               ?ActionSigners:Map,
               PerformedActions:List):StateCell
@@ -79,7 +79,7 @@ module PROOF-PROPOSE-SC-DEPLOY
             NumProposers,
             UserRoles,
             Quorum,
-            ?ActionLastIndex,
+            u(?ActionLastIndex),
             ?ActionData,
             ?ActionSigners,
             usesExpanded)

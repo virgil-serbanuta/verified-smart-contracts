@@ -17,10 +17,10 @@ module PROOF-PROPOSE-SC-CALL
 
   claim <T><TT>
           <k> runExternalCall(from MaliciousAddress run proposeSCCall(
-                  _To:Address,
-                  _Amount:BigUint,
-                  _Function:BoxedBytes,
-                  Args:ExpressionList);)
+                  address(_To:Int),
+                  big(_Amount:Int),
+                  bytes(_Function:String),
+                  ([_ArgsCsv:ExpressionCSV] #as Args:ExpressionList));)
               ~> K:K
           </k>
           invariantState(
@@ -47,7 +47,7 @@ module PROOF-PROPOSE-SC-CALL
               NumProposers,
               UserRoles,
               Quorum,
-              ?ActionLastIndex:Usize,
+              u(?ActionLastIndex:Int),
               ?ActionData:Map,
               ?ActionSigners:Map,
               PerformedActions:List):StateCell
@@ -77,7 +77,7 @@ module PROOF-PROPOSE-SC-CALL
             NumProposers,
             UserRoles,
             Quorum,
-            ?ActionLastIndex,
+            u(?ActionLastIndex),
             ?ActionData,
             ?ActionSigners,
             usesExpanded)

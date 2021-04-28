@@ -758,8 +758,8 @@ kprove_test(
   ],
   semantics = ":invariant-execution",
   timeout = "eternal",
-  breadth = "1",
-  # depth = ~
+  breadth = "22",
+  # depth = ~45
 )
 
 ktrusted(

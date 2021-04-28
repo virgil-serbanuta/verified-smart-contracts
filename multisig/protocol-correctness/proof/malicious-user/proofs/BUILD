@@ -7,7 +7,7 @@ kprove_test(
       ":trusted-call-invariant",
   ],
   semantics = "//protocol-correctness/proof/malicious-user:malicious-user-execute",
-  timeout = "moderate",
+  timeout = "long",
   breadth = "2",
   # depth = "5"
 )
@@ -30,6 +30,8 @@ kprove_test(
   ],
   semantics = "//protocol-correctness/proof/malicious-user:malicious-user-execute",
   timeout = "eternal",
+  breadth = "11",
+  # depth = ~12
 )
 
 kprove_test(
@@ -118,7 +120,7 @@ kprove_test(
   ],
   semantics = "//protocol-correctness/proof/malicious-user:malicious-user-execute",
   timeout = "eternal",
-  breadth = "7", # >6
+  breadth = "13", # >9
   # depth = ~29
 )
 
@@ -148,6 +150,7 @@ kprove_test(
       "//protocol-correctness/proof/functions:trusted-sign-no-signers",
       "//protocol-correctness/proof/functions:trusted-sign-existing-signers-in-list",
       "//protocol-correctness/proof/functions:trusted-sign-existing-signers-not-in-list",
+      "//protocol-correctness/proof/instrumentation/pushlist:trusted-push-list-not-empty",
   ],
   semantics = "//protocol-correctness/proof/malicious-user:malicious-user-execute",
   timeout = "eternal",
@@ -189,8 +192,8 @@ kprove_test(
   ],
   semantics = "//protocol-correctness/proof/malicious-user:malicious-user-execute",
   timeout = "eternal",
-  breadth = "1",
-  # depth = ~
+  breadth = "18",
+  # depth = ~44
 )
 
 kprove_test(
@@ -204,8 +207,8 @@ kprove_test(
   ],
   semantics = "//protocol-correctness/proof/malicious-user:malicious-user-execute",
   timeout = "eternal",
-  breadth = "1",
-  #depth ~
+  breadth = "13",
+  #depth ~46
 )
 
 ktrusted(

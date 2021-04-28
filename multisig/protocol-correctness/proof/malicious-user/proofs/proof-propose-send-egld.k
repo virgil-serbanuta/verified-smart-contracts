@@ -17,7 +17,7 @@ module PROOF-PROPOSE-SEND-EGLD
 
   claim <T><TT>
           <k> runExternalCall(from MaliciousAddress run proposeSendEgld(
-                  _To:Address, _Amount:BigUint, _Data:BoxedBytes);)
+                  address(_To:Int), big(_Amount:Int), bytes(_Data:String));)
               ~> K:K
           </k>
           invariantState(
@@ -44,7 +44,7 @@ module PROOF-PROPOSE-SEND-EGLD
               NumProposers,
               UserRoles,
               Quorum,
-              ?ActionLastIndex:Usize,
+              u(?ActionLastIndex:Int),
               ?ActionData:Map,
               ?ActionSigners:Map,
               PerformedActions:List):StateCell
@@ -73,7 +73,7 @@ module PROOF-PROPOSE-SEND-EGLD
             NumProposers,
             UserRoles,
             Quorum,
-            ?ActionLastIndex,
+            u(?ActionLastIndex),
             ?ActionData,
             ?ActionSigners,
             usesExpanded)
