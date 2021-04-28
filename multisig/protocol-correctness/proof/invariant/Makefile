@@ -33,10 +33,6 @@ perform: $(INVARIANT_OUT_PREFIX)proofperform.timestamp
 
 propose: $(INVARIANT_OUT_PREFIX)proofpropose.timestamp
 
-$(INVARIANT_OUT_PREFIX)short-proofs.timestamp: $(INVARIANT_OUT_PREFIX)proof-init-loop.timestamp $(INVARIANT_OUT_PREFIX)proof-count-can-sign.timestamp $(INVARIANT_OUT_PREFIX)proof-init.timestamp $(INVARIANT_OUT_PREFIX)proof-listlen.timestamp $(INVARIANT_OUT_PREFIX)proof-perform-add-proposer-1.timestamp  $(INVARIANT_OUT_PREFIX)proof-perform-add-proposer-2.timestamp  $(INVARIANT_OUT_PREFIX)proof-perform-add-proposer-3.timestamp  $(INVARIANT_OUT_PREFIX)proof-perform-change-quorum.timestamp $(INVARIANT_OUT_PREFIX)proof-perform-nothing.timestamp $(INVARIANT_OUT_PREFIX)proof-perform-remove-user-1.timestamp  $(INVARIANT_OUT_PREFIX)proof-perform-remove-user-2.timestamp $(INVARIANT_OUT_PREFIX)proof-perform-remove-user-5.timestamp $(INVARIANT_OUT_PREFIX)proof-perform-s-c-call.timestamp $(INVARIANT_OUT_PREFIX)proof-perform-s-c-deploy.timestamp $(INVARIANT_OUT_PREFIX)proof-perform-send-egld.timestamp $(INVARIANT_OUT_PREFIX)execution.timestamp
-	$(DIR_GUARD)
-	@touch $(INVARIANT_OUT_PREFIX)short-proof.timestamp
-
 $(INVARIANT_OUT_PREFIX)proofperform.timestamp: ${INVARIANT_PERFORM_TIMESTAMPS} $(INVARIANT_OUT_PREFIX)execution.timestamp
 	$(DIR_GUARD)
 	@touch $(INVARIANT_OUT_PREFIX)proofperform.timestamp

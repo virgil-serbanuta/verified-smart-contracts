@@ -1,23 +1,28 @@
 //@ proof
-require "../functions/trusted-perform-action-endpoint-no-quorum.k"  //@ Bazel remove
+require "trusted-perform-action-endpoint-nothing.k"  //@ Bazel remove
 
-module PROOF-PERFORM-PARTS-NO-QUORUM
-  imports TRUSTED-PERFORM-ACTION-ENDPOINT-NO-QUORUM
+module PROOF-PERFORM-ACTION-ENDPOINT-NOTHING-MARKER
+  imports TRUSTED-PERFORM-ACTION-ENDPOINT-NOTHING
 //@ trusted
-// module TRUSTED-PERFORM-PARTS-NO-QUORUM
+// module TRUSTED-PERFORM-ACTION-ENDPOINT-NOTHING-MARKER
 //@ end
 
-  imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
+  imports PROOF-INSTRUMENTATION
+  imports INVARIANT
 
   claim <T><TT>
-          <k> no-quorum.k ~> call(performActionEndpoint(ActionId:Usize)) ~> K:K </k>
+          <k> perform-nothing.k ~> call(performActionEndpoint(ActionId:Usize)) ~> K:K </k>
           invariantStateFull(
               NumUsers:Usize,
               UserIdToAddress:Map,
-              (CallerAddress |-> UserId:Usize _AddressToUserId:Map) #as AddressToUserId:Map,
+              (CallerAddress |-> CallerId:Usize
+                  _AddressToUserId:Map
+              ) #as AddressToUserId:Map,
               NumBoardMembers:Usize,
               NumProposers:Usize,
-              (UserId |-> Role:UserRole _UserIdToRole:Map) #as UserIdToRole:Map,
+              (CallerId |-> Role:UserRole
+                  _UserIdToRole:Map
+              ) #as UserIdToRole:Map,
               u(Quorum:Int),
               ActionLastIndex:Usize,
               ActionData:Map,
@@ -30,7 +35,7 @@ module PROOF-PERFORM-PARTS-NO-QUORUM
         </TT></T>
       =>
         <T><TT>
-          <k> error ~> K:K </k>
+          <k> evaluate(void) ~> K:K </k>
           invariantStateFull(
               NumUsers,
               UserIdToAddress,
@@ -41,20 +46,22 @@ module PROOF-PERFORM-PARTS-NO-QUORUM
               u(Quorum),
               ActionLastIndex,
               ActionData,
-              ActionSigners,
+              ActionSigners[ActionId <- undef],
               CallerAddress,
               Stack,
-              caller_address |-> CallerAddress
-                caller_id |-> UserId
-                caller_role |-> Role,
-              PerformedActions
+              ?_Variables:Map,
+              ListItem(Nothing) PerformedActions
               )
         </TT></T>
     requires true
-        andBool userIdToRoleInvariant(UserIdToRole)
+        // perform-from-id
+        andBool notBool ActionId in_keys(ActionData)
+
+        // perform-fragment
         andBool actionSignersInvariant(ActionSigners)
+        andBool userIdToRoleInvariant(UserIdToRole)
         andBool (Role ==K BoardMember orBool Role ==K Proposer)
-        andBool Quorum >Int countCanSignFunction({ActionSigners[ActionId] orDefault [.]}:>ExpressionList, opaque(UserIdToRole))
+        andBool Quorum <=Int countCanSignFunction({ActionSigners[ActionId] orDefault [.]}:>ExpressionList, opaque(UserIdToRole))
     ensures true
     //@ proof
     //@ trusted

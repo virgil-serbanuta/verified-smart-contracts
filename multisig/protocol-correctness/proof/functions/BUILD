@@ -27,6 +27,13 @@ kprove_test(
 )
 
 kprove_test(
+  name = "proof-perform-action-endpoint-New-marker",
+  srcs = ["proof-perform-action-endpoint-New-marker.k"],
+  trusted = [":trusted-perform-action-endpoint-New"],
+  semantics = ":functions-execute",
+)
+
+kprove_test(
   name = "proof-perform-action-endpoint-None",
   srcs = ["proof-perform-action-endpoint-None.k"],
   trusted = [":trusted-perform-action-endpoint-fragment-None"],
@@ -34,9 +41,23 @@ kprove_test(
 )
 
 kprove_test(
+  name = "proof-perform-action-endpoint-None-marker",
+  srcs = ["proof-perform-action-endpoint-None-marker.k"],
+  trusted = [":trusted-perform-action-endpoint-None"],
+  semantics = ":functions-execute",
+)
+
+kprove_test(
   name = "proof-perform-action-endpoint-no-quorum",
   srcs = ["proof-perform-action-endpoint-no-quorum.k"],
   trusted = [":trusted-perform-action-endpoint-fragment-no-quorum"],
+  semantics = ":functions-execute",
+)
+
+kprove_test(
+  name = "proof-perform-action-endpoint-no-quorum-marker",
+  srcs = ["proof-perform-action-endpoint-no-quorum-marker.k"],
+  trusted = [":trusted-perform-action-endpoint-no-quorum"],
   semantics = ":functions-execute",
 )
 
@@ -49,6 +70,15 @@ kprove_test(
   ],
   semantics = ":functions-execute",
   timeout = "moderate",
+)
+
+kprove_test(
+  name = "proof-perform-action-endpoint-nothing-marker",
+  srcs = ["proof-perform-action-endpoint-nothing-marker.k"],
+  trusted = [
+      ":trusted-perform-action-endpoint-nothing",
+  ],
+  semantics = ":functions-execute",
 )
 
 kprove_test(
@@ -1063,6 +1093,14 @@ kprove_test(
   timeout = "moderate",
 )
 
+kprove_test(
+  name = "proof-listlen",
+  srcs = ["proof-listlen.k"],
+  semantics = ":functions-execute",
+  timeout = "moderate",
+  breadth = "4",
+)
+
 ktrusted(
   name = "trusted-count-can-sign",
   srcs = ["proof-count-can-sign.k"],
@@ -1504,8 +1542,20 @@ ktrusted(
 )
 
 ktrusted(
+  name = "trusted-perform-action-endpoint-New-marker",
+  srcs = ["proof-perform-action-endpoint-New-marker.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
   name = "trusted-perform-action-endpoint-None",
   srcs = ["proof-perform-action-endpoint-None.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-perform-action-endpoint-None-marker",
+  srcs = ["proof-perform-action-endpoint-None-marker.k"],
   visibility = ["//visibility:public"],
 )
 
@@ -1516,8 +1566,20 @@ ktrusted(
 )
 
 ktrusted(
+  name = "trusted-perform-action-endpoint-no-quorum-marker",
+  srcs = ["proof-perform-action-endpoint-no-quorum-marker.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
   name = "trusted-perform-action-endpoint-nothing",
   srcs = ["proof-perform-action-endpoint-nothing.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-perform-action-endpoint-nothing-marker",
+  srcs = ["proof-perform-action-endpoint-nothing-marker.k"],
   visibility = ["//visibility:public"],
 )
 
@@ -1728,5 +1790,11 @@ ktrusted(
 ktrusted(
   name = "trusted-unsign-Proposer",
   srcs = ["proof-unsign-Proposer.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-listlen",
+  srcs = ["proof-listlen.k"],
   visibility = ["//visibility:public"],
 )

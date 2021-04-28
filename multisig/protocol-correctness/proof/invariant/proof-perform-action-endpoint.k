@@ -1,23 +1,25 @@
 //@ proof
 require "trusted-perform-parts-1.k"  //@ Bazel remove
 require "trusted-perform-parts-2.k"  //@ Bazel remove
-require "trusted-perform-parts-New.k"  //@ Bazel remove
-require "trusted-perform-parts-no-quorum.k"  //@ Bazel remove
-require "trusted-perform-parts-None.k"  //@ Bazel remove
-require "trusted-perform-parts-nothing.k"  //@ Bazel remove
+require "../functions/trusted-perform-action-endpoint-New-marker.k"  //@ Bazel remove
+require "../functions/trusted-perform-action-endpoint-no-quorum-marker.k"  //@ Bazel remove
+require "../functions/trusted-perform-action-endpoint-None-marker.k"  //@ Bazel remove
+require "../functions/trusted-perform-action-endpoint-nothing-marker.k"  //@ Bazel remove
 
 module PROOF-PERFORM-ACTION-ENDPOINT
   imports INVARIANT-EXECUTION
 
   imports TRUSTED-PERFORM-PARTS-1
   imports TRUSTED-PERFORM-PARTS-2
-  imports TRUSTED-PERFORM-PARTS-NEW
-  imports TRUSTED-PERFORM-PARTS-NO-QUORUM
-  imports TRUSTED-PERFORM-PARTS-NONE
-  imports TRUSTED-PERFORM-PARTS-NOTHING
+  imports TRUSTED-PERFORM-ACTION-ENDPOINT-NEW-MARKER
+  imports TRUSTED-PERFORM-ACTION-ENDPOINT-NO-QUORUM-MARKER
+  imports TRUSTED-PERFORM-ACTION-ENDPOINT-NONE-MARKER
+  imports TRUSTED-PERFORM-ACTION-ENDPOINT-NOTHING-MARKER
 //@ trusted
 // module TRUSTED-PERFORM-ACTION-ENDPOINT
 //@ end
+
+  imports INVARIANT
 
   claim <T><TT>
           <k> runExternalCalls(

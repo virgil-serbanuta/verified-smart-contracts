@@ -1,17 +1,18 @@
 // TODO: Move in ../functions as "-marker"
 //@ proof
-require "../functions/trusted-perform-action-endpoint-New.k"  //@ Bazel remove
+require "trusted-perform-action-endpoint-New.k"  //@ Bazel remove
 
-module PROOF-PERFORM-PARTS-NEW
+module PROOF-PERFORM-ACTION-ENDPOINT-NEW-MARKER
   imports TRUSTED-PERFORM-ACTION-ENDPOINT-NEW
 //@ trusted
-// module TRUSTED-PERFORM-PARTS-NEW
+// module TRUSTED-PERFORM-ACTION-ENDPOINT-NEW-MARKER
 //@ end
 
-  imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
+  imports PROOF-INSTRUMENTATION
+  imports INVARIANT
 
   claim <T><TT>
-          <k> new.k ~> call(performActionEndpoint(_ActionId:Usize)) ~> K:K </k>
+          <k> perform-new.k ~> call(performActionEndpoint(_ActionId:Usize)) ~> K:K </k>
           invariantStateFull(
               NumUsers:Usize,
               UserIdToAddress:Map,

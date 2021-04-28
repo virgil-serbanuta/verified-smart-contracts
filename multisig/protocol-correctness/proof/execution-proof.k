@@ -148,6 +148,45 @@ module PROOF-INSTRUMENTATION
 
   rule discard-action-no-user.k => .K
   rule discard-action-no-role.k => .K
+
+  syntax PerformBranch ::= "perform-new.k"
+  syntax PerformBranch ::= "perform-none.k"
+  syntax PerformBranch ::= "perform-no-quorum.k"
+  syntax PerformBranch ::= "perform-add-board-member-New.k"
+  syntax PerformBranch ::= "perform-add-board-member-None.k"
+  syntax PerformBranch ::= "perform-add-board-member-BoardMember.k"
+  syntax PerformBranch ::= "perform-add-board-member-Proposer.k"
+  syntax PerformBranch ::= "perform-add-board-member-BoardMember-eq.k"
+  syntax PerformBranch ::= "perform-add-board-member-Proposer-eq.k"
+  syntax PerformBranch ::= "perform-add-proposer-New.k"
+  syntax PerformBranch ::= "perform-add-proposer-None.k"
+  syntax PerformBranch ::= "perform-add-proposer-BoardMember.k"
+  syntax PerformBranch ::= "perform-add-proposer-BoardMember-no-quorum.k"
+  syntax PerformBranch ::= "perform-add-proposer-Proposer.k"
+  syntax PerformBranch ::= "perform-add-proposer-BoardMember-eq.k"
+  syntax PerformBranch ::= "perform-add-proposer-BoardMember-no-quorum-eq.k"
+  syntax PerformBranch ::= "perform-add-proposer-Proposer-eq.k"
+  syntax PerformBranch ::= "perform-change-quorum.k"
+  syntax PerformBranch ::= "perform-change-quorum-no-quorum.k"
+  syntax PerformBranch ::= "perform-nothing.k"
+  syntax PerformBranch ::= "perform-remove-user-New.k"
+  syntax PerformBranch ::= "perform-remove-user-None.k"
+  syntax PerformBranch ::= "perform-remove-user-BoardMember-too-few.k"
+  syntax PerformBranch ::= "perform-remove-user-BoardMember.k"
+  syntax PerformBranch ::= "perform-remove-user-Proposer-nobody-left.k"
+  syntax PerformBranch ::= "perform-remove-user-Proposer.k"
+  syntax PerformBranch ::= "perform-remove-user-Proposer-nobody-left-eq.k"
+  syntax PerformBranch ::= "perform-remove-user-Proposer-eq.k"
+  syntax PerformBranch ::= "perform-remove-user-BoardMember-too-few-eq.k"
+  syntax PerformBranch ::= "perform-remove-user-BoardMember-eq.k"
+  syntax PerformBranch ::= "perform-sc-call.k"
+  syntax PerformBranch ::= "perform-sc-deploy.k"
+  syntax PerformBranch ::= "perform-send-egld.k"
+
+  syntax KItem ::= PerformBranch
+
+  // TODO: It might be faster to enumerate all cases separately.
+  rule _:PerformBranch => .K
 endmodule
 
 module EXECUTION-PROOF-BOOL

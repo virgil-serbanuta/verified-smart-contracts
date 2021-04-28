@@ -1,16 +1,17 @@
 //@ proof
-require "../functions/trusted-perform-action-endpoint-None.k"  //@ Bazel remove
+require "trusted-perform-action-endpoint-None.k"  //@ Bazel remove
 
-module PROOF-PERFORM-PARTS-NONE
+module PROOF-PERFORM-ACTION-ENDPOINT-NONE-MARKER
   imports TRUSTED-PERFORM-ACTION-ENDPOINT-NONE
 //@ trusted
-// module TRUSTED-PERFORM-PARTS-NONE
+// module TRUSTED-PERFORM-ACTION-ENDPOINT-NONE-MARKER
 //@ end
 
-  imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
+  imports PROOF-INSTRUMENTATION
+  imports INVARIANT
 
   claim <T><TT>
-          <k> none.k ~> call(performActionEndpoint(_ActionId:Usize)) ~> K:K </k>
+          <k> perform-none.k ~> call(performActionEndpoint(_ActionId:Usize)) ~> K:K </k>
           invariantStateFull(
               NumUsers:Usize,
               UserIdToAddress:Map,

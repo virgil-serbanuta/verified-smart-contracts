@@ -65,10 +65,10 @@ kprove_test(
   trusted = [
       ":trusted-perform-parts-1",
       ":trusted-perform-parts-2",
-      ":trusted-perform-parts-New",
-      ":trusted-perform-parts-no-quorum",
-      ":trusted-perform-parts-None",
-      ":trusted-perform-parts-nothing",
+      "//protocol-correctness/proof/functions:trusted-perform-action-endpoint-New-marker",
+      "//protocol-correctness/proof/functions:trusted-perform-action-endpoint-no-quorum-marker",
+      "//protocol-correctness/proof/functions:trusted-perform-action-endpoint-None-marker",
+      "//protocol-correctness/proof/functions:trusted-perform-action-endpoint-nothing-marker",
   ],
   semantics = ":invariant-execution",
   timeout = "eternal",
@@ -84,9 +84,9 @@ kprove_test(
       ":trusted-perform-parts-add-proposer-signers",
       ":trusted-perform-parts-add-proposer-no-signers",
       ":trusted-perform-parts-change-quorum",
-      ":trusted-perform-parts-New",
-      ":trusted-perform-parts-no-quorum",
-      ":trusted-perform-parts-None",
+      # ":trusted-perform-parts-New",
+      # ":trusted-perform-parts-no-quorum",
+      # ":trusted-perform-parts-None",
       ":trusted-perform-parts-remove-user",
       ":trusted-perform-parts-sc-call",
       ":trusted-perform-parts-sc-deploy",
@@ -106,9 +106,9 @@ kprove_test(
       ":trusted-perform-parts-add-proposer-signers",
       ":trusted-perform-parts-add-proposer-no-signers",
       ":trusted-perform-parts-change-quorum",
-      ":trusted-perform-parts-New",
-      ":trusted-perform-parts-no-quorum",
-      ":trusted-perform-parts-None",
+      # ":trusted-perform-parts-New",
+      # ":trusted-perform-parts-no-quorum",
+      # ":trusted-perform-parts-None",
       ":trusted-perform-parts-remove-user",
       ":trusted-perform-parts-sc-call",
       ":trusted-perform-parts-sc-deploy",
@@ -151,41 +151,41 @@ kprove_test(
   semantics = ":invariant-execution",
 )
 
-kprove_test(
-  name = "proof-perform-parts-New",
-  srcs = ["proof-perform-parts-New.k"],
-  trusted = [
-      "//protocol-correctness/proof/functions:trusted-perform-action-endpoint-New",
-  ],
-  semantics = ":invariant-execution",
-)
+# kprove_test(
+#   name = "proof-perform-parts-New",
+#   srcs = ["proof-perform-parts-New.k"],
+#   trusted = [
+#       "//protocol-correctness/proof/functions:trusted-perform-action-endpoint-New",
+#   ],
+#   semantics = ":invariant-execution",
+# )
 
-kprove_test(
-  name = "proof-perform-parts-None",
-  srcs = ["proof-perform-parts-None.k"],
-  trusted = [
-      "//protocol-correctness/proof/functions:trusted-perform-action-endpoint-None",
-  ],
-  semantics = ":invariant-execution",
-)
+# kprove_test(
+#   name = "proof-perform-parts-None",
+#   srcs = ["proof-perform-parts-None.k"],
+#   trusted = [
+#       "//protocol-correctness/proof/functions:trusted-perform-action-endpoint-None",
+#   ],
+#   semantics = ":invariant-execution",
+# )
 
-kprove_test(
-  name = "proof-perform-parts-no-quorum",
-  srcs = ["proof-perform-parts-no-quorum.k"],
-  trusted = [
-      "//protocol-correctness/proof/functions:trusted-perform-action-endpoint-no-quorum",
-  ],
-  semantics = ":invariant-execution",
-)
+# kprove_test(
+#   name = "proof-perform-parts-no-quorum",
+#   srcs = ["proof-perform-parts-no-quorum.k"],
+#   trusted = [
+#       "//protocol-correctness/proof/functions:trusted-perform-action-endpoint-no-quorum",
+#   ],
+#   semantics = ":invariant-execution",
+# )
 
-kprove_test(
-  name = "proof-perform-parts-nothing",
-  srcs = ["proof-perform-parts-nothing.k"],
-  trusted = [
-      "//protocol-correctness/proof/functions:trusted-perform-action-endpoint-nothing",
-  ],
-  semantics = ":invariant-execution",
-)
+# kprove_test(
+#   name = "proof-perform-parts-nothing",
+#   srcs = ["proof-perform-parts-nothing.k"],
+#   trusted = [
+#       "//protocol-correctness/proof/functions:trusted-perform-action-endpoint-nothing",
+#   ],
+#   semantics = ":invariant-execution",
+# )
 
 kprove_test(
   name = "proof-perform-parts-sc-call",
@@ -686,7 +686,7 @@ kprove_test(
   ],
   semantics = ":invariant-execution",
   timeout = "eternal",
-  breadth = "7", # >6
+  breadth = "9", # >7
   # depth = ~30
 )
 
@@ -760,6 +760,17 @@ kprove_test(
   timeout = "eternal",
   breadth = "22",
   # depth = ~45
+)
+
+kprove_test(
+  name = "proof-init-loop",
+  srcs = ["proof-init-loop.k"],
+  trusted = [
+  ],
+  semantics = ":invariant-execution",
+  timeout = "eternal",
+  breadth = "2", # >1
+  # depth = ~
 )
 
 ktrusted(
@@ -972,23 +983,23 @@ ktrusted(
   visibility = ["//visibility:public"],
 )
 
-ktrusted(
-  name = "trusted-perform-parts-New",
-  srcs = ["proof-perform-parts-New.k"],
-  visibility = ["//visibility:public"],
-)
+# ktrusted(
+#   name = "trusted-perform-parts-New",
+#   srcs = ["proof-perform-parts-New.k"],
+#   visibility = ["//visibility:public"],
+# )
 
-ktrusted(
-  name = "trusted-perform-parts-no-quorum",
-  srcs = ["proof-perform-parts-no-quorum.k"],
-  visibility = ["//visibility:public"],
-)
+# ktrusted(
+#   name = "trusted-perform-parts-no-quorum",
+#   srcs = ["proof-perform-parts-no-quorum.k"],
+#   visibility = ["//visibility:public"],
+# )
 
-ktrusted(
-  name = "trusted-perform-parts-None",
-  srcs = ["proof-perform-parts-None.k"],
-  visibility = ["//visibility:public"],
-)
+# ktrusted(
+#   name = "trusted-perform-parts-None",
+#   srcs = ["proof-perform-parts-None.k"],
+#   visibility = ["//visibility:public"],
+# )
 
 ktrusted(
   name = "trusted-perform-parts-nothing",
