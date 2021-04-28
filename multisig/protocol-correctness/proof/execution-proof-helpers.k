@@ -54,6 +54,14 @@ module EXECUTION-PROOF-HELPERS
   rule pListLen([#pushList(_, _)]) >Int 0 => true
       [simplification]
 
+  rule #listContains([removeLast(L:ExpressionCSV)], last(L)) => false
+    requires listElementsAreDistinct([L])
+    [simplification]
+
+  rule listElementsAreDistinct([removeLast(L:ExpressionCSV)]) => true
+    requires listElementsAreDistinct([L])
+    [simplification]
+
   syntax Bool ::= noCommonItem(Usize, Map, ExpressionList)  [function, functional]
   rule noCommonItem(_:Usize, _:Map, [.]) => true
   rule noCommonItem(U:Usize, M:Map, [E:Expression , Es:ExpressionCSV])

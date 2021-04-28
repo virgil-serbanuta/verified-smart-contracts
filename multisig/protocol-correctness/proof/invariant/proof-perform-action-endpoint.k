@@ -3,7 +3,7 @@ require "trusted-perform-parts-1.k"  //@ Bazel remove
 require "trusted-perform-parts-New.k"  //@ Bazel remove
 require "trusted-perform-parts-no-quorum.k"  //@ Bazel remove
 require "trusted-perform-parts-None.k"  //@ Bazel remove
-require "trusted-perform-parts-Nothing.k"  //@ Bazel remove
+require "trusted-perform-parts-nothing.k"  //@ Bazel remove
 
 module PROOF-PERFORM-ACTION-ENDPOINT
   imports INVARIANT-EXECUTION

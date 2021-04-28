@@ -961,7 +961,7 @@ kprove_test(
   name = "proof-sign-no-signers",
   srcs = ["proof-sign-no-signers.k"],
   semantics = ":functions-execute",
-  timeout = "moderate",
+  timeout = "eternal",
   breadth = "2", 
 )
 
@@ -1486,8 +1486,8 @@ ktrusted(
 )
 
 ktrusted(
-  name = "trusted-perform-action-endpoint-Nothing",
-  srcs = ["proof-perform-action-endpoint-Nothing.k"],
+  name = "trusted-perform-action-endpoint-nothing",
+  srcs = ["proof-perform-action-endpoint-nothing.k"],
   visibility = ["//visibility:public"],
 )
 

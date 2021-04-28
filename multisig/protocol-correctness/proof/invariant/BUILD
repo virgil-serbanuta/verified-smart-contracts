@@ -85,13 +85,14 @@ kprove_test(
       ":trusted-perform-parts-New",
       ":trusted-perform-parts-no-quorum",
       ":trusted-perform-parts-None",
-      ":trusted-perform-parts-Nothing",
+      ":trusted-perform-parts-nothing",
       # ":trusted-perform-parts-remove-user",
       # ":trusted-perform-parts-sc-call",
       # ":trusted-perform-parts-sc-deploy",
       # ":trusted-perform-parts-send-egld",
   ],
   semantics = ":invariant-execution",
+  timeout = "eternal",
   breadth = "30",  # 28?
   #depth ???
 )
@@ -136,7 +137,7 @@ kprove_test(
   ],
   semantics = ":invariant-execution",
   timeout = "eternal",
-  breadth = "1",
+  breadth = "7", # >1
   #depth ???
 )
 
@@ -199,8 +200,8 @@ kprove_test(
 )
 
 kprove_test(
-  name = "proof-perform-parts-Nothing",
-  srcs = ["proof-perform-parts-Nothing.k"],
+  name = "proof-perform-parts-nothing",
+  srcs = ["proof-perform-parts-nothing.k"],
   trusted = [
       "//protocol-correctness/proof/functions:trusted-perform-action-endpoint-nothing",
   ],
@@ -706,7 +707,7 @@ kprove_test(
   ],
   semantics = ":invariant-execution",
   timeout = "eternal",
-  breadth = "6",
+  breadth = "7", # >6
   # depth = ~30
 )
 
@@ -1010,8 +1011,8 @@ ktrusted(
 )
 
 ktrusted(
-  name = "trusted-perform-parts-Nothing",
-  srcs = ["proof-perform-parts-Nothing.k"],
+  name = "trusted-perform-parts-nothing",
+  srcs = ["proof-perform-parts-nothing.k"],
   visibility = ["//visibility:public"],
 )
 
