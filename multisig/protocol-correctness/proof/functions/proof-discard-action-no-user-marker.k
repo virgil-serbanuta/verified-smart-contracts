@@ -1,17 +1,16 @@
-// TODO: Move in ../functions as "-marker"
 //@ proof
-require "../functions/trusted-perform-action-endpoint-New.k"  //@ Bazel remove
+require "proof-discard-action-no-user.k"  //@ Bazel remove
 
-module PROOF-PERFORM-PARTS-NEW
-  imports TRUSTED-PERFORM-ACTION-ENDPOINT-NEW
+module PROOF-DISCARD-ACTION-NO-USER-MARKER
+  imports TRUSTED-DISCARD-ACTION-NO-USER
 //@ trusted
-// module TRUSTED-PERFORM-PARTS-NEW
+// module TRUSTED-DISCARD-ACTION-NO-USER-MARKER
 //@ end
-
-  imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
+  imports FUNCTIONS-EXECUTE
 
   claim <T><TT>
-          <k> new.k ~> call(performActionEndpoint(_ActionId:Usize)) ~> K:K </k>
+          <k> discard-action-no-user.k ~> call(discardAction(_ActionId:Usize)) ~> K:K
+          </k>
           invariantStateFull(
               NumUsers:Usize,
               UserIdToAddress:Map,
@@ -31,7 +30,7 @@ module PROOF-PERFORM-PARTS-NEW
         </TT></T>
       =>
         <T><TT>
-          <k> error ~> K:K </k>
+          <k> error ~> K </k>
           invariantStateFull(
               NumUsers,
               UserIdToAddress,
@@ -40,20 +39,19 @@ module PROOF-PERFORM-PARTS-NEW
               NumProposers,
               UserIdToRole,
               Quorum,
-              ActionLastIndex,
+              ActionLastIndex:Usize,
               ActionData,
               ActionSigners,
               CallerAddress,
-              Stack,
-              caller_address |-> CallerAddress
-                caller_id |-> u(0)
-                caller_role |-> None,
-              PerformedActions
-              )
+              Stack:Stack,
+              ?_Variables,
+              PerformedActions:List
+              ):StateCell
         </TT></T>
     requires true
-        andBool notBool CallerAddress in_keys(AddressToUserId)
-        andBool notBool u(0) in_keys(UserIdToRole)
+      andBool notBool u(0) in_keys(UserIdToRole)
+
+      andBool notBool CallerAddress in_keys(AddressToUserId)
     ensures true
     //@ proof
     //@ trusted

@@ -142,6 +142,12 @@ module PROOF-INSTRUMENTATION
 
   rule unsign-new.k => .K
   rule unsign-no-role.k => .K
+
+  syntax KItem ::= "discard-action-no-user.k"
+  syntax KItem ::= "discard-action-no-role.k"
+
+  rule discard-action-no-user.k => .K
+  rule discard-action-no-role.k => .K
 endmodule
 
 module EXECUTION-PROOF-BOOL

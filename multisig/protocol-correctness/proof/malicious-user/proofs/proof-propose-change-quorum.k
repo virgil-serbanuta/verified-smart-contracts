@@ -35,8 +35,8 @@ module PROOF-PROPOSE-CHANGE-QUORUM
           <k> K </k>
           invariantState(
               NumUsers,
-              ?UserIdToAddress:Map,
-              ?AddressToUserId:Map,
+              UserIdToAddress:Map,
+              AddressToUserId:Map,
               NumBoardMembers,
               NumProposers,
               UserRoles,
@@ -64,8 +64,8 @@ module PROOF-PROPOSE-CHANGE-QUORUM
         andBool maliciousInvariant(
             MaliciousAddress,
             NumUsers,
-            ?UserIdToAddress,
-            ?AddressToUserId,
+            UserIdToAddress,
+            AddressToUserId,
             NumBoardMembers,
             NumProposers,
             UserRoles,

@@ -1,22 +1,24 @@
 //@ proof
-require "../functions/trusted-propose-action-BoardMember.k"  //@ Bazel remove
-require "../functions/trusted-propose-action-Proposer.k"  //@ Bazel remove
-require "../functions/trusted-propose-action-error-no-user.k"  //@ Bazel remove
-require "../functions/trusted-propose-action-error-no-role.k"  //@ Bazel remove
+require "../invariant/trusted-perform-parts-New.k"  //@ Bazel remove
+require "../invariant/trusted-perform-parts-no-quorum.k"  //@ Bazel remove
+require "../invariant/trusted-perform-parts-None.k"  //@ Bazel remove
+require "../invariant/trusted-perform-parts-nothing.k"  //@ Bazel remove
 
-module PROOF-PROPOSE-ADD-BOARD-MEMBER
-  imports TRUSTED-PROPOSE-ACTION-ERROR-NO-ROLE
-  imports TRUSTED-PROPOSE-ACTION-ERROR-NO-USER
-  imports TRUSTED-PROPOSE-ACTION-BOARDMEMBER
-  imports TRUSTED-PROPOSE-ACTION-PROPOSER
+module PROOF-PERFORM-ACTION
+  imports INVARIANT-EXECUTION
+
+  imports TRUSTED-PERFORM-PARTS-NEW
+  imports TRUSTED-PERFORM-PARTS-NO-QUORUM
+  imports TRUSTED-PERFORM-PARTS-NONE
+  imports TRUSTED-PERFORM-PARTS-NOTHING
 //@ trusted
-// module TRUSTED-PROPOSE-ADD-BOARD-MEMBER
+// module TRUSTED-PERFORM-ACTION-ENDPOINT
 //@ end
   imports MALICIOUS-USER-EXECUTE
-  imports PSEUDOCODE
+  imports PSEUDOCODE-SYNTAX
 
-  claim <T><TT>
-          <k> runExternalCall(from MaliciousAddress run proposeAddBoardMember(_UserAddress:Address);) ~> K:K </k>
+    claim <T><TT>
+        <k> runExternalCall(from MaliciousAddress run performActionEndpoint(_ActionId:Usize);) ~> K:K </k>
           invariantState(
               NumUsers:Usize,
               UserIdToAddress:Map,
@@ -41,9 +43,9 @@ module PROOF-PROPOSE-ADD-BOARD-MEMBER
               NumProposers,
               UserRoles,
               Quorum,
-              ?ActionLastIndex:Usize,
-              ?ActionData:Map,
-              ?ActionSigners:Map,
+              ActionLastIndex:Usize,
+              ActionData:Map,
+              ActionSigners:Map,
               PerformedActions:List):StateCell
         </TT></T>
     requires true
@@ -70,9 +72,9 @@ module PROOF-PROPOSE-ADD-BOARD-MEMBER
             NumProposers,
             UserRoles,
             Quorum,
-            ?ActionLastIndex,
-            ?ActionData,
-            ?ActionSigners,
+            ActionLastIndex,
+            ActionData,
+            ActionSigners,
             usesExpanded)
     //@ proof
     //@ trusted

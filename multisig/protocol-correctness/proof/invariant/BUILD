@@ -9,6 +9,7 @@ kompile(
       ":perform-parts-files",
       "//protocol-correctness/proof:execution-proof-files",
       "//protocol-correctness/proof/functions:functions-execute-files",
+      "//protocol-correctness/proof/instrumentation/pushlist:pushlist-execute-files",
   ],
 )
 
@@ -21,6 +22,7 @@ klibrary(
       ":perform-parts-files",
       "//protocol-correctness/proof:execution-proof-files",
       "//protocol-correctness/proof/functions:functions-execute-files",
+      "//protocol-correctness/proof/instrumentation/pushlist:pushlist-execute-files",
   ],
   visibility = ["//visibility:public"],
 )
@@ -57,44 +59,21 @@ klibrary(
   ],
 )
 
-# kprove_test(
-#   name = "proof-discard-action",
-#   srcs = ["proof-discard-action.k"],
-#   trusted = [
-#       "//protocol-correctness/proof/functions:trusted-discard-action-has-signers",
-#       "//protocol-correctness/proof/functions:trusted-discard-action-no-role",
-#       "//protocol-correctness/proof/functions:trusted-discard-action-no-signers",
-#       "//protocol-correctness/proof/functions:trusted-discard-action-no-signers-no-action",
-#       "//protocol-correctness/proof/functions:trusted-discard-action-no-user",
-#       "//protocol-correctness/proof/functions:trusted-discard-action-no-valid-signers",
-#       "//protocol-correctness/proof/functions:trusted-discard-action-no-valid-signers-no-action",
-#   ],
-#   semantics = ":invariant-execution",
-# )
-
 kprove_test(
   name = "proof-perform-action-endpoint",
   srcs = ["proof-perform-action-endpoint.k"],
   trusted = [
       ":trusted-perform-parts-1",
       ":trusted-perform-parts-2",
-      #":trusted-perform-parts-add-board-member",
-      # ":trusted-perform-parts-add-proposer",
-      # ":trusted-perform-parts-change-quorum-with-quorum",
-      # ":trusted-perform-parts-change-quorum-no-quorum",
       ":trusted-perform-parts-New",
       ":trusted-perform-parts-no-quorum",
       ":trusted-perform-parts-None",
       ":trusted-perform-parts-nothing",
-      # ":trusted-perform-parts-remove-user",
-      # ":trusted-perform-parts-sc-call",
-      # ":trusted-perform-parts-sc-deploy",
-      # ":trusted-perform-parts-send-egld",
   ],
   semantics = ":invariant-execution",
   timeout = "eternal",
-  breadth = "30",  # 28?
-  #depth ???
+  breadth = "26",
+  #depth ~49
 )
 
 kprove_test(
@@ -737,11 +716,12 @@ kprove_test(
       "//protocol-correctness/proof/functions:trusted-sign-no-signers",
       "//protocol-correctness/proof/functions:trusted-sign-existing-signers-in-list",
       "//protocol-correctness/proof/functions:trusted-sign-existing-signers-not-in-list",
+      "//protocol-correctness/proof/instrumentation/pushlist:trusted-push-list-not-empty",
   ],
   semantics = ":invariant-execution",
   timeout = "eternal",
-  breadth = "1",
-  # depth = ~
+  breadth = "10",
+  # depth = ~42
 )
 
 kprove_test(
@@ -760,8 +740,8 @@ kprove_test(
   ],
   semantics = ":invariant-execution",
   timeout = "eternal",
-  breadth = "1",
-  # depth = ~
+  breadth = "17",
+  # depth = ~66
 )
 
 kprove_test(
@@ -769,10 +749,10 @@ kprove_test(
   srcs = ["proof-discard-action.k"],
   trusted = [
       "//protocol-correctness/proof/functions:trusted-discard-action-has-signers",
-      "//protocol-correctness/proof/functions:trusted-discard-action-no-role",
+      "//protocol-correctness/proof/functions:trusted-discard-action-no-role-marker",
       "//protocol-correctness/proof/functions:trusted-discard-action-no-signers",
       "//protocol-correctness/proof/functions:trusted-discard-action-no-signers-no-action",
-      "//protocol-correctness/proof/functions:trusted-discard-action-no-user",
+      "//protocol-correctness/proof/functions:trusted-discard-action-no-user-marker",
       "//protocol-correctness/proof/functions:trusted-discard-action-no-valid-signers",
       "//protocol-correctness/proof/functions:trusted-discard-action-no-valid-signers-no-action",
   ],

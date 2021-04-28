@@ -791,6 +791,15 @@ kprove_test(
 )
 
 kprove_test(
+  name = "proof-discard-action-no-role-marker",
+  srcs = ["proof-discard-action-no-role-marker.k"],
+  trusted = [
+      ":trusted-discard-action-no-role"
+  ],
+  semantics = ":functions-execute",
+)
+
+kprove_test(
   name = "proof-discard-action-no-signers-no-action",
   srcs = ["proof-discard-action-no-signers-no-action.k"],
   trusted = [":trusted-count-can-sign"],
@@ -811,6 +820,15 @@ kprove_test(
 kprove_test(
   name = "proof-discard-action-no-user",
   srcs = ["proof-discard-action-no-user.k"],
+  semantics = ":functions-execute",
+)
+
+kprove_test(
+  name = "proof-discard-action-no-user-marker",
+  srcs = ["proof-discard-action-no-user-marker.k"],
+  trusted = [
+      ":trusted-discard-action-no-user"
+  ],
   semantics = ":functions-execute",
 )
 
@@ -1342,6 +1360,12 @@ ktrusted(
 )
 
 ktrusted(
+  name = "trusted-discard-action-no-role-marker",
+  srcs = ["proof-discard-action-no-role-marker.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
   name = "trusted-discard-action-no-signers-no-action",
   srcs = ["proof-discard-action-no-signers-no-action.k"],
   visibility = ["//visibility:public"],
@@ -1356,6 +1380,12 @@ ktrusted(
 ktrusted(
   name = "trusted-discard-action-no-user",
   srcs = ["proof-discard-action-no-user.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-discard-action-no-user-marker",
+  srcs = ["proof-discard-action-no-user-marker.k"],
   visibility = ["//visibility:public"],
 )
 

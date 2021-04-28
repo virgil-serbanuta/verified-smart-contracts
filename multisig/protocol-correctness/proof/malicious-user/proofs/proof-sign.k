@@ -1,4 +1,5 @@
 //@ proof
+require "../instrumentation/pushlist/trusted-push-list-not-empty.k"  //@ Bazel remove
 require "../functions/trusted-sign-empty-action.k"  //@ Bazel remove
 require "../functions/trusted-sign-caller-not-user.k"  //@ Bazel remove
 require "../functions/trusted-sign-caller-none.k"  //@ Bazel remove
@@ -8,6 +9,7 @@ require "../functions/trusted-sign-existing-signers-in-list.k"  //@ Bazel remove
 require "../functions/trusted-sign-existing-signers-not-in-list.k"  //@ Bazel remove
 
 module PROOF-SIGN
+  imports TRUSTED-PUSH-LIST-NOT-EMPTY
   imports TRUSTED-SIGN-EMPTY-ACTION
   imports TRUSTED-SIGN-CALLER-NOT-USER
   imports TRUSTED-SIGN-CALLER-NONE
@@ -41,14 +43,14 @@ module PROOF-SIGN
           <k> K </k>
           invariantState(
               NumUsers,
-              ?UserIdToAddress:Map,
-              ?AddressToUserId:Map,
+              UserIdToAddress:Map,
+              AddressToUserId:Map,
               NumBoardMembers,
               NumProposers,
               UserRoles,
               u(Quorum),
-              ?ActionLastIndex:Usize,
-              ?ActionData:Map,
+              ActionLastIndex:Usize,
+              ActionData:Map,
               ?ActionSigners:Map,
               PerformedActions:List):StateCell
         </TT></T>
@@ -70,14 +72,14 @@ module PROOF-SIGN
         andBool maliciousInvariant(
             MaliciousAddress,
             NumUsers,
-            ?UserIdToAddress,
-            ?AddressToUserId,
+            UserIdToAddress,
+            AddressToUserId,
             NumBoardMembers,
             NumProposers,
             UserRoles,
             u(Quorum),
-            ?ActionLastIndex,
-            ?ActionData,
+            ActionLastIndex,
+            ActionData,
             ?ActionSigners,
             usesExpanded)
     //@ proof

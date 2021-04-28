@@ -45,14 +45,14 @@ module PROOF-UNSIGN
           <k> K </k>
           invariantState(
               NumUsers,
-              ?UserIdToAddress:Map,
-              ?AddressToUserId:Map,
+              UserIdToAddress:Map,
+              AddressToUserId:Map,
               NumBoardMembers,
               NumProposers,
               UserRoles,
               Quorum,
-              ?ActionLastIndex:Usize,
-              ?ActionData:Map,
+              ActionLastIndex:Usize,
+              ActionData:Map,
               ?ActionSigners:Map,
               PerformedActions:List):StateCell
         </TT></T>
@@ -74,14 +74,14 @@ module PROOF-UNSIGN
         andBool maliciousInvariant(
             MaliciousAddress,
             NumUsers,
-            ?UserIdToAddress,
-            ?AddressToUserId,
+            UserIdToAddress,
+            AddressToUserId,
             NumBoardMembers,
             NumProposers,
             UserRoles,
             Quorum,
-            ?ActionLastIndex,
-            ?ActionData,
+            ActionLastIndex,
+            ActionData,
             ?ActionSigners,
             usesExpanded)
     //@ proof

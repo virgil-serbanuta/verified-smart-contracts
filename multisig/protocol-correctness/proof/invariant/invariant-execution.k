@@ -1,5 +1,6 @@
 require "protocol-correctness/proof/execution-proof.k"
 require "protocol-correctness/proof/functions/functions-execute.k"
+require "protocol-correctness/proof/instrumentation/pushlist/pushlist-execute.k"
 
 require "protocol-correctness/proof/invariant/count-can-sign-parts.k"
 require "protocol-correctness/proof/invariant/init-loop-parts.k"
@@ -251,10 +252,12 @@ endmodule
 module SIGN-INSTRUMENTATION
   imports PSEUDOCODE
   imports INVARIANT-INSTRUMENTATION
+  imports PUSHLIST-EXECUTE-SYNTAX
 
   syntax KItem ::= splitSign(Usize)
   syntax KItem ::= splitSign2(Usize)
   syntax KItem ::= splitSign3(Usize)
+  syntax KItem ::= splitSign4(Usize)
 
   rule  preCall
         ~> (.K => splitSign(ActionId))
@@ -295,7 +298,8 @@ module SIGN-INSTRUMENTATION
                     UserIdToRole[AddressToUserId[CallerAddress]] ==K BoardMember,
                     branchK(
                       ActionId in_keys(ActionSigners),
-                      makeConcreteValue(ActionId, rExpressionList, ActionSigners),
+                      makeConcreteValue(ActionId, rExpressionList, ActionSigners)
+                        ~> splitSign4(ActionId),
                       .K
                     ),
                     .K
@@ -307,6 +311,13 @@ module SIGN-INSTRUMENTATION
         <action-signers>ActionSigners:Map</action-signers>
     requires CallerAddress in_keys(AddressToUserId)
       andBool AddressToUserId[CallerAddress] in_keys(UserIdToRole)
+
+  rule  <k> splitSign4(ActionId:Usize)
+            =>    lemmaPushListNotEmpty(Signers, CallerId)
+        ...</k>
+        <address-to-user-id> CallerAddress |-> CallerId _AddressToUserId:Map </address-to-user-id>
+        <caller-address>CallerAddress:KItem</caller-address>
+        <action-signers>ActionId |-> [Signers:ExpressionCSV] _ActionSigners:Map</action-signers>
 endmodule
 
 module UNSIGN-INSTRUMENTATION
@@ -496,7 +507,7 @@ module DISCARD-ACTION-INSTRUMENTATION
             =>  branchK(
                   Caller in_keys(AddressToUserId),
                   splitDiscardAction1(ActionId),
-                  .K
+                  discard-action-no-user.k
                 )
         ...</k>
         <address-to-user-id>AddressToUserId:Map</address-to-user-id>
@@ -507,7 +518,7 @@ module DISCARD-ACTION-INSTRUMENTATION
               ~>  branchK(
                     AddressToUserId[Caller] in_keys(UserIdToRole),
                     splitDiscardAction2(ActionId),
-                    .K
+                    discard-action-no-role.k
                   )
         ...</k>
         <address-to-user-id>AddressToUserId:Map</address-to-user-id>
@@ -688,9 +699,8 @@ module PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
             ~> call(performActionEndpoint(ActionId:Usize))
             ~> _:KItem
             ~> _:KItem
-            ~> _:KItem
+            ~> clearExternalCallEnv
             ~> (.K => splitActionSigners(ActionId, ActionSigners))
-            ~> runExternalCalls(_:ExternalCommands)
         ...</k>
         <action-signers>ActionSigners:Map</action-signers>
     [priority(20)]
@@ -737,7 +747,8 @@ module PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
                   Quorum <=Int countCanSignFunction({ActionSigners[ActionId] orDefault [.]}:>ExpressionList, opaque(UserIdToRole)),
                   branchK(
                       ActionId in_keys(ActionData),
-                      splitPerformActionEndpoint2(ActionId),
+                      makeConcreteValue(ActionId, rAction, ActionData)
+                        ~> splitPerformActionEndpoint2(ActionId),
                       nothing.k
                   ),
                   no-quorum.k
@@ -779,11 +790,9 @@ module PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
   rule isSendEgld(_) => false [owise]
 
   rule  <k> splitPerformActionEndpoint2(ActionId)
-          =>  makeConcreteValue(ActionId, rAction, ActionData)
-              ~> splitPerformActionEndpoint3({ActionData[ActionId]}:>Action)
+          =>  splitPerformActionEndpoint3(Action)
         ...</k>
-        <action-data>ActionData:Map</action-data>
-    requires ActionId in_keys(ActionData)
+        <action-data>ActionId |-> Action:Action _ActionData:Map</action-data>
 
   syntax KItem ::= "action-splitted"
   rule action-splitted => .K

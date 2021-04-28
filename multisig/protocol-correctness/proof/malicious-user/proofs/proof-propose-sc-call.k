@@ -41,8 +41,8 @@ module PROOF-PROPOSE-SC-CALL
           <k> K </k>
           invariantState(
               NumUsers,
-              ?UserIdToAddress:Map,
-              ?AddressToUserId:Map,
+              UserIdToAddress:Map,
+              AddressToUserId:Map,
               NumBoardMembers,
               NumProposers,
               UserRoles,
@@ -71,8 +71,8 @@ module PROOF-PROPOSE-SC-CALL
         andBool maliciousInvariant(
             MaliciousAddress,
             NumUsers,
-            ?UserIdToAddress,
-            ?AddressToUserId,
+            UserIdToAddress,
+            AddressToUserId,
             NumBoardMembers,
             NumProposers,
             UserRoles,

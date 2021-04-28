@@ -38,8 +38,8 @@ module PROOF-PROPOSE-SEND-EGLD
           <k> K </k>
           invariantState(
               NumUsers,
-              ?UserIdToAddress:Map,
-              ?AddressToUserId:Map,
+              UserIdToAddress:Map,
+              AddressToUserId:Map,
               NumBoardMembers,
               NumProposers,
               UserRoles,
@@ -67,8 +67,8 @@ module PROOF-PROPOSE-SEND-EGLD
         andBool maliciousInvariant(
             MaliciousAddress,
             NumUsers,
-            ?UserIdToAddress,
-            ?AddressToUserId,
+            UserIdToAddress,
+            AddressToUserId,
             NumBoardMembers,
             NumProposers,
             UserRoles,

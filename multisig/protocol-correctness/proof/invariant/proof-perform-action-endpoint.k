@@ -1,5 +1,6 @@
 //@ proof
 require "trusted-perform-parts-1.k"  //@ Bazel remove
+require "trusted-perform-parts-2.k"  //@ Bazel remove
 require "trusted-perform-parts-New.k"  //@ Bazel remove
 require "trusted-perform-parts-no-quorum.k"  //@ Bazel remove
 require "trusted-perform-parts-None.k"  //@ Bazel remove
@@ -78,7 +79,7 @@ module PROOF-PERFORM-ACTION-ENDPOINT
         ?ActionData1:Map,
         ?ActionSigners1:Map,
         usesExpanded)
-
+  /*
   claim <T><TT>
           <k> call(getActionSignerIds(ActionId:Usize)) ~> K:K
           </k>
@@ -93,7 +94,7 @@ module PROOF-PERFORM-ACTION-ENDPOINT
               ActionLastIndex:Usize,
               ActionData:Map,
               ActionSigners:Map,
-              _PerformedActions:List):StateCell
+              PerformedActions:List):StateCell
         </TT></T>
       =>
         <T><TT>
@@ -109,11 +110,11 @@ module PROOF-PERFORM-ACTION-ENDPOINT
               ActionLastIndex:Usize,
               ActionData:Map,
               ActionSigners:Map,
-              ?_PerformedActions:List):StateCell
+              PerformedActions:List):StateCell
         </TT></T>
     //@ proof
     //@ trusted
     // [trusted]
     //@ end
-
+  */
 endmodule

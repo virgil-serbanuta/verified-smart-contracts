@@ -1,18 +1,18 @@
 //@ proof
 require "protocol-correctness/proof/functions/trusted-discard-action-has-signers.k"  //@ Bazel remove
-require "protocol-correctness/proof/functions/trusted-discard-action-no-role.k"  //@ Bazel remove
+require "protocol-correctness/proof/functions/trusted-discard-action-no-role-marker.k"  //@ Bazel remove
 require "protocol-correctness/proof/functions/trusted-discard-action-no-signers.k"  //@ Bazel remove
 require "protocol-correctness/proof/functions/trusted-discard-action-no-signers-no-action.k"  //@ Bazel remove
-require "protocol-correctness/proof/functions/trusted-discard-action-no-user.k"  //@ Bazel remove
+require "protocol-correctness/proof/functions/trusted-discard-action-no-user-marker.k"  //@ Bazel remove
 require "protocol-correctness/proof/functions/trusted-discard-action-no-valid-signers.k"  //@ Bazel remove
 require "protocol-correctness/proof/functions/trusted-discard-action-no-valid-signers-no-action.k"  //@ Bazel remove
 
 module PROOF-DISCARD-ACTION
   imports TRUSTED-DISCARD-ACTION-HAS-SIGNERS
-  imports TRUSTED-DISCARD-ACTION-NO-ROLE
+  imports TRUSTED-DISCARD-ACTION-NO-ROLE-MARKER
   imports TRUSTED-DISCARD-ACTION-NO-SIGNERS
   imports TRUSTED-DISCARD-ACTION-NO-SIGNERS-NO-ACTION
-  imports TRUSTED-DISCARD-ACTION-NO-USER
+  imports TRUSTED-DISCARD-ACTION-NO-USER-MARKER
   imports TRUSTED-DISCARD-ACTION-NO-VALID-SIGNERS
   imports TRUSTED-DISCARD-ACTION-NO-VALID-SIGNERS-NO-ACTION
 //@ trusted
@@ -41,13 +41,13 @@ module PROOF-DISCARD-ACTION
           <k> K </k>
           invariantState(
               NumUsers,
-              ?UserIdToAddress:Map,
-              ?AddressToUserId:Map,
+              UserIdToAddress:Map,
+              AddressToUserId:Map,
               NumBoardMembers,
               NumProposers,
               UserRoles,
               Quorum,
-              ?ActionLastIndex:Usize,
+              ActionLastIndex:Usize,
               ?ActionData:Map,
               ?ActionSigners:Map,
               PerformedActions:List):StateCell
@@ -70,13 +70,13 @@ module PROOF-DISCARD-ACTION
         andBool maliciousInvariant(
             MaliciousAddress,
             NumUsers,
-            ?UserIdToAddress,
-            ?AddressToUserId,
+            UserIdToAddress,
+            AddressToUserId,
             NumBoardMembers,
             NumProposers,
             UserRoles,
             Quorum,
-            ?ActionLastIndex,
+            ActionLastIndex,
             ?ActionData,
             ?ActionSigners,
             usesExpanded)

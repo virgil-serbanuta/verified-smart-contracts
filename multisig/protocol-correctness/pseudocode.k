@@ -481,16 +481,11 @@ module PSEUDOCODE-DETAILS
             andBool isKResult(Arguments)
 endmodule
 
-module PSEUDOCODE-FUNCTIONS
+module PSEUDOCODE-FUNCTIONS-SYNTAX
   imports BOOL
-  imports MAP
+  imports INT
 
-  imports MAP-UTILS
-  imports PSEUDOCODE-COMMON
-  imports PSEUDOCODE-CONFIGURATION
-  imports PSEUDOCODE-MAP-UTILS
   imports PSEUDOCODE-SYNTAX
-  imports PSEUDOCODE-TYPE-REFLECTION
 
   syntax KResult
 
@@ -498,6 +493,47 @@ module PSEUDOCODE-FUNCTIONS
   syntax KItem ::= stuck(KItem)
   syntax KItem ::= call(Expression)
   syntax KItem ::= Expression
+
+  syntax FunctionTag ::= "proposeActionSCDeploy"
+
+  syntax KItem ::= "plusOne"
+
+  syntax Bool ::= #listContains(ExpressionList, KItem)  [function, functional]
+
+  syntax Int ::= #listFind(ExpressionList, Expression)  [function, functional]
+  
+  syntax Int ::= addOneIfNotNegative(Int)  [function, functional]
+
+  syntax Int ::= pListLen(ExpressionList)  [function, functional, smtlib(pListLen)]
+
+  syntax ExpressionCSV ::= #listSwapRemove(ExpressionCSV, Int)  [function, functional]
+
+  syntax ExpressionCSV ::= lastToStart(ExpressionCSV)  [function, functional]
+
+  syntax Expression ::= last(ExpressionCSV)  [function]
+
+  syntax ExpressionCSV ::= removeLast(ExpressionCSV)  [function]
+
+  syntax ExpressionCSV ::= reverseExpressionCsv(ExpressionCSV, ExpressionCSV)  [function, functional]
+
+  syntax ExpressionCSV ::= #pushList(ExpressionCSV, Expression) [function, functional]
+
+  syntax ExpressionCSV ::= prepend(ExpressionCSV, Expression) [function, functional]
+
+endmodule
+
+
+module PSEUDOCODE-FUNCTIONS
+  imports BOOL
+  imports MAP
+
+  imports MAP-UTILS
+  imports PSEUDOCODE-COMMON
+  imports PSEUDOCODE-CONFIGURATION
+  imports PSEUDOCODE-FUNCTIONS-SYNTAX
+  imports PSEUDOCODE-MAP-UTILS
+  imports PSEUDOCODE-SYNTAX
+  imports PSEUDOCODE-TYPE-REFLECTION
 
   context evaluate(_:FunctionTag(
           {HOLE => evaluateAc(HOLE)}:>ArgumentCSV
@@ -623,7 +659,6 @@ module PSEUDOCODE-FUNCTIONS
           proposeActionSCDeploy(Amount, Code, code_metadata, Args);
       )
 
-  syntax FunctionTag ::= "proposeActionSCDeploy"
   rule  call(proposeActionSCDeploy(Amount:BigUint, Code:BoxedBytes, CodeMetadata:CodeMetadata, Args:ExpressionList))
         => runPseudoCode(proposeAction(SCDeploy(Amount, Code, CodeMetadata, Args));)
 
@@ -723,7 +758,6 @@ module PSEUDOCODE-FUNCTIONS
   rule  call(listLen([_:Expression , Es:ExpressionCSV]))
         => call(listLen([Es])) ~> plusOne
 
-  syntax KItem ::= "plusOne"
   rule  (I:Usize ~> plusOne) => add(I, u(1))
 
   rule  <k> call(setQuorum(Quorum:Usize)) => void ... </k>
@@ -813,8 +847,6 @@ module PSEUDOCODE-FUNCTIONS
 
   rule call(listContains(Es:ExpressionList, E:Expression)) => #listContains(Es, E)
 
-  syntax Bool ::= #listContains(ExpressionList, KItem)  [function, functional]
-
   rule  #listContains([.], _) => false
   rule  #listContains([E:Expression, _:ExpressionCSV], E) => true
   rule  #listContains([_:Expression, Es:ExpressionCSV], X:KItem)
@@ -822,20 +854,16 @@ module PSEUDOCODE-FUNCTIONS
 
   rule call(listFind(Es:ExpressionList, E:Expression)) => u(#listFind(Es, E))
 
-  syntax Int ::= #listFind(ExpressionList, Expression)  [function, functional]
-
   rule  #listFind([.], _:Expression) => -1
   rule  #listFind([X:Usize, _:ExpressionCSV], X) => 0
   rule  #listFind([_:Usize, Es:ExpressionCSV], X:Usize) => addOneIfNotNegative(#listFind([Es], X))
     [owise]
   
-  syntax Int ::= addOneIfNotNegative(Int)  [function, functional]
   rule addOneIfNotNegative(X:Int) => X +Int 1
     requires X >=Int 0
   rule addOneIfNotNegative(X) => X
     requires X <Int 0
 
-  syntax Int ::= pListLen(ExpressionList)  [function, functional, smtlib(pListLen)]
   rule pListLen([.]) => 0
   rule pListLen([_:Expression, Es:ExpressionCSV]) => 1 +Int pListLen([Es])
 
@@ -844,7 +872,6 @@ module PSEUDOCODE-FUNCTIONS
     // TODO: Do things work with this requires?
     requires I >=Int 0
 
-  syntax ExpressionCSV ::= #listSwapRemove(ExpressionCSV, Int)  [function, functional]
   rule  #listSwapRemove(_:Expression , Es:ExpressionCSV, 0)
         => lastToStart(Es)
   rule  #listSwapRemove(E:Expression , Es:ExpressionCSV, I:Int)
@@ -854,12 +881,10 @@ module PSEUDOCODE-FUNCTIONS
         => Es
     requires I <Int 0
 
-  syntax ExpressionCSV ::= lastToStart(ExpressionCSV)  [function, functional]
   rule lastToStart(.) => .:ExpressionCSV
   rule lastToStart(Es:ExpressionCSV) => last(Es), removeLast(Es)
     requires pListLen([Es]) >Int 0
 
-  syntax Expression ::= last(ExpressionCSV)  [function]
   rule last(E:Expression, .) => E
   rule last(_:Expression, Es:ExpressionCSV) => last(Es)
     requires pListLen([Es]) >Int 0
@@ -869,7 +894,6 @@ module PSEUDOCODE-FUNCTIONS
           #And #Ceil(@Es)
     [anywhere, simplification]
 
-  syntax ExpressionCSV ::= removeLast(ExpressionCSV)  [function]
   rule removeLast(_:Expression, .) => .:ExpressionCSV
   rule removeLast(E:Expression, Es:ExpressionCSV) => E, removeLast(Es)
     requires pListLen([Es]) >Int 0
@@ -879,12 +903,6 @@ module PSEUDOCODE-FUNCTIONS
           #And #Ceil(@Es)
     [anywhere, simplification]
 
-  // rule lastToStart(L1:ExpressionCSV, (E:Expression, .))
-  //       => E , reverseExpressionCsv(L1, .)
-  // rule lastToStart(L1:ExpressionCSV, (E:Expression , L2:ExpressionCSV))
-  //       => lastToStart((E , L1), L2)
-
-  syntax ExpressionCSV ::= reverseExpressionCsv(ExpressionCSV, ExpressionCSV)  [function, functional]
   rule reverseExpressionCsv(., L2:ExpressionCSV) => L2
   rule reverseExpressionCsv((E:Expression , Es:ExpressionCSV), L2:ExpressionCSV) => reverseExpressionCsv(Es, (E , L2))
 
@@ -1033,18 +1051,11 @@ module PSEUDOCODE-FUNCTIONS
   rule call(pushList([Es:ExpressionCSV], E:Expression))
         => [#pushList(Es, E)]
 
-  syntax ExpressionCSV ::= #pushList(ExpressionCSV, Expression)
-    [function, functional, smtlib(pushList)]
-
   rule #pushList(., E:Expression)
         => E, .
   rule #pushList(E:Expression , Es:ExpressionCSV, E2:Expression)
         => prepend(#pushList(Es, E2), E)
 
-  rule .:ExpressionCSV ==K pushList(_, _) => false  [simplification, smt-lemma]
-
-  syntax ExpressionCSV ::= prepend(ExpressionCSV, Expression)
-    [function, functional]
   rule prepend(Es:ExpressionCSV, E:Expression) => E , Es
 
   rule call(sendTx(_To:Address, _Amount:BigUint, _Data:BoxedBytes))

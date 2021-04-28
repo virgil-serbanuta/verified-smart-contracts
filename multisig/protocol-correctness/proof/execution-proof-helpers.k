@@ -57,6 +57,14 @@ module EXECUTION-PROOF-HELPERS
   rule #listContains([removeLast(L:ExpressionCSV)], last(L)) => false
     requires listElementsAreDistinct([L])
     [simplification]
+  rule #listContains([#listSwapRemove(L:ExpressionCSV, _:Int)], E:Expression) => false
+    requires notBool #listContains([L], E)
+    [simplification]
+  rule #listContains([E1, #listSwapRemove(L:ExpressionCSV, _:Int)], E:Expression) => false
+    requires notBool #listContains([E1, L], E)
+    [simplification]
+  rule #listContains([lastToStart(L:ExpressionCSV) => L], _:Expression)
+    [simplification]
 
   rule listElementsAreDistinct([removeLast(L:ExpressionCSV)]) => true
     requires listElementsAreDistinct([L])
@@ -118,8 +126,14 @@ module EXECUTION-PROOF-HELPERS
   rule listElementsAreDistinct(_:KItem) => false
     [owise]
   rule listElementsAreDistinct([#pushList(L:ExpressionCSV, E:Expression)])
-      => true
+      => listElementsAreDistinct([L])
     requires notBool #listContains([L], E)
+    [simplification]
+  rule listElementsAreDistinct([#listSwapRemove(L:ExpressionCSV, _:Int)])
+      => true
+    requires listElementsAreDistinct([L])
+    [simplification, label(xyzzy)]
+  rule listElementsAreDistinct([lastToStart(L:ExpressionCSV) => L])
     [simplification]
 
   syntax Bool ::= valuesAreExpressionListOfUsize(Map)  [function, functional]

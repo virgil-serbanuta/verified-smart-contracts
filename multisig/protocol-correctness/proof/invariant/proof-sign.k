@@ -1,3 +1,4 @@
+require "../instrumentation/pushlist/trusted-push-list-not-empty.k"  //@ Bazel remove
 require "../functions/trusted-sign-empty-action.k"  //@ Bazel remove
 require "../functions/trusted-sign-caller-not-user.k"  //@ Bazel remove
 require "../functions/trusted-sign-caller-none.k"  //@ Bazel remove
@@ -10,6 +11,7 @@ module PROOF-SIGN
   imports INVARIANT-EXECUTION
   imports PSEUDOCODE
 
+  imports TRUSTED-PUSH-LIST-NOT-EMPTY
   imports TRUSTED-SIGN-EMPTY-ACTION
   imports TRUSTED-SIGN-CALLER-NOT-USER
   imports TRUSTED-SIGN-CALLER-NONE

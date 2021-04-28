@@ -1,8 +1,28 @@
 //@ proof
+require "trusted-discard-action.k"  //@ Bazel remove
+require "trusted-perform-action.k"  //@ Bazel remove
 require "trusted-propose-add-board-member.k"  //@ Bazel remove
+require "trusted-propose-add-proposer.k"  //@ Bazel remove
+require "trusted-propose-change-quorum.k"  //@ Bazel remove
+require "trusted-propose-remove-user.k"  //@ Bazel remove
+require "trusted-propose-sc-call.k"  //@ Bazel remove
+require "trusted-propose-sc-deploy.k"  //@ Bazel remove
+require "trusted-propose-send-egld.k"  //@ Bazel remove
+require "trusted-sign.k"  //@ Bazel remove
+require "trusted-unsign.k"  //@ Bazel remove
 
 module PROOF-CALL-INVARIANT
-  imports TRUSTED-PROPOSE-ADD-BOARD-MEMBER
+    imports TRUSTED-DISCARD-ACTION
+    imports TRUSTED-PERFORM-ACTION
+    imports TRUSTED-PROPOSE-ADD-BOARD-MEMBER
+    imports TRUSTED-PROPOSE-ADD-PROPOSER
+    imports TRUSTED-PROPOSE-CHANGE-QUORUM
+    imports TRUSTED-PROPOSE-REMOVE-USER
+    imports TRUSTED-PROPOSE-SC-CALL
+    imports TRUSTED-PROPOSE-SC-DEPLOY
+    imports TRUSTED-PROPOSE-SEND-EGLD
+    imports TRUSTED-SIGN
+    imports TRUSTED-UNSIGN
 //@ trusted
 // module TRUSTED-CALL-INVARIANT
 //@ end

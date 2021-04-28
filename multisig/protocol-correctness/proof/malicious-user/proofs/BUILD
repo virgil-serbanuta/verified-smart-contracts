@@ -16,7 +16,17 @@ kprove_test(
   name = "proof-call-invariant",
   srcs = ["proof-call-invariant.k"],
   trusted = [
+      ":trusted-discard-action",
+      ":trusted-perform-action",
       ":trusted-propose-add-board-member",
+      ":trusted-propose-add-proposer",
+      ":trusted-propose-change-quorum",
+      ":trusted-propose-remove-user",
+      ":trusted-propose-sc-call",
+      ":trusted-propose-sc-deploy",
+      ":trusted-propose-send-egld",
+      ":trusted-sign",
+      ":trusted-unsign",
   ],
   semantics = "//protocol-correctness/proof/malicious-user:malicious-user-execute",
   timeout = "eternal",
@@ -170,10 +180,10 @@ kprove_test(
   srcs = ["proof-discard-action.k"],
   trusted = [
       "//protocol-correctness/proof/functions:trusted-discard-action-has-signers",
-      "//protocol-correctness/proof/functions:trusted-discard-action-no-role",
+      "//protocol-correctness/proof/functions:trusted-discard-action-no-role-marker",
       "//protocol-correctness/proof/functions:trusted-discard-action-no-signers",
       "//protocol-correctness/proof/functions:trusted-discard-action-no-signers-no-action",
-      "//protocol-correctness/proof/functions:trusted-discard-action-no-user",
+      "//protocol-correctness/proof/functions:trusted-discard-action-no-user-marker",
       "//protocol-correctness/proof/functions:trusted-discard-action-no-valid-signers",
       "//protocol-correctness/proof/functions:trusted-discard-action-no-valid-signers-no-action",
   ],
@@ -181,6 +191,21 @@ kprove_test(
   timeout = "eternal",
   breadth = "1",
   # depth = ~
+)
+
+kprove_test(
+  name = "proof-perform-action",
+  srcs = ["proof-perform-action.k"],
+  trusted = [
+      "//protocol-correctness/proof/invariant:trusted-perform-parts-New",
+      "//protocol-correctness/proof/invariant:trusted-perform-parts-no-quorum",
+      "//protocol-correctness/proof/invariant:trusted-perform-parts-None",
+      "//protocol-correctness/proof/invariant:trusted-perform-parts-nothing",
+  ],
+  semantics = "//protocol-correctness/proof/malicious-user:malicious-user-execute",
+  timeout = "eternal",
+  breadth = "1",
+  #depth ~
 )
 
 ktrusted(
@@ -195,3 +220,62 @@ ktrusted(
   visibility = ["//visibility:public"],
 )
 
+ktrusted(
+  name = "trusted-discard-action",
+  srcs = ["proof-discard-action.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-perform-action",
+  srcs = ["proof-perform-action.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-propose-add-proposer",
+  srcs = ["proof-propose-add-proposer.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-propose-change-quorum",
+  srcs = ["proof-propose-change-quorum.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-propose-remove-user",
+  srcs = ["proof-propose-remove-user.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-propose-sc-call",
+  srcs = ["proof-propose-sc-call.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-propose-sc-deploy",
+  srcs = ["proof-propose-sc-deploy.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-propose-send-egld",
+  srcs = ["proof-propose-send-egld.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-sign",
+  srcs = ["proof-sign.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-unsign",
+  srcs = ["proof-unsign.k"],
+  visibility = ["//visibility:public"],
+)

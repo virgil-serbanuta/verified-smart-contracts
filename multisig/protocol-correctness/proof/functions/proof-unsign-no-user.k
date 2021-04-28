@@ -7,7 +7,7 @@ module PROOF-UNSIGN-NO-USER
 //@ end
 
   claim <T><TT>
-          <k> unsign-new.k ~> call(unsign(ActionId:Usize)) ~> K:K
+          <k> call(unsign(ActionId:Usize)) ~> K:K
           </k>
           invariantStateFull(
               NumUsers:Usize,
