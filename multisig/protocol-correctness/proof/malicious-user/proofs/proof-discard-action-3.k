@@ -1,26 +1,32 @@
 //@ proof
-require "../functions/trusted-propose-action-BoardMember.k"  //@ Bazel remove
-require "../functions/trusted-propose-action-Proposer.k"  //@ Bazel remove
-require "../functions/trusted-propose-action-error-no-user.k"  //@ Bazel remove
-require "../functions/trusted-propose-action-error-no-role.k"  //@ Bazel remove
+require "trusted-discard-action-1.k"  //@ Bazel remove
+require "trusted-discard-action-2.k"  //@ Bazel remove
+require "protocol-correctness/proof/functions/trusted-discard-action-no-signers.k"  //@ Bazel remove
+require "protocol-correctness/proof/functions/trusted-discard-action-no-signers-no-action.k"  //@ Bazel remove
 
-module PROOF-PROPOSE-ADD-BOARD-MEMBER
-  imports TRUSTED-PROPOSE-ACTION-ERROR-NO-ROLE
-  imports TRUSTED-PROPOSE-ACTION-ERROR-NO-USER
-  imports TRUSTED-PROPOSE-ACTION-BOARDMEMBER
-  imports TRUSTED-PROPOSE-ACTION-PROPOSER
+module PROOF-DISCARD-ACTION-3
+  imports TRUSTED-DISCARD-ACTION-1
+  imports TRUSTED-DISCARD-ACTION-2
+  imports TRUSTED-DISCARD-ACTION-NO-SIGNERS
+  imports TRUSTED-DISCARD-ACTION-NO-SIGNERS-NO-ACTION
 //@ trusted
-// module TRUSTED-PROPOSE-ADD-BOARD-MEMBER
+// module TRUSTED-DISCARD-ACTION-3
 //@ end
   imports MALICIOUS-USER-EXECUTE
   imports PSEUDOCODE
 
   claim <T><TT>
-          <k> runExternalCall(from MaliciousAddress run proposeAddBoardMember(_UserAddress:Address);) ~> K:K </k>
-          invariantState(
+          <k> splitDiscardAction2(ActionId:Usize)
+              ~> call(discardAction(ActionId))
+              ~> popContext
+              ~> evaluateReturnValue
+              ~> clearExternalCallEnv
+              ~> K:K
+          </k>
+          invariantStateFull(
               NumUsers:Usize,
               UserIdToAddress:Map,
-              AddressToUserId:Map,
+              (MaliciousAddress |-> MaliciousId:Usize _AddressToUserId:Map) #as AddressToUserId:Map,
               NumBoardMembers:Usize,
               NumProposers:Usize,
               UserIdToRole:Map,
@@ -28,6 +34,24 @@ module PROOF-PROPOSE-ADD-BOARD-MEMBER
               ActionLastIndex:Usize,
               ActionData:Map,
               ActionSigners:Map,
+              MaliciousAddress:Address,
+              stack(
+                  invariantMultisigState(
+                      NumUsers,
+                      UserIdToAddress,
+                      AddressToUserId,
+                      NumBoardMembers,
+                      NumProposers,
+                      UserIdToRole,
+                      Quorum,
+                      ActionLastIndex,
+                      ActionData,
+                      ActionSigners),
+                  .Map,
+                  PerformedActions,
+                  .stack
+              ),
+              .Map,
               PerformedActions:List)
         </TT></T>
       =>
@@ -41,7 +65,7 @@ module PROOF-PROPOSE-ADD-BOARD-MEMBER
               NumProposers,
               UserIdToRole,
               Quorum,
-              u(?ActionLastIndex:Int),
+              ActionLastIndex:Usize,
               ?ActionData:Map,
               ?ActionSigners:Map,
               PerformedActions:List):StateCell
@@ -60,6 +84,7 @@ module PROOF-PROPOSE-ADD-BOARD-MEMBER
             ActionData,
             ActionSigners,
             expand(expanded))
+        andBool MaliciousId in_keys(UserIdToRole)
     ensures true
         andBool maliciousInvariant(
             MaliciousAddress,
@@ -70,7 +95,7 @@ module PROOF-PROPOSE-ADD-BOARD-MEMBER
             NumProposers,
             UserIdToRole,
             Quorum,
-            u(?ActionLastIndex),
+            ActionLastIndex,
             ?ActionData,
             ?ActionSigners,
             usesExpanded)

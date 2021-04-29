@@ -1,39 +1,57 @@
 //@ proof
-require "../functions/trusted-propose-action-BoardMember.k"  //@ Bazel remove
-require "../functions/trusted-propose-action-Proposer.k"  //@ Bazel remove
-require "../functions/trusted-propose-action-error-no-user.k"  //@ Bazel remove
-require "../functions/trusted-propose-action-error-no-role.k"  //@ Bazel remove
+require "../functions/trusted-propose-sc-deploy-error-BoardMember.k"  //@ Bazel remove
 
-module PROOF-PROPOSE-SC-CALL
-  imports TRUSTED-PROPOSE-ACTION-ERROR-NO-ROLE
-  imports TRUSTED-PROPOSE-ACTION-ERROR-NO-USER
-  imports TRUSTED-PROPOSE-ACTION-BOARDMEMBER
-  imports TRUSTED-PROPOSE-ACTION-PROPOSER
+module PROOF-PROPOSE-SC-DEPLOY-3
+  imports TRUSTED-PROPOSE-SC-DEPLOY-BOARDMEMBER
 //@ trusted
-// module TRUSTED-PROPOSE-SC-CALL
+// module TRUSTED-PROPOSE-SC-DEPLOY-3
 //@ end
-  imports MALICIOUS-USER-EXECUTE
+  imports INVARIANT-EXECUTION
   imports PSEUDOCODE
 
   claim <T><TT>
-          <k> runExternalCall(from MaliciousAddress run proposeSCCall(
-                  address(_To:Int),
-                  big(_Amount:Int),
-                  bytes(_Function:String),
-                  ([_ArgsCsv:ExpressionCSV] #as Args:ExpressionList));)
+          <k> propose-sc-deploy-role.k
+              ~> call(proposeSCDeploy(
+                  _Amount:BigUint,
+                  _Code:BoxedBytes,
+                  _Upgradeable:Bool,
+                  _Payable:Bool,
+                  _Readable:Bool,
+                  Args:ExpressionList))
+              ~> popContext
+              ~> evaluateReturnValue
+              ~> clearExternalCallEnv
               ~> K:K
           </k>
-          invariantState(
+          invariantStateFull(
               NumUsers:Usize,
               UserIdToAddress:Map,
-              AddressToUserId:Map,
+              (CallerAddress |-> MaliciousId:Usize _AddressToUserId:Map) #as AddressToUserId:Map,
               NumBoardMembers:Usize,
               NumProposers:Usize,
-              UserIdToRole:Map,
+              (MaliciousId |-> BoardMember _UserIdToRole:Map) #as UserIdToRole:Map,
               Quorum:Usize,
               ActionLastIndex:Usize,
               ActionData:Map,
               ActionSigners:Map,
+              CallerAddress:Address,
+              stack(
+                  invariantMultisigState(
+                      NumUsers,
+                      UserIdToAddress,
+                      AddressToUserId,
+                      NumBoardMembers,
+                      NumProposers,
+                      UserIdToRole,
+                      Quorum,
+                      ActionLastIndex,
+                      ActionData,
+                      ActionSigners),
+                  .Map,
+                  PerformedActions,
+                  .stack
+              ),
+              .Map,
               PerformedActions:List)
         </TT></T>
       =>
@@ -53,8 +71,7 @@ module PROOF-PROPOSE-SC-CALL
               PerformedActions:List):StateCell
         </TT></T>
     requires true
-        andBool maliciousInvariant(
-            MaliciousAddress,
+        andBool invariant(
             NumUsers,
             UserIdToAddress,
             AddressToUserId,
@@ -68,8 +85,7 @@ module PROOF-PROPOSE-SC-CALL
             expand(expanded))
         andBool isKResult(Args)
     ensures true
-        andBool maliciousInvariant(
-            MaliciousAddress,
+        andBool invariant(
             NumUsers,
             UserIdToAddress,
             AddressToUserId,

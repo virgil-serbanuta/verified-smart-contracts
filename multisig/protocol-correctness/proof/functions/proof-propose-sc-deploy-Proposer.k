@@ -87,4 +87,8 @@ module PROOF-PROPOSE-SC-DEPLOY-PROPOSER
       andBool AddressToUserId[CallerAddress] in_keys(UserIdToRole)
       andBool UserIdToRole[AddressToUserId[CallerAddress]] ==K Proposer
     ensures true
+    //@ proof
+    //@ trusted
+    // [trusted]
+    //@ end
 endmodule

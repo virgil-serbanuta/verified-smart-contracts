@@ -113,15 +113,63 @@ kprove_test(
   name = "proof-propose-sc-deploy",
   srcs = ["proof-propose-sc-deploy.k"],
   trusted = [
-      "//protocol-correctness/proof/functions:trusted-propose-sc-deploy-BoardMember",
-      "//protocol-correctness/proof/functions:trusted-propose-sc-deploy-Proposer",
+      ":trusted-propose-sc-deploy-1",
+      ":trusted-propose-sc-deploy-2",
+      ":trusted-propose-sc-deploy-3",
+      ":trusted-propose-sc-deploy-4",
+  ],
+  semantics = "//protocol-correctness/proof/malicious-user:malicious-user-execute",
+  timeout = "eternal",
+  breadth = "6",
+  # depth = ~?
+)
+
+kprove_test(
+  name = "proof-propose-sc-deploy-1",
+  srcs = ["proof-propose-sc-deploy-1.k"],
+  trusted = [
       "//protocol-correctness/proof/functions:trusted-propose-sc-deploy-error-no-user",
+  ],
+  semantics = "//protocol-correctness/proof/malicious-user:malicious-user-execute",
+  timeout = "eternal",
+  breadth = "1",
+  # depth = ~8
+)
+
+kprove_test(
+  name = "proof-propose-sc-deploy-2",
+  srcs = ["proof-propose-sc-deploy-2.k"],
+  trusted = [
       "//protocol-correctness/proof/functions:trusted-propose-sc-deploy-error-no-role",
   ],
   semantics = "//protocol-correctness/proof/malicious-user:malicious-user-execute",
   timeout = "eternal",
-  breadth = "13", # >9
-  # depth = ~29
+  breadth = "1",
+  # depth = ~8
+)
+
+kprove_test(
+  name = "proof-propose-sc-deploy-3",
+  srcs = ["proof-propose-sc-deploy-3.k"],
+  trusted = [
+      "//protocol-correctness/proof/functions:trusted-propose-sc-deploy-BoardMember",
+  ],
+  semantics = "//protocol-correctness/proof/malicious-user:malicious-user-execute",
+  timeout = "eternal",
+  breadth = "1",
+  # depth = ~8
+)
+
+kprove_test(
+  name = "proof-propose-sc-deploy-4",
+  srcs = ["proof-propose-sc-deploy-4.k"],
+  trusted = [
+      "//protocol-correctness/proof/functions:trusted-propose-sc-deploy-Proposer",
+  ],
+  semantics = "//protocol-correctness/proof/malicious-user:malicious-user-execute",
+  timeout = "eternal",
+  breadth = "1",
+  # depth = ~8
 )
 
 kprove_test(
@@ -182,18 +230,57 @@ kprove_test(
   name = "proof-discard-action",
   srcs = ["proof-discard-action.k"],
   trusted = [
-      "//protocol-correctness/proof/functions:trusted-discard-action-has-signers",
+      ":trusted-discard-action-3",
       "//protocol-correctness/proof/functions:trusted-discard-action-no-role-marker",
-      "//protocol-correctness/proof/functions:trusted-discard-action-no-signers",
-      "//protocol-correctness/proof/functions:trusted-discard-action-no-signers-no-action",
       "//protocol-correctness/proof/functions:trusted-discard-action-no-user-marker",
+  ],
+  semantics = "//protocol-correctness/proof/malicious-user:malicious-user-execute",
+  timeout = "eternal",
+  breadth = "8",
+  # depth = ~44
+)
+
+kprove_test(
+  name = "proof-discard-action-1",
+  srcs = ["proof-discard-action-1.k"],
+  trusted = [
+      "//protocol-correctness/proof/functions:trusted-discard-action-has-signers",
       "//protocol-correctness/proof/functions:trusted-discard-action-no-valid-signers",
       "//protocol-correctness/proof/functions:trusted-discard-action-no-valid-signers-no-action",
   ],
   semantics = "//protocol-correctness/proof/malicious-user:malicious-user-execute",
   timeout = "eternal",
-  breadth = "18",
-  # depth = ~44
+  breadth = "4",
+  # depth = ~20
+)
+
+kprove_test(
+  name = "proof-discard-action-2",
+  srcs = ["proof-discard-action-2.k"],
+  trusted = [
+      "//protocol-correctness/proof/functions:trusted-discard-action-has-signers",
+      "//protocol-correctness/proof/functions:trusted-discard-action-no-valid-signers",
+      "//protocol-correctness/proof/functions:trusted-discard-action-no-valid-signers-no-action",
+  ],
+  semantics = "//protocol-correctness/proof/malicious-user:malicious-user-execute",
+  timeout = "eternal",
+  breadth = "4",
+  # depth = ~20
+)
+
+kprove_test(
+  name = "proof-discard-action-3",
+  srcs = ["proof-discard-action-3.k"],
+  trusted = [
+      ":trusted-discard-action-1",
+      ":trusted-discard-action-2",
+      "//protocol-correctness/proof/functions:trusted-discard-action-no-signers",
+      "//protocol-correctness/proof/functions:trusted-discard-action-no-signers-no-action",
+  ],
+  semantics = "//protocol-correctness/proof/malicious-user:malicious-user-execute",
+  timeout = "eternal",
+  breadth = "9",
+  # depth = ~20
 )
 
 kprove_test(
@@ -230,6 +317,24 @@ ktrusted(
 )
 
 ktrusted(
+  name = "trusted-discard-action-1",
+  srcs = ["proof-discard-action-1.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-discard-action-2",
+  srcs = ["proof-discard-action-2.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-discard-action-3",
+  srcs = ["proof-discard-action-3.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
   name = "trusted-perform-action",
   srcs = ["proof-perform-action.k"],
   visibility = ["//visibility:public"],
@@ -262,6 +367,30 @@ ktrusted(
 ktrusted(
   name = "trusted-propose-sc-deploy",
   srcs = ["proof-propose-sc-deploy.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-propose-sc-deploy-1",
+  srcs = ["proof-propose-sc-deploy-1.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-propose-sc-deploy-2",
+  srcs = ["proof-propose-sc-deploy-2.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-propose-sc-deploy-3",
+  srcs = ["proof-propose-sc-deploy-3.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-propose-sc-deploy-4",
+  srcs = ["proof-propose-sc-deploy-4.k"],
   visibility = ["//visibility:public"],
 )
 

@@ -137,85 +137,6 @@ def _merge_trusted(input_file, trusted_attr, kmerge, actions, merged_file):
       progress_message="Preparing %s" % input_file.path,
       executable=kmerge)
 
-# def _kprove_test_impl(ctx):
-#   if len(ctx.files.srcs) != 1:
-#     fail
-#   merged_file = ctx.actions.declare_file(ctx.label.name + '.k')
-
-#   _merge_trusted(
-#       ctx.files.srcs[0],
-#       ctx.attr.trusted,
-#       ctx.executable.kmerge_tool,
-#       ctx.actions,
-#       merged_file)
-
-#   output_file = ctx.actions.declare_file(ctx.label.name + '-runner.sh')
-#   command_parts = [
-#       "pushd $(pwd)",
-#       "kompile_tool/kprove_tool %s %s %s --debug" % (
-#           ctx.attr.semantics[KompileInfo].files[0].short_path,
-#           ctx.files.srcs[0].path,
-#           merged_file.short_path),
-#       "popd",
-#   ]
-#   script_lines = [
-#       "#!/usr/bin/env bash",
-#       "",
-#       # "read line",
-#       # 'echo "aaa: $line"',
-#       # "",
-#       "echo 'To debug:'",
-#       'echo "%s"' % ("; ".join(command_parts)),
-#       "kompile_tool/kprove_tool %s %s %s %s" % (ctx.attr.semantics[KompileInfo].files[0].short_path, ctx.files.srcs[0].path, merged_file.short_path, '"$@"'),
-#   ]
-#   ctx.actions.write(output_file, "\n".join(script_lines), is_executable = True)
-#   runfiles = ctx.runfiles(
-#       [merged_file, ctx.executable.kprove_tool]
-#       + ctx.attr.semantics[KompileInfo].files
-#       + ctx.attr.k_distribution[DefaultInfo].files.to_list()
-#       + ctx.attr.debug_script[DefaultInfo].files.to_list()
-#   )
-#   return [
-#       DefaultInfo(
-#           runfiles = runfiles,
-#           executable = output_file,
-#       )
-#   ]
-
-# kprove_test = rule(
-#     implementation = _kprove_test_impl,
-#     attrs = {
-#         "srcs": attr.label_list(allow_files = [".k"]),
-#         "trusted": attr.label_list(providers=[DefaultInfo, KtrustedInfo]),
-#         "semantics": attr.label(mandatory=True, providers=[DefaultInfo, KompileInfo]),
-#         "kprove_tool": attr.label(
-#             executable = True,
-#             cfg = "exec",
-#             allow_files = True,
-#             default = Label("//kompile_tool:kprove_tool"),
-#         ),
-#         "kmerge_tool": attr.label(
-#             executable = True,
-#             cfg = "exec",
-#             allow_files = True,
-#             default = Label("//kompile_tool:kmerge_tool"),
-#         ),
-#         "k_distribution": attr.label(
-#             executable = False,
-#             cfg = "exec",
-#             allow_files = True,
-#             default = Label("//kompile_tool:k_release"),
-#         ),
-#         "debug_script": attr.label(
-#             executable = False,
-#             cfg = "exec",
-#             allow_files = True,
-#             default = Label("//kompile_tool:kast_script"),
-#         ),
-#     },
-#     test = True,
-# )
-
 def _kprove_kompile_impl(ctx):
   if len(ctx.files.srcs) != 1:
     fail
@@ -318,7 +239,7 @@ def _kore_test_impl(ctx):
       "",
       "echo 'To debug:'",
       'echo "%s"' % ("; ".join(command_parts)),
-      "%s %s" % (tool_call, '"$@"'),
+      "%s %s || (echo 'Proof FAILED!'; false)" % (tool_call, '"$@"'),
   ]
   ctx.actions.write(script_file, "\n".join(script_lines), is_executable = True)
   runfiles = ctx.runfiles(

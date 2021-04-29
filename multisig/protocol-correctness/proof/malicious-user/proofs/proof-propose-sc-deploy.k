@@ -1,14 +1,14 @@
 //@ proof
-require "../functions/trusted-propose-sc-deploy-BoardMember.k"  //@ Bazel remove
-require "../functions/trusted-propose-sc-deploy-Proposer.k"  //@ Bazel remove
-require "../functions/trusted-propose-sc-deploy-error-no-user.k"  //@ Bazel remove
-require "../functions/trusted-propose-sc-deploy-error-no-role.k"  //@ Bazel remove
+require "trusted-propose-sc-deploy-1.k"  //@ Bazel remove
+require "trusted-propose-sc-deploy-2.k"  //@ Bazel remove
+require "trusted-propose-sc-deploy-3.k"  //@ Bazel remove
+require "trusted-propose-sc-deploy-4.k"  //@ Bazel remove
 
 module PROOF-PROPOSE-SC-DEPLOY
-  imports TRUSTED-PROPOSE-SC-DEPLOY-ERROR-NO-USER
-  imports TRUSTED-PROPOSE-SC-DEPLOY-ERROR-NO-ROLE
-  imports TRUSTED-PROPOSE-SC-DEPLOY-BOARDMEMBER
-  imports TRUSTED-PROPOSE-SC-DEPLOY-PROPOSER
+  imports TRUSTED-PROPOSE-SC-DEPLOY-1
+  imports TRUSTED-PROPOSE-SC-DEPLOY-2
+  imports TRUSTED-PROPOSE-SC-DEPLOY-3
+  imports TRUSTED-PROPOSE-SC-DEPLOY-4
 //@ trusted
 // module TRUSTED-PROPOSE-SC-DEPLOY
 //@ end
@@ -31,7 +31,7 @@ module PROOF-PROPOSE-SC-DEPLOY
               AddressToUserId:Map,
               NumBoardMembers:Usize,
               NumProposers:Usize,
-              UserRoles:Map,
+              UserIdToRole:Map,
               Quorum:Usize,
               ActionLastIndex:Usize,
               ActionData:Map,
@@ -47,7 +47,7 @@ module PROOF-PROPOSE-SC-DEPLOY
               AddressToUserId:Map,
               NumBoardMembers,
               NumProposers,
-              UserRoles,
+              UserIdToRole,
               Quorum,
               u(?ActionLastIndex:Int),
               ?ActionData:Map,
@@ -62,7 +62,7 @@ module PROOF-PROPOSE-SC-DEPLOY
             AddressToUserId,
             NumBoardMembers,
             NumProposers,
-            UserRoles,
+            UserIdToRole,
             Quorum,
             ActionLastIndex,
             ActionData,
@@ -77,7 +77,7 @@ module PROOF-PROPOSE-SC-DEPLOY
             AddressToUserId,
             NumBoardMembers,
             NumProposers,
-            UserRoles,
+            UserIdToRole,
             Quorum,
             u(?ActionLastIndex),
             ?ActionData,

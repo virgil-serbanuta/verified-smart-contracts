@@ -1,31 +1,55 @@
 //@ proof
-require "trusted-discard-action-3.k"  //@ Bazel remove
-require "protocol-correctness/proof/functions/trusted-discard-action-no-role-marker.k"  //@ Bazel remove
-require "protocol-correctness/proof/functions/trusted-discard-action-no-user-marker.k"  //@ Bazel remove
+require "protocol-correctness/proof/functions/trusted-discard-action-has-signers.k"  //@ Bazel remove
+require "protocol-correctness/proof/functions/trusted-discard-action-no-valid-signers.k"  //@ Bazel remove
+require "protocol-correctness/proof/functions/trusted-discard-action-no-valid-signers-no-action.k"  //@ Bazel remove
 
-module PROOF-DISCARD-ACTION
-  imports TRUSTED-DISCARD-ACTION-3
-  imports TRUSTED-DISCARD-ACTION-NO-ROLE-MARKER
-  imports TRUSTED-DISCARD-ACTION-NO-USER-MARKER
+module PROOF-DISCARD-ACTION-2
+  imports TRUSTED-DISCARD-ACTION-HAS-SIGNERS
+  imports TRUSTED-DISCARD-ACTION-NO-VALID-SIGNERS
+  imports TRUSTED-DISCARD-ACTION-NO-VALID-SIGNERS-NO-ACTION
 //@ trusted
-// module TRUSTED-DISCARD-ACTION
+// module TRUSTED-DISCARD-ACTION-2
 //@ end
   imports MALICIOUS-USER-EXECUTE
   imports PSEUDOCODE
 
   claim <T><TT>
-          <k> runExternalCall(from MaliciousAddress run discardAction(_ActionId:Usize);) ~> K:K </k>
-          invariantState(
+          <k> splitDiscardAction3(ActionId:Usize)
+              ~> call(discardAction(ActionId))
+              ~> popContext
+              ~> evaluateReturnValue
+              ~> clearExternalCallEnv
+              ~> K:K
+          </k>
+          invariantStateFull(
               NumUsers:Usize,
               UserIdToAddress:Map,
-              AddressToUserId:Map,
+              (MaliciousAddress |-> MaliciousId:Usize _AddressToUserId:Map) #as AddressToUserId:Map,
               NumBoardMembers:Usize,
               NumProposers:Usize,
-              UserIdToRole:Map,
+              (MaliciousId |-> Proposer _UserIdToRole:Map) #as UserIdToRole:Map,
               Quorum:Usize,
               ActionLastIndex:Usize,
               ActionData:Map,
               ActionSigners:Map,
+              MaliciousAddress:Address,
+              stack(
+                  invariantMultisigState(
+                      NumUsers,
+                      UserIdToAddress,
+                      AddressToUserId,
+                      NumBoardMembers,
+                      NumProposers,
+                      UserIdToRole,
+                      Quorum,
+                      ActionLastIndex,
+                      ActionData,
+                      ActionSigners),
+                  .Map,
+                  PerformedActions,
+                  .stack
+              ),
+              .Map,
               PerformedActions:List)
         </TT></T>
       =>
@@ -58,6 +82,7 @@ module PROOF-DISCARD-ACTION
             ActionData,
             ActionSigners,
             expand(expanded))
+        andBool ActionId in_keys(ActionSigners)
     ensures true
         andBool maliciousInvariant(
             MaliciousAddress,

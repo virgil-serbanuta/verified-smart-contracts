@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e -x
+set -e
 
 SPEC_MODULE_NAME=$1
 shift

@@ -162,7 +162,7 @@ module PROPOSE-SC-DEPLOY-INSTRUMENTATION
                   Caller in_keys(AddressToUserId),
                   makeConcreteValue(Caller, rUsize, AddressToUserId)
                     ~>  split-sc-deploy1,
-                  .K
+                  propose-sc-deploy-no-user.k
                 )
         ... </k>
         <address-to-user-id>AddressToUserId:Map</address-to-user-id>
@@ -171,8 +171,9 @@ module PROPOSE-SC-DEPLOY-INSTRUMENTATION
   rule  <k> split-sc-deploy1
             =>  branchK(
                   AddressToUserId[Caller] in_keys(UserIdToRole),
-                  makeConcreteValue(AddressToUserId[Caller], rUserRole, UserIdToRole),
-                  .K
+                  makeConcreteValue(AddressToUserId[Caller], rUserRole, UserIdToRole)
+                      ~> propose-sc-deploy-role.k,
+                  propose-sc-deploy-no-role.k
                 )
         ... </k>
         <address-to-user-id>AddressToUserId:Map</address-to-user-id>

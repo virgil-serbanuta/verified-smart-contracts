@@ -187,6 +187,14 @@ module PROOF-INSTRUMENTATION
 
   // TODO: It might be faster to enumerate all cases separately.
   rule _:PerformBranch => .K
+
+  syntax KItem ::= "propose-sc-deploy-no-user.k"
+  syntax KItem ::= "propose-sc-deploy-no-role.k"
+  syntax KItem ::= "propose-sc-deploy-role.k"
+
+  rule propose-sc-deploy-no-user.k => .K
+  rule propose-sc-deploy-no-role.k => .K
+  rule propose-sc-deploy-role.k => .K
 endmodule
 
 module EXECUTION-PROOF-BOOL
