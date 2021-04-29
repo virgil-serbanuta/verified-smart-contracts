@@ -2,9 +2,7 @@ require "protocol-correctness/proof/execution-proof.k"
 require "protocol-correctness/proof/functions/functions-execute.k"
 require "protocol-correctness/proof/instrumentation/pushlist/pushlist-execute.k"
 
-require "protocol-correctness/proof/invariant/count-can-sign-parts.k"
 require "protocol-correctness/proof/invariant/init-loop-parts.k"
-require "protocol-correctness/proof/invariant/perform-parts.k"
 
 module INVARIANT-EXECUTION-SYNTAX
   imports EXECUTION-PROOF-SYNTAX
@@ -1108,7 +1106,5 @@ module INVARIANT-EXECUTION
   imports UNSIGN-INSTRUMENTATION
   imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
 
-  imports COUNT-CAN-SIGN-PARTS
   imports INIT-LOOP-PARTS
-  imports PERFORM-PARTS
 endmodule

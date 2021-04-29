@@ -1,16 +1,21 @@
-require "proof-init-loop.k"
+//@ proof
+require "trusted-init-loop-error.k"  //@ Bazel remove
+require "trusted-init-loop-no-error.k"  //@ Bazel remove
+require "../functions/trusted-listlen.k"  //@ Bazel remove
 
 module PROOF-INIT
+  imports TRUSTED-INIT-LOOP-ERROR
+  imports TRUSTED-INIT-LOOP-NO-ERROR
+  imports TRUSTED-LISTLEN
+//@ trusted
+// module TRUSTED-INIT
+//@ end
+
   imports INVARIANT-EXECUTION
   imports PSEUDOCODE
-  imports TRUSTED-INIT-LOOP
 
   rule forall-v-greater-or-equal-than-u-v-not-in-m(_:Usize, .Map, _:ExpressionList)
       => true  [simplification]
-
-  claim call(listLen(L:ExpressionList)) => u(pListLen(L))
-    requires isKResult(L)
-    [trusted]
 
   claim <T><TT>
           <k> runExternalCalls(
@@ -38,7 +43,6 @@ module PROOF-INIT
               ?PerformedActions:List)
         </TT></T>
     requires    listElementsAreAddresses(Addresses)
-        //andBool noCommonItem(u(1), .Map, Addresses)
 
         andBool isKResult(Addresses)
         andBool noReusedIndexAddress(u(1), .Map, Addresses)
@@ -69,4 +73,8 @@ module PROOF-INIT
                 ?ActionSigners:Map,
                 ?PerformedActions:List)
               ==K initialState
+    //@ proof
+    //@ trusted
+    // [trusted]
+    //@ end
 endmodule

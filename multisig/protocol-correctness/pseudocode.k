@@ -276,8 +276,8 @@ module PSEUDOCODE-INSTRUCTIONS
     requires isKResult(E)
 
   context runInstruction(require({HOLE:Expression => evaluate(HOLE)}:>Expression);)
-  rule runInstruction(require(true);) => evaluate(void)
-  rule runInstruction(require(false);) => error
+  rule runInstruction(require(true);) => evaluate(void)  [label(requireTrue)]
+  rule runInstruction(require(false);) => error  [label(requireError)]
 endmodule
 
 module PSEUDOCODE-EXTERNAL
@@ -343,6 +343,7 @@ module PSEUDOCODE-FOR
 
   rule runInstruction(for(_:Variable = _:Usize, _:Variable) in [.] _:Block)
         => evaluate(void)
+    [label(forEnd)]
   rule runInstruction(
           for (IndexVar:Variable = u(Index:Int), ValueVar:Variable)
               in [E:Expression, Es:ExpressionCSV]
@@ -350,6 +351,7 @@ module PSEUDOCODE-FOR
         )
         =>  runPseudoCode(IndexVar = u(Index); ValueVar = E; B)
             ~> runInstruction(for(IndexVar = u(Index +Int 1), ValueVar) in [Es:ExpressionCSV] {B})
+    [label(forLoop)]
 endmodule
 
 module PSEUDOCODE-IF
@@ -751,8 +753,8 @@ module PSEUDOCODE-FUNCTIONS
 
   rule  call(userRoleCanDiscardAction(R:UserRole) => userRoleCanPropose(R))
 
-  rule  call(isEmptyList([.])) => true
-  rule  call(isEmptyList(_:ExpressionList)) => false [owise]
+  rule  call(isEmptyList([.])) => true  [label(isEmptyListEmpty)]
+  rule  call(isEmptyList(_:ExpressionList)) => false [owise, label(isEmptyListNotEmpty)]
 
   rule  call(listLen([.])) => u(0)
   rule  call(listLen([_:Expression , Es:ExpressionCSV]))

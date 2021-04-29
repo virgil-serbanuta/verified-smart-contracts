@@ -12,7 +12,7 @@ module PROOF-DISCARD-ACTION
 
   claim <T><TT>
           <k> runExternalCalls(
-                  (   from _:Address run discardAction(ActionId:Usize);
+                  (   from _:Address run discardAction(_ActionId:Usize);
                       EC:ExternalCommands
                   )
               )

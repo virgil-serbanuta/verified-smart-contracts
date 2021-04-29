@@ -4,9 +4,7 @@ kompile(
   name = "invariant-execution",
   srcs = ["invariant-execution.k"],
   deps = [
-      ":count-can-sign-parts-files",
       ":init-loop-parts-files",
-      ":perform-parts-files",
       "//protocol-correctness/proof:execution-proof-files",
       "//protocol-correctness/proof/functions:functions-execute-files",
       "//protocol-correctness/proof/instrumentation/pushlist:pushlist-execute-files",
@@ -17,9 +15,7 @@ klibrary(
   name = "invariant-execution-files",
   srcs = ["invariant-execution.k"],
   deps = [
-      ":count-can-sign-parts-files",
       ":init-loop-parts-files",
-      ":perform-parts-files",
       "//protocol-correctness/proof:execution-proof-files",
       "//protocol-correctness/proof/functions:functions-execute-files",
       "//protocol-correctness/proof/instrumentation/pushlist:pushlist-execute-files",
@@ -27,31 +23,9 @@ klibrary(
   visibility = ["//visibility:public"],
 )
 
-# TODO: Delete.
-klibrary(
-  name = "count-can-sign-parts-files",
-  srcs = ["count-can-sign-parts.k"],
-  deps = [
-      "//protocol-correctness/proof:execution-proof-helpers-files",
-      "//protocol-correctness/proof:invariant-files",
-      "//protocol-correctness:pseudocode-files",
-  ],
-)
-
 klibrary(
   name = "init-loop-parts-files",
   srcs = ["init-loop-parts.k"],
-  deps = [
-      "//protocol-correctness/proof:execution-proof-helpers-files",
-      "//protocol-correctness/proof:invariant-files",
-      "//protocol-correctness:pseudocode-files",
-  ],
-)
-
-# TODO: Delete.
-klibrary(
-  name = "perform-parts-files",
-  srcs = ["perform-parts.k"],
   deps = [
       "//protocol-correctness/proof:execution-proof-helpers-files",
       "//protocol-correctness/proof:invariant-files",
@@ -847,6 +821,28 @@ kprove_test(
   timeout = "eternal",
   breadth = "9",
   # depth = ~20
+)
+
+kprove_test(
+  name = "proof-init-loop-error",
+  srcs = ["proof-init-loop-error.k"],
+  trusted = [
+  ],
+  semantics = ":invariant-execution",
+  timeout = "eternal",
+  breadth = "2", # >1
+  # depth = ~
+)
+
+kprove_test(
+  name = "proof-init-loop-no-error",
+  srcs = ["proof-init-loop-no-error.k"],
+  trusted = [
+  ],
+  semantics = ":invariant-execution",
+  timeout = "eternal",
+  breadth = "2", # >1
+  # depth = ~
 )
 
 ktrusted(
