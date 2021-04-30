@@ -717,7 +717,7 @@ module PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
           =>  branchK(
                 CallerAddress in_keys(AddressToUserId),
                 splitPerformActionEndpoint1(ActionId),
-                new.k
+                perform-new.k
               )
         ... </k>
         <address-to-user-id>AddressToUserId:Map</address-to-user-id>
@@ -734,7 +734,7 @@ module PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
                               ~> splitPerformActionEndpoint1a(ActionId),
                             splitPerformActionEndpoint1a(ActionId)
                           ),
-                    none.k
+                    perform-none.k
                   )
         ... </k>
         <address-to-user-id>AddressToUserId:Map</address-to-user-id>
@@ -750,9 +750,9 @@ module PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
                       ActionId in_keys(ActionData),
                       makeConcreteValue(ActionId, rAction, ActionData)
                         ~> splitPerformActionEndpoint2(ActionId),
-                      nothing.k
+                      perform-nothing.k
                   ),
-                  no-quorum.k
+                  perform-no-quorum.k
               )
         ... </k>
         <address-to-user-id>CallerAddress |-> UserId:KItem _AddressToUserId:Map</address-to-user-id>
