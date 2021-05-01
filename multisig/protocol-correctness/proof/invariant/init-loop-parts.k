@@ -235,135 +235,135 @@ module INIT-LOOP-PARTS
 
       andBool 0 ==Int countMapValues(UserIdToRole, wrap(Proposer))
 
-  syntax TTCell ::= initLoopBodyLhs(
-            /*prevIndex:*/Usize,
-            K,
-            /*userIdToAddress:*/Map,
-            /*addressToUserId:*/Map,
-            /*userIdToRole:*/Map,
-            /*quorum:*/Usize,
-            ActionStateCell,
-            /*variables:*/Map,
-            /*stack:*/Stack,
-            ExternalCallEnvCell,
-            /*address:*/Expression,
-            /*userId:*/Usize)
-      [function, functional]
-  rule initLoopBodyLhs(
-            PrevIndex:Usize,
-            K:K,
-            UserIdToAddress0:Map,
-            AddressToUserId0:Map,
-            UserIdToRole0:Map,
-            Quorum:Usize,
-            ActionState:ActionStateCell,
-            Variables:Map,
-            Stack:Stack,
-            ExternalCallEnv:ExternalCallEnvCell,
-            Address:Expression,
-            UserId:Usize)
-      => <TT>
-          <k>
-            runInstructions(
-                user_id = i + u(1);
-                require(getUserId(address) == u(0));
-                setUserId(address, user_id);
-                setUserAddress(user_id, address);
-                setUserIdToRole(user_id, BoardMember);
-            )
-            ~> K
-          </k>
-          <state>
-            <multisig-state>
-              <users>
-                <num-users>u(0)</num-users>
-                <user-id-to-address>UserIdToAddress0</user-id-to-address>
-                <address-to-user-id>AddressToUserId0</address-to-user-id>
-              </users>
-              <board-state>
-                <num-board-members>u(0)</num-board-members>
-                <num-proposers>u(0)</num-proposers>
-                <user-roles>UserIdToRole0</user-roles>
-                <quorum>Quorum</quorum>
-              </board-state>
-              ActionState
-            </multisig-state>
-            <pseudocode-state>
-              <variables>
-                i |-> PrevIndex
-                address |-> Address
-                user_id |-> UserId
-                Variables
-              </variables>
-              <stack> Stack </stack>
-            </pseudocode-state>
-            ExternalCallEnv
-            <log>
-              <performed-actions>.List</performed-actions>
-            </log>
-          </state>
-        </TT>
+  // syntax TTCell ::= initLoopBodyLhs(
+  //           /*prevIndex:*/Usize,
+  //           K,
+  //           /*userIdToAddress:*/Map,
+  //           /*addressToUserId:*/Map,
+  //           /*userIdToRole:*/Map,
+  //           /*quorum:*/Usize,
+  //           ActionStateCell,
+  //           /*variables:*/Map,
+  //           /*stack:*/Stack,
+  //           ExternalCallEnvCell,
+  //           /*address:*/Expression,
+  //           /*userId:*/Usize)
+  //     [function, functional]
+  // rule initLoopBodyLhs(
+  //           PrevIndex:Usize,
+  //           K:K,
+  //           UserIdToAddress0:Map,
+  //           AddressToUserId0:Map,
+  //           UserIdToRole0:Map,
+  //           Quorum:Usize,
+  //           ActionState:ActionStateCell,
+  //           Variables:Map,
+  //           Stack:Stack,
+  //           ExternalCallEnv:ExternalCallEnvCell,
+  //           Address:Expression,
+  //           UserId:Usize)
+  //     => <TT>
+  //         <k>
+  //           runInstructions(
+  //               user_id = i + u(1);
+  //               require(getUserId(address) == u(0));
+  //               setUserId(address, user_id);
+  //               setUserAddress(user_id, address);
+  //               setUserIdToRole(user_id, BoardMember);
+  //           )
+  //           ~> K
+  //         </k>
+  //         <state>
+  //           <multisig-state>
+  //             <users>
+  //               <num-users>u(0)</num-users>
+  //               <user-id-to-address>UserIdToAddress0</user-id-to-address>
+  //               <address-to-user-id>AddressToUserId0</address-to-user-id>
+  //             </users>
+  //             <board-state>
+  //               <num-board-members>u(0)</num-board-members>
+  //               <num-proposers>u(0)</num-proposers>
+  //               <user-roles>UserIdToRole0</user-roles>
+  //               <quorum>Quorum</quorum>
+  //             </board-state>
+  //             ActionState
+  //           </multisig-state>
+  //           <pseudocode-state>
+  //             <variables>
+  //               i |-> PrevIndex
+  //               address |-> Address
+  //               user_id |-> UserId
+  //               Variables
+  //             </variables>
+  //             <stack> Stack </stack>
+  //           </pseudocode-state>
+  //           ExternalCallEnv
+  //           <log>
+  //             <performed-actions>.List</performed-actions>
+  //           </log>
+  //         </state>
+  //       </TT>
 
-  syntax TTCell ::= initLoopRhs(
-            K,
-            /*userIdToAddress:*/Map,
-            /*addressToUserId:*/Map,
-            /*userIdToRole:*/Map,
-            /*quorum:*/Usize,
-            ActionStateCell,
-            /*variables:*/Map,
-            /*stack:*/Stack,
-            ExternalCallEnvCell,
-            /*index:*/Usize,
-            /*address:*/Expression,
-            /*userId:*/Usize)
-      [function, functional]
-  rule initLoopRhs(
-            K:K,
-            UserIdToAddress1:Map,
-            AddressToUserId1:Map,
-            UserIdToRole1:Map,
-            Quorum:Usize,
-            ActionState:ActionStateCell,
-            Variables:Map,
-            Stack:Stack,
-            ExternalCallEnv:ExternalCallEnvCell,
-            Index:Usize,
-            Address:Expression,
-            UserId:Usize)
-      =>
-        <TT>
-          <k> K </k>
-          <state>
-            <multisig-state>
-              <users>
-                <num-users>u(0)</num-users>
-                <user-id-to-address>UserIdToAddress1</user-id-to-address>
-                <address-to-user-id>AddressToUserId1:Map</address-to-user-id>
-              </users>
-              <board-state>
-                <num-board-members>u(0)</num-board-members>
-                <num-proposers>u(0)</num-proposers>
-                <user-roles>UserIdToRole1</user-roles>
-                <quorum>Quorum</quorum>
-              </board-state>
-              ActionState
-            </multisig-state>
-            <pseudocode-state>
-              <variables>
-                (i |-> Index)
-                (address |-> Address)
-                (user_id |-> PrevIndex +Int 1)
-                Variables
-              </variables>
-              <stack> Stack </stack>
-            </pseudocode-state>
-            ExternalCallEnv
-            <log>
-              <performed-actions>.List</performed-actions>
-            </log>
-          </state>
-        </TT>
+  // syntax TTCell ::= initLoopRhs(
+  //           K,
+  //           /*userIdToAddress:*/Map,
+  //           /*addressToUserId:*/Map,
+  //           /*userIdToRole:*/Map,
+  //           /*quorum:*/Usize,
+  //           ActionStateCell,
+  //           /*variables:*/Map,
+  //           /*stack:*/Stack,
+  //           ExternalCallEnvCell,
+  //           /*index:*/Usize,
+  //           /*address:*/Expression,
+  //           /*userId:*/Usize)
+  //     [function, functional]
+  // rule initLoopRhs(
+  //           K:K,
+  //           UserIdToAddress1:Map,
+  //           AddressToUserId1:Map,
+  //           UserIdToRole1:Map,
+  //           Quorum:Usize,
+  //           ActionState:ActionStateCell,
+  //           Variables:Map,
+  //           Stack:Stack,
+  //           ExternalCallEnv:ExternalCallEnvCell,
+  //           Index:Usize,
+  //           Address:Expression,
+  //           UserId:Usize)
+  //     =>
+  //       <TT>
+  //         <k> K </k>
+  //         <state>
+  //           <multisig-state>
+  //             <users>
+  //               <num-users>u(0)</num-users>
+  //               <user-id-to-address>UserIdToAddress1</user-id-to-address>
+  //               <address-to-user-id>AddressToUserId1:Map</address-to-user-id>
+  //             </users>
+  //             <board-state>
+  //               <num-board-members>u(0)</num-board-members>
+  //               <num-proposers>u(0)</num-proposers>
+  //               <user-roles>UserIdToRole1</user-roles>
+  //               <quorum>Quorum</quorum>
+  //             </board-state>
+  //             ActionState
+  //           </multisig-state>
+  //           <pseudocode-state>
+  //             <variables>
+  //               (i |-> Index)
+  //               (address |-> Address)
+  //               (user_id |-> PrevIndex +Int 1)
+  //               Variables
+  //             </variables>
+  //             <stack> Stack </stack>
+  //           </pseudocode-state>
+  //           ExternalCallEnv
+  //           <log>
+  //             <performed-actions>.List</performed-actions>
+  //           </log>
+  //         </state>
+  //       </TT>
 
 
 endmodule

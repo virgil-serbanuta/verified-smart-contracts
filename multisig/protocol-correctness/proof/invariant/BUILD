@@ -845,6 +845,20 @@ kprove_test(
   # depth = ~
 )
 
+kprove_test(
+  name = "proof-init",
+  srcs = ["proof-init.k"],
+  trusted = [
+      ":proof-init-loop-error",
+      ":proof-init-loop-no-error",
+      "//protocol-correctness/proof/functions:trusted-listlen",
+  ],
+  semantics = ":invariant-execution",
+  timeout = "eternal",
+  breadth = "5", # >1
+  # depth = ~213
+)
+
 ktrusted(
   name = "trusted-perform-parts-add-board-member-boardmember-eq",
   srcs = ["proof-perform-parts-add-board-member-boardmember-eq.k"],
