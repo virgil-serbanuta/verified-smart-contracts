@@ -1245,9 +1245,11 @@ module PSEUDOCODE-MAP-UTILS
   rule nullableMapSet(Key:KItem, Value:KItem, M:Map, T:ReflectionType)
         => mapDelete(Key, M)
     requires isDefaultValue(Value, T)
+    [label(nullableMapSetDeleteEmpty)]
   rule nullableMapSet(Key:KItem, Value:KItem, M:Map, T:ReflectionType)
         => mapSet(Key, Value, M)
     requires notBool isDefaultValue(Value, T)
+    [label(nullableMapSetAddNonEmpty)]
 
 endmodule
 

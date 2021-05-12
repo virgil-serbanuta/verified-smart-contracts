@@ -830,14 +830,26 @@ kprove_test(
   ],
   semantics = ":invariant-execution",
   timeout = "eternal",
-  breadth = "2", # >1
+  breadth = "2",
   # depth = ~
+)
+
+kprove_test(
+  name = "proof-init-loop-body-no-error",
+  srcs = ["proof-init-loop-body-no-error.k"],
+  trusted = [
+  ],
+  semantics = ":invariant-execution",
+  timeout = "eternal",
+  breadth = "2",
+  # depth = ~111
 )
 
 kprove_test(
   name = "proof-init-loop-no-error",
   srcs = ["proof-init-loop-no-error.k"],
   trusted = [
+    ":trusted-init-loop-body-no-error",
   ],
   semantics = ":invariant-execution",
   timeout = "eternal",
@@ -849,8 +861,8 @@ kprove_test(
   name = "proof-init",
   srcs = ["proof-init.k"],
   trusted = [
-      ":proof-init-loop-error",
-      ":proof-init-loop-no-error",
+      ":trusted-init-loop-error",
+      ":trusted-init-loop-no-error",
       "//protocol-correctness/proof/functions:trusted-listlen",
   ],
   semantics = ":invariant-execution",
@@ -1186,5 +1198,23 @@ ktrusted(
 ktrusted(
   name = "trusted-discard-action-3",
   srcs = ["proof-discard-action-3.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-init-loop-error",
+  srcs = ["proof-init-loop-error.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-init-loop-no-error",
+  srcs = ["proof-init-loop-no-error.k"],
+  visibility = ["//visibility:public"],
+)
+
+ktrusted(
+  name = "trusted-init-loop-body-no-error",
+  srcs = ["proof-init-loop-body-no-error.k"],
   visibility = ["//visibility:public"],
 )

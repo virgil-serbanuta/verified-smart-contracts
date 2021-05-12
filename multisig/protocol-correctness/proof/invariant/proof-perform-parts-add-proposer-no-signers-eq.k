@@ -83,7 +83,10 @@ module PROOF-PERFORM-PARTS-ADD-PROPOSER-NO-SIGNERS-EQ
             ActionSigners,
             expand(expanded))
         andBool (CallerRole ==K BoardMember orBool CallerRole ==K Proposer)
-        andBool Quorum <=Int countCanSignFunction({ActionSigners[ActionId] orDefault [.]}:>ExpressionList, opaque(UserIdToRole))
+        andBool Quorum
+                <=Int countCanSignFunction(
+                    toExpressionListOrDefault(ActionSigners[ActionId] orDefault [.], [void, .]),
+                    opaque(UserIdToRole))
         andBool notBool ActionId in_keys(ActionSigners)
     ensures invariant(
         ?NumUsers1,

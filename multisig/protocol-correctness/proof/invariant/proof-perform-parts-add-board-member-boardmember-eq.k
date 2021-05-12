@@ -61,7 +61,10 @@ module PROOF-PERFORM-PARTS-ADD-BOARD-MEMBER-BOARDMEMBER-EQ
         // perform-fragment
         andBool actionSignersInvariant(ActionSigners)
         andBool userIdToRoleInvariant(UserIdToRole)
-        andBool Quorum <=Int countCanSignFunction({ActionSigners[ActionId] orDefault [.]}:>ExpressionList, opaque(UserIdToRole))
+        andBool Quorum
+                <=Int countCanSignFunction(
+                    toExpressionListOrDefault(ActionSigners[ActionId] orDefault [.], [void, .]),
+                    opaque(UserIdToRole))
     ensures true
     //@ proof
     //@ trusted

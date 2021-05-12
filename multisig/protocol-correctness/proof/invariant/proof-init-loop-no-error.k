@@ -1,5 +1,8 @@
 //@ proof
+require "trusted-init-loop-body-no-error.k"  //@ Bazel remove
+
 module PROOF-INIT-LOOP-NO-ERROR
+  imports TRUSTED-INIT-LOOP-BODY-NO-ERROR
 //@ trusted
 // module TRUSTED-INIT-LOOP-NO-ERROR
 //@ end

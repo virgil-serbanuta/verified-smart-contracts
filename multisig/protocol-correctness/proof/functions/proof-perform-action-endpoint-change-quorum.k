@@ -63,7 +63,10 @@ module PROOF-PERFORM-ACTION-ENDPOINT-CHANGE-QUORUM
         andBool actionSignersInvariant(ActionSigners)
         andBool userIdToRoleInvariant(UserIdToRole)
         andBool (Role ==K BoardMember orBool Role ==K Proposer)
-        andBool OldQuorum <=Int countCanSignFunction({ActionSigners[ActionId] orDefault [.]}:>ExpressionList, opaque(UserIdToRole))
+        andBool OldQuorum
+                <=Int countCanSignFunction(
+                    toExpressionListOrDefault(ActionSigners[ActionId] orDefault [.], [void, .]),
+                    opaque(UserIdToRole))
     ensures true
     //@ proof
     //@ trusted
