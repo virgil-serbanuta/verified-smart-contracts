@@ -88,7 +88,7 @@ module PROOF-PERFORM-PARTS-ADD-PROPOSER-SIGNERS
         andBool Quorum
                 <=Int countCanSignFunction(
                     toExpressionListOrDefault(ActionSigners[ActionId] orDefault [.], [void, .]),
-                    opaque(UserIdToRole))
+                    UserIdToRole)
     ensures invariant(
         ?NumUsers1,
         ?UserIdToAddress1,

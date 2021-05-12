@@ -66,7 +66,7 @@ module PROOF-PERFORM-ACTION-ENDPOINT-CHANGE-QUORUM-NO-QUORUM
         andBool OldQuorum
                 <=Int countCanSignFunction(
                     toExpressionListOrDefault(ActionSigners[ActionId] orDefault [.], [void, .]),
-                    opaque(UserIdToRole))
+                    UserIdToRole)
     ensures true
     //@ proof
     //@ trusted

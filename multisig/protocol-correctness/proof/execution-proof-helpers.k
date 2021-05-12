@@ -503,43 +503,6 @@ module EXECUTION-PROOF-HELPERS
     ensures notBool UserId in_keys(M)
     [simplification]
 
-  // TODO: Remove concat from calls to this.
-  rule countCanSignFunction(Es, concat(UserId, Role:UserRole, M:Map))
-      =>  boolToInt(canSignFunction(Role) andBool #listContains(Es, UserId))
-          +Int countCanSignFunction(Es, M)
-    ensures notBool UserId in_keys(M)
-    [simplification]
-
-  /*
-  rule countCanSignFunction(Es:ExpressionList, UserId |-> _:UserRole M:Map)
-      => countCanSignFunction(Es, M)
-    requires notBool #listContains(Es, UserId)
-    [simplification]
-  rule countCanSignFunction(Es:ExpressionList, concat(UserId, _:UserRole, M:Map))
-      => countCanSignFunction(Es, M)
-    requires notBool #listContains(Es, UserId)
-    [simplification]
-
-  rule countCanSignFunction(Es:ExpressionList, concat(UserId:KItem, _Role:UserRole, M:Map))
-      => countCanSignFunction(Es, M)
-    requires notBool #listContains(Es, UserId)
-    [simplification]
-  rule countCanSignFunction([UserId:Usize, Es:ExpressionCSV], concat(UserId1:KItem, Role:UserRole, M:Map))
-    => #countCanSignFunction(UserId, [Es], concat(UserId1, Role, M), concat(UserId1, Role, M)[UserId] orDefault None)
-    [simplification]
-  rule countCanSignFunction([#pushList(Es:ExpressionCSV, UserId:Usize)], concat(UserId1:KItem, Role:UserRole, M:Map))
-    => #countCanSignFunction(UserId, [Es], concat(UserId1, Role, M), concat(UserId1, Role, M)[UserId] orDefault None)
-    [simplification]
-  rule #countCanSignFunction(UserId:Usize, Es:ExpressionList, M:Map, Value:UserRole)
-      => 1 +Int countCanSignFunction(Es, M[UserId <- undef])
-    requires canSignFunction(Value)
-    [simplification]
-  rule #countCanSignFunction(_:Usize, Es:ExpressionList, M:Map, Value:UserRole)
-      => countCanSignFunction(Es, M)
-    requires notBool canSignFunction(Value)
-    [simplification]
-  */
-
   rule 0 <=Int countCanSignFunction(_, _) => true  [simplification, smt-lemma]
 
 endmodule

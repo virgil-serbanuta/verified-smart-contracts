@@ -87,7 +87,7 @@ module PROOF-PERFORM-PARTS-REMOVE-USER-EQ
         andBool Quorum
                 <=Int countCanSignFunction(
                     toExpressionListOrDefault(ActionSigners[ActionId] orDefault [.], [void, .]),
-                    opaque(UserIdToRole))
+                    UserIdToRole)
     ensures invariant(
         ?NumUsers1,
         ?UserIdToAddress1,

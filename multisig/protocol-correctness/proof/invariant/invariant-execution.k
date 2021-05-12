@@ -557,7 +557,7 @@ module DISCARD-ACTION-INSTRUMENTATION
     requires ActionId in_keys(ActionSigners)
   rule  <k> splitDiscardAction4(ActionId:Usize)
             =>    branchK(
-                    countCanSignFunction({ActionSigners[ActionId]}:>ExpressionList, opaque(UserIdToRole)) >Int 0,
+                    countCanSignFunction({ActionSigners[ActionId]}:>ExpressionList, UserIdToRole) >Int 0,
                     .K,
                     .K
                   )
@@ -743,7 +743,7 @@ module PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
 
   rule <k> splitPerformActionEndpoint1a(ActionId:Usize)
           =>  branchK(
-                  Quorum <=Int countCanSignFunction({ActionSigners[ActionId] orDefault [.]}:>ExpressionList, opaque(UserIdToRole)),
+                  Quorum <=Int countCanSignFunction({ActionSigners[ActionId] orDefault [.]}:>ExpressionList, UserIdToRole),
                   branchK(
                       ActionId in_keys(ActionData),
                       makeConcreteValue(ActionId, rAction, ActionData)

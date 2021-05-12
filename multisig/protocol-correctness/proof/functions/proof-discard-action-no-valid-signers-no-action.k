@@ -64,7 +64,7 @@ module PROOF-DISCARD-ACTION-NO-VALID-SIGNERS-NO-ACTION
 
 
       andBool (Role ==K BoardMember orBool Role ==K Proposer)
-      andBool countCanSignFunction(SignerIds, opaque(UserIdToRole)) ==Int 0
+      andBool countCanSignFunction(SignerIds, UserIdToRole) ==Int 0
       andBool notBool ActionId in_keys(ActionData)
     ensures true
     //@ proof

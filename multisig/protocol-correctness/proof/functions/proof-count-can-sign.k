@@ -29,7 +29,7 @@ module PROOF-COUNT-CAN-SIGN
         </TT> </T>
       => <T> <TT>
           <k>
-            evaluate(u(countCanSignFunction(SignerIds, opaque(UserIdToRole)))) ~> K
+            evaluate(u(countCanSignFunction(SignerIds, UserIdToRole))) ~> K
           </k>
           invariantStateFull(
               NumUsers,

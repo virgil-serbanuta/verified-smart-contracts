@@ -68,7 +68,7 @@ module PROOF-PERFORM-PARTS-SC-CALL
         andBool Quorum
                 <=Int countCanSignFunction(
                     toExpressionListOrDefault(ActionSigners[ActionId] orDefault [.], [void, .]),
-                    opaque(UserIdToRole))
+                    UserIdToRole)
     ensures true
     //@ proof
     //@ trusted

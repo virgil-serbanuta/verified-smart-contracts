@@ -656,7 +656,7 @@ kprove_test(
       "//protocol-correctness/proof/functions:trusted-propose-sc-deploy-error-no-user",
   ],
   semantics = ":invariant-execution",
-  timeout = "eternal",
+  timeout = "long",
   breadth = "1",
   # depth = ~8
 )
@@ -668,7 +668,7 @@ kprove_test(
       "//protocol-correctness/proof/functions:trusted-propose-sc-deploy-error-no-role",
   ],
   semantics = ":invariant-execution",
-  timeout = "eternal",
+  timeout = "long",
   breadth = "1",
   # depth = ~8
 )
@@ -680,7 +680,7 @@ kprove_test(
       "//protocol-correctness/proof/functions:trusted-propose-sc-deploy-BoardMember",
   ],
   semantics = ":invariant-execution",
-  timeout = "eternal",
+  timeout = "long",
   breadth = "1",
   # depth = ~8
 )
@@ -692,7 +692,7 @@ kprove_test(
       "//protocol-correctness/proof/functions:trusted-propose-sc-deploy-Proposer",
   ],
   semantics = ":invariant-execution",
-  timeout = "eternal",
+  timeout = "long",
   breadth = "1",
   # depth = ~8
 )

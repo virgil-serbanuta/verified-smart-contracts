@@ -67,7 +67,7 @@ module PROOF-PERFORM-PARTS-ADD-BOARD-MEMBER-BOARDMEMBER
         andBool Quorum
                 <=Int countCanSignFunction(
                     toExpressionListOrDefault(ActionSigners[ActionId] orDefault [.], [void, .]),
-                    opaque(UserIdToRole))
+                    UserIdToRole)
     ensures true
     //@ proof
     //@ trusted

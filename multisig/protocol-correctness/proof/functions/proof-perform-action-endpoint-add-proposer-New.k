@@ -74,7 +74,7 @@ module PROOF-PERFORM-ACTION-ENDPOINT-ADD-PROPOSER-NEW
         andBool Quorum
                 <=Int countCanSignFunction(
                     toExpressionListOrDefault(ActionSigners[ActionId] orDefault [.], [void, .]),
-                    opaque(UserIdToRole))
+                    UserIdToRole)
     ensures true
     //@ proof
     //@ trusted

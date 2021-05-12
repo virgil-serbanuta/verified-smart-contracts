@@ -62,7 +62,7 @@ module PROOF-DISCARD-ACTION-HAS-SIGNERS
 
 
       andBool (Role ==K BoardMember orBool Role ==K Proposer)
-      andBool countCanSignFunction(SignerIds, opaque(UserIdToRole)) >Int 0
+      andBool countCanSignFunction(SignerIds, UserIdToRole) >Int 0
     ensures true
     //@ proof
     //@ trusted

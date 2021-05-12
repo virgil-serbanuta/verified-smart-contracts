@@ -69,7 +69,7 @@ module PROOF-PERFORM-PARTS-REMOVE-USER-PROPOSER-NOBODY-LEFT
         andBool Quorum
                 <=Int countCanSignFunction(
                     toExpressionListOrDefault(ActionSigners[ActionId] orDefault [.], [void, .]),
-                    opaque(UserIdToRole))
+                    UserIdToRole)
     ensures true
     //@ proof
     //@ trusted

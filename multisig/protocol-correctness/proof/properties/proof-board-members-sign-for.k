@@ -8,6 +8,7 @@ require "../functions/trusted-sign-no-signers.k"
 require "../functions/trusted-sign-existing-signers-in-list.k"
 require "../functions/trusted-sign-existing-signers-not-in-list.k"
 
+// TODO: Make a single module
 module TRUSTED-BOARD-MEMBERS-SIGN-FOR
   imports PROPERTIES-EXECUTE
   imports PSEUDOCODE
@@ -79,9 +80,9 @@ module TRUSTED-BOARD-MEMBERS-SIGN-FOR
             ActionIndex |-> ?Signatures ActionSigners,
             usesExpanded)
 
-        andBool countCanSignFunction(?Signatures, opaque(UserRoles))
+        andBool countCanSignFunction(?Signatures, UserRoles)
                 ==Int countMapValues(PartialUserRoles, BoardMember)
-                      +Int countCanSignFunction(Signatures, opaque(UserRoles))
+                      +Int countCanSignFunction(Signatures, UserRoles)
     [trusted]
 endmodule
 
@@ -164,8 +165,8 @@ module PROOF-BOARD-MEMBERS-SIGN-FOR
             ActionData,
             ActionIndex |-> ?Signatures ActionSigners,
             usesExpanded)
-        andBool countCanSignFunction(?Signatures, opaque(UserRoles))
+        andBool countCanSignFunction(?Signatures, UserRoles)
                 ==Int countMapValues(PartialUserRoles, BoardMember)
-                      +Int countCanSignFunction(Signatures, opaque(UserRoles))
+                      +Int countCanSignFunction(Signatures, UserRoles)
 
 endmodule

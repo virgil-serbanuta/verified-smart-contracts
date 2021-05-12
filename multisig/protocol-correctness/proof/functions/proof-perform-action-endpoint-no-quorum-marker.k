@@ -55,7 +55,7 @@ module PROOF-PERFORM-ACTION-ENDPOINT-NO-QUORUM-MARKER
         andBool userIdToRoleInvariant(UserIdToRole)
         andBool actionSignersInvariant(ActionSigners)
         andBool (Role ==K BoardMember orBool Role ==K Proposer)
-        andBool Quorum >Int countCanSignFunction({ActionSigners[ActionId] orDefault [.]}:>ExpressionList, opaque(UserIdToRole))
+        andBool Quorum >Int countCanSignFunction({ActionSigners[ActionId] orDefault [.]}:>ExpressionList, UserIdToRole)
     ensures true
     //@ proof
     //@ trusted
