@@ -2,3 +2,6 @@
 	path = .build/pandoc-tangle
 	url = https://github.com/ehildenb/pandoc-tangle
 	ignore = untracked
+[submodule "multisig/wasm/elrond-semantics"]
+	path = multisig/wasm/elrond-semantics
+	url = git@github.com:runtimeverification/elrond-semantics
