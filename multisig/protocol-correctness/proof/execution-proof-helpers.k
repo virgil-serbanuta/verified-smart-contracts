@@ -382,9 +382,6 @@ module EXECUTION-PROOF-HELPERS
 
   syntax Bool ::= noMapKeyInList(Map, ExpressionList)  [function, functional]
   rule noMapKeyInList(.Map, _:ExpressionList) => true
-  // TODO: Do I need this?
-  rule noMapKeyInList(.Map, [.]) => true
-    [simplification]
   rule noMapKeyInList(M:Map, [E:Expression, .]) => true
     requires notBool E in_keys(M)
     [simplification]
@@ -421,43 +418,11 @@ module EXECUTION-PROOF-HELPERS
   syntax Int ::= countValue(ExplicitKItem, ExplicitKItem) [function, functional, smtlib(countMapValue)]
   rule countValue(V:ExplicitKItem, V:ExplicitKItem) => 1
   rule countValue(_:ExplicitKItem, _:ExplicitKItem) => 0 [owise]
-  //  requires notBool (V1 ==K V2)
 
   rule 0 <=Int countValue(_:ExplicitKItem, _:ExplicitKItem) => true [simplification, smt-lemma]
-  // rule countValue(_:KItem, _:KItem) >=Int 0 => true [simplification]
   rule countValue(_:ExplicitKItem, _:ExplicitKItem) <=Int 1 => true [simplification, smt-lemma]
 
   rule 0 <=Int countMapValues(_:Map, _:ExplicitKItem) => true  [simplification, smt-lemma]
-  // rule countMapValues(_, _) >=Int 0 => true  [simplification]
-
-  // rule countMapValues(X, Y) >Int 0 => true requires notBool countMapValues(X, Y) ==Int 0 [simplification]
-
-  // rule countMapValues(_, _) +Int X:Int <=Int 0 => false
-  //   requires X >Int 0
-  //   [simplification]
-  // // TODO: Replace these with generic int rules.
-  // rule 0 <=Int countMapValues(A, B) +Int X:Int => countMapValues(A, B) +Int X >=Int 0
-  //   [simplification]
-  // rule countMapValues(_, _) +Int X:Int >=Int 0 => true
-  //   requires X >=Int 0
-  //   [simplification]
-  // rule countMapValues(_, _) +Int X:Int >Int 0 => true
-  //   requires X >Int 0
-  //   [simplification]
-  // rule countValue(_, _) +Int X:Int >=Int 0 => true
-  //   requires X >=Int 0
-  //   [simplification]
-  // rule countValue(_, _) +Int X:Int >Int 0 => true
-  //   requires X >Int 0
-  //   [simplification]
-
-  // rule Q:Int <=Int (countMapValues(_, _) #as Cmv:Int) +Int X:Int +Int Y:Int => true
-  //   requires Q:Int <=Int Cmv +Int X:Int andBool Y >=Int 0
-  //   [simplification]
-  // // TODO: Do I really need the rule below?
-  // rule countMapValues(_, _) +Int X:Int +Int Y:Int >=Int 0 => true
-  //   requires X >=Int 0 andBool Y >=Int 0
-  //   [simplification]
 
   syntax Int ::= boolToInt(Bool)  [function, functional, smtlib(boolToInt)]
   rule boolToInt(true) => 1
@@ -482,7 +447,7 @@ module EXECUTION-PROOF-HELPERS
       => 1 +Int countCanSignFunction([Es], M)  // Remove UserId from the map since each user is counted at most once.
     requires canSignFunction(Role)
   rule countCanSignFunction([UserId:Usize, Es:ExpressionCSV], M:Map)
-      => countCanSignFunction([Es], M)  // Remove UserId from the map since each user is counted at most once.
+      => countCanSignFunction([Es], M)
     requires notBool UserId in_keys(M)
   rule countCanSignFunction([_:Expression, Es:ExpressionCSV], M)
       => countCanSignFunction([Es], M)

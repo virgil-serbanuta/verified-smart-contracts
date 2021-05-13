@@ -29,10 +29,6 @@ module INVARIANT-INSTRUMENTATION
     [priority(20)]
   rule (M:Map ~> lazyConcretizeKeysFreezer) => (lazyConcretizeKeys(M) ~> M)
     [priority(20)]
-
-  // syntax KItem ::= lazySplitMap(k:KItem, m:Map, value:KItem, remainder:Map)
-  // rule lazySplitMap(K:KItem, M:Map, Value:KItem, Remainder:Map)
-  //     => splitMap(K, M, Value, Remainder)
 endmodule
 
 module PERFORM-SPLIT-ACTION-INSTRUMENTATION

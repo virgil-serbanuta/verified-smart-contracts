@@ -1104,12 +1104,20 @@ module MAP-UTILS
   imports MAYBE
   imports PSEUDOCODE-COMMON
 
+  syntax KItem ::= concretizeMapKey(KItem, Map)
+  rule concretizeMapKey(Key:KItem, M:Map) => splitMap(Key, M, ?_Value, ?_Remainder)
+    requires Key in_keys(M)
+    [label(concretizeMapKey)]
+  rule concretizeMapKey(Key:KItem, M:Map) => .K
+    requires notBool Key in_keys(M)
+    [label(normalizeKeyNotInMap)]
+
   syntax KItem ::= splitMap(key:KItem, toSplit:Map, value:KItem, remainder:Map)
-    [function, functional]
-  syntax KItem ::= "endSplitMap"
+      [function, functional]
+  syntax KItem ::= "splitMapStuck" | "endSplitMap"
   rule endSplitMap => .K
 
-  rule splitMap(Key:KItem, M:Map, _Value:KItem, _Remainder:Map) => stuck
+  rule splitMap(Key:KItem, M:Map, _Value:KItem, _Remainder:Map) => splitMapStuck
     requires notBool Key in_keys(M)
   rule splitMap(Key:KItem, (Key |-> _:KItem) _:Map, _Value:KItem, _Remainder:Map)
       => endSplitMap
@@ -1177,7 +1185,7 @@ module MAP-UTILS
 
   syntax KItem ::= mapLookup(KItem, Map)
   rule mapLookup(K:KItem, M:Map)
-      =>  splitMap(K, M, ?_Value:KItem, ?_Remainder:Map)
+      =>  concretizeMapKey(K, M)
           ~> #mapLookup(K, M)
     requires K in_keys(M)
     [label(mapLookupInKeys)]
@@ -1185,9 +1193,6 @@ module MAP-UTILS
       =>  nothing
     requires notBool K in_keys(M)
     [label(mapLookupNotInKeys)]
-  /*
-  rule mapLookup(K:KItem, M:Map) => #mapLookup(K, splitMap(K, M, M))
-  */
 
   syntax KItem ::= #mapLookup(KItem, Map)
   rule #mapLookup(K:KItem, ((K |-> V:KItem) _:Map) #as M:Map) => just(V)
