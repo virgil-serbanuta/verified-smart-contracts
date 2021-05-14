@@ -59,6 +59,32 @@ module INVARIANT-HELPERS
 
       andBool actionSignersInvariant(ActionSigners)
     [simplification]
+
+  rule valuesAreOfType(M:Map, rUsize) => true
+    requires addressToUserIdInvariant(M)
+  rule valuesAreOfType(M:Map, rUserRole) => true
+    requires userIdToRoleInvariant(M)
+  rule valuesAreOfType(M:Map, rAction) => true
+    requires actionDataInvariant(M)
+  rule valuesAreKResult(M:Map) => true
+    requires false
+      orBool addressToUserIdInvariant(M)
+      orBool userIdToRoleInvariant(M)
+      orBool actionSignersInvariant(M)
+      orBool actionDataInvariant(M)
+  rule valuesAreNotEmpty(M:Map, rUsize) => true
+    requires false
+      orBool addressToUserIdInvariant(M)
+  rule valuesAreNotEmpty(M:Map, rUserRole) => true
+    requires false
+      orBool userIdToRoleInvariant(M)
+  rule valuesAreExpressionListOfUsize(M:Map) => true
+    requires false
+      orBool actionSignersInvariant(M)
+  rule valuesAreDistinct(M:Map) => true
+    requires false
+      orBool addressToUserIdInvariant(M)
+
 endmodule
 
 module INVARIANT
@@ -290,7 +316,6 @@ module INVARIANT
       // andBool valuesAreKResult(AddressToUserId)
       // andBool valuesAreNotEmpty(AddressToUserId, rUsize)
       // andBool valuesAreDistinct(AddressToUserId)
-      // TODO: Is unusedIdsInMapValues the same as noReusedIndexValue?
       andBool unusedIdsInMapValues(NumUsers +Int 1, AddressToUserId, Handling)
       andBool noReusedIndexValue(NumUsers +Int 1, AddressToUserId, Handling)
 
@@ -327,31 +352,6 @@ module INVARIANT
       andBool NumProposers ==Int countMapValues(UserIdToRole, wrap(Proposer))
 
   // TODO: Maybe move somewhere else.
-  rule valuesAreOfType(M:Map, rUsize) => true
-    requires addressToUserIdInvariant(M)
-  rule valuesAreOfType(M:Map, rUserRole) => true
-    requires userIdToRoleInvariant(M)
-  rule valuesAreOfType(M:Map, rAction) => true
-    requires actionDataInvariant(M)
-  rule valuesAreKResult(M:Map) => true
-    requires false
-      orBool addressToUserIdInvariant(M)
-      orBool userIdToRoleInvariant(M)
-      orBool actionSignersInvariant(M)
-      orBool actionDataInvariant(M)
-  rule valuesAreNotEmpty(M:Map, rUsize) => true
-    requires false
-      orBool addressToUserIdInvariant(M)
-  rule valuesAreNotEmpty(M:Map, rUserRole) => true
-    requires false
-      orBool userIdToRoleInvariant(M)
-  rule valuesAreExpressionListOfUsize(M:Map) => true
-    requires false
-      orBool actionSignersInvariant(M)
-  rule valuesAreDistinct(M:Map) => true
-    requires false
-      orBool addressToUserIdInvariant(M)
-
   syntax Bool ::= subset(Map, Map)  [function, functional]
   rule subset(K:KItem |-> _:KItem M:Map, N:Map)
       => K in_keys(N) andBool subset(M, N)
@@ -385,9 +385,8 @@ module INVARIANT
     => isKResult(Es)
     [simplification]
 
-  // TODO: This is wrong, although it works in practice.
-  rule listElementsAreUsize([#listSwapRemove(Es:ExpressionCSV, _:Int)])
-    => listElementsAreUsize([Es])
+  rule listElementsAreUsize([#listSwapRemove(Es:ExpressionCSV, _:Int)]) => true
+    requires listElementsAreUsize([Es])
     [simplification]
 
   rule A:Int +Int K:Int >Int B:Int => true
