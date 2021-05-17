@@ -1,32 +1,30 @@
 //@ proof
-require "../functions/trusted-perform-action-endpoint-add-board-member-BoardMember.k"  //@ Bazel remove
+require "../functions/trusted-perform-action-endpoint-add-proposer-BoardMember-no-quorum-eq.k"  //@ Bazel remove
 
-module PROOF-PERFORM-PARTS-ADD-BOARD-MEMBER-BOARDMEMBER
-  imports TRUSTED-PERFORM-ACTION-ENDPOINT-ADD-BOARD-MEMBER-BOARDMEMBER
+module PROOF-PERFORM-ACTION-ENDPOINT-ADD-PROPOSER-BOARDMEMBER-NO-QUORUM-EQ-MARKER
+  imports TRUSTED-PERFORM-ACTION-ENDPOINT-ADD-PROPOSER-BOARDMEMBER-NO-QUORUM-EQ
 //@ trusted
-// module TRUSTED-PERFORM-PARTS-ADD-BOARD-MEMBER-BOARDMEMBER
+// module TRUSTED-PERFORM-ACTION-ENDPOINT-ADD-PROPOSER-BOARDMEMBER-NO-QUORUM-EQ-MARKER
 //@ end
 
-  imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
+  imports FUNCTIONS-EXECUTE
 
   claim <T><TT>
-          <k> add-board-member-BoardMember.k ~> call(performActionEndpoint(ActionId:Usize)) ~> K:K </k>
+          <k> add-proposer-BoardMember-no-quorum-eq.k ~> call(performActionEndpoint(ActionId:Usize)) ~> K:K </k>
           invariantStateFull(
               NumUsers:Usize,
               UserIdToAddress:Map,
               (CallerAddress |-> CallerId:Usize
-                  UserAddress |-> UserId:Usize
                   _AddressToUserId:Map
               ) #as AddressToUserId:Map,
-              NumBoardMembers:Usize,
-              NumProposers:Usize,
-              (CallerId |-> Role:UserRole
-                  UserId |-> BoardMember
+              u(NumBoardMembers:Int),
+              u(NumProposers:Int),
+              (CallerId |-> BoardMember
                   _UserIdToRole:Map
               ) #as UserIdToRole:Map,
               u(Quorum:Int),
               ActionLastIndex:Usize,
-              ActionId |-> AddBoardMember(UserAddress:Address) #as Action:Action
+              ActionId |-> AddProposer(CallerAddress:Address) #as Action:Action
                   ActionData:Map,
               ActionSigners:Map,
               CallerAddress:Address,
@@ -37,33 +35,33 @@ module PROOF-PERFORM-PARTS-ADD-BOARD-MEMBER-BOARDMEMBER
         </TT></T>
       =>
         <T><TT>
-          <k> evaluate(void) ~> K:K </k>
+          <k> error ~> K:K </k>
           invariantStateFull(
               NumUsers,
               UserIdToAddress,
               AddressToUserId,
-              NumBoardMembers,
-              NumProposers,
+              u(NumBoardMembers),
+              u(NumProposers),
               UserIdToRole,
               u(Quorum),
               ActionLastIndex,
-              ActionData,
-              ActionSigners[ActionId <- undef],
+              ActionId |-> Action ActionData,
+              ActionSigners,
               CallerAddress,
               Stack,
               ?_Variables:Map,
-              ListItem(Action) PerformedActions
+              PerformedActions
               )
         </TT></T>
     requires true
         // perform-from-id
         andBool isKResult(Action)
         andBool addressToUserIdInvariant(AddressToUserId)
+        andBool Quorum ==Int NumBoardMembers
 
         // perform-fragment
         andBool actionSignersInvariant(ActionSigners)
         andBool userIdToRoleInvariant(UserIdToRole)
-        andBool (Role ==K BoardMember orBool Role ==K Proposer)
         andBool Quorum
                 <=Int countCanSignFunction(
                     toExpressionListOrDefault(ActionSigners[ActionId] orDefault [.], [void, .]),
@@ -74,3 +72,4 @@ module PROOF-PERFORM-PARTS-ADD-BOARD-MEMBER-BOARDMEMBER
     // [trusted]
     //@ end
 endmodule
+

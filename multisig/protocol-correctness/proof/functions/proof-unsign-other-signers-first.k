@@ -1,3 +1,4 @@
+// timeout = long
 //@ proof
 module PROOF-UNSIGN-OTHER-SIGNERS-FIRST
   imports FUNCTIONS-EXECUTE

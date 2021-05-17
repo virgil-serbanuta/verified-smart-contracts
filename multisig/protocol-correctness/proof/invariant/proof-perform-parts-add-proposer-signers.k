@@ -1,18 +1,21 @@
+// timeout = eternal
+// breadth = 5
 //@ proof
-require "trusted-perform-parts-add-proposer-eq.k"  //@ Bazel remove
-require "trusted-perform-parts-add-proposer-neq.k"  //@ Bazel remove
-require "trusted-perform-parts-add-proposer-New.k"  //@ Bazel remove
-require "trusted-perform-parts-add-proposer-None.k"  //@ Bazel remove
+require "trusted-perform-parts-add-proposer-signers-eq.k"  //@ Bazel remove
+require "trusted-perform-parts-add-proposer-signers-neq.k"  //@ Bazel remove
+require "../functions/trusted-perform-action-endpoint-add-proposer-New-marker.k"  //@ Bazel remove
+require "../functions/trusted-perform-action-endpoint-add-proposer-None-marker.k"  //@ Bazel remove
 
 module PROOF-PERFORM-PARTS-ADD-PROPOSER-SIGNERS
-  imports INVARIANT-EXECUTION
+  imports INVARIANT-EXECUTE
 
   imports TRUSTED-PERFORM-PARTS-ADD-PROPOSER-SIGNERS-EQ
   imports TRUSTED-PERFORM-PARTS-ADD-PROPOSER-SIGNERS-NEQ
-  imports TRUSTED-PERFORM-PARTS-ADD-PROPOSER-NEW
-  imports TRUSTED-PERFORM-PARTS-ADD-PROPOSER-NONE
+  imports TRUSTED-PERFORM-ACTION-ENDPOINT-ADD-PROPOSER-NEW-MARKER
+  imports TRUSTED-PERFORM-ACTION-ENDPOINT-ADD-PROPOSER-NONE-MARKER
 //@ trusted
 // module TRUSTED-PERFORM-PARTS-ADD-PROPOSER-SIGNERS
+// imports INVARIANT
 //@ end
 
   imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION

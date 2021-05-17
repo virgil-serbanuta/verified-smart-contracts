@@ -1,3 +1,4 @@
+// breadth = 6
 //@ proof
 module PROOF-PROPOSE-SC-DEPLOY-FRAGMENT
 //@ trusted

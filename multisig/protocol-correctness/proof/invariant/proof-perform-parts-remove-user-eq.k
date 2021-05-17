@@ -1,18 +1,21 @@
+// timeout = eternal
+// breadth = 12
 //@ proof
-require "trusted-perform-parts-remove-user-BoardMember-eq.k"  //@ Bazel remove
-require "trusted-perform-parts-remove-user-BoardMember-too-few-eq.k"  //@ Bazel remove
-require "trusted-perform-parts-remove-user-Proposer-eq.k"  //@ Bazel remove
-require "trusted-perform-parts-remove-user-Proposer-nobody-left-eq.k"  //@ Bazel remove
+require "../functions/trusted-perform-action-endpoint-remove-user-BoardMember-eq-marker.k"  //@ Bazel remove
+require "../functions/trusted-perform-action-endpoint-remove-user-BoardMember-too-few-eq-marker.k"  //@ Bazel remove
+require "../functions/trusted-perform-action-endpoint-remove-user-Proposer-eq-marker.k"  //@ Bazel remove
+require "../functions/trusted-perform-action-endpoint-remove-user-Proposer-nobody-left-eq-marker.k"  //@ Bazel remove
 
 module PROOF-PERFORM-PARTS-REMOVE-USER-EQ
-  imports INVARIANT-EXECUTION
+  imports INVARIANT-EXECUTE
 
-  imports TRUSTED-PERFORM-PARTS-REMOVE-USER-BOARDMEMBER-EQ
-  imports TRUSTED-PERFORM-PARTS-REMOVE-USER-BOARDMEMBER-TOO-FEW-EQ
-  imports TRUSTED-PERFORM-PARTS-REMOVE-USER-PROPOSER-EQ
-  imports TRUSTED-PERFORM-PARTS-REMOVE-USER-PROPOSER-NOBODY-LEFT-EQ
+  imports TRUSTED-PERFORM-ACTION-ENDPOINT-REMOVE-USER-BOARDMEMBER-EQ-MARKER
+  imports TRUSTED-PERFORM-ACTION-ENDPOINT-REMOVE-USER-BOARDMEMBER-TOO-FEW-EQ-MARKER
+  imports TRUSTED-PERFORM-ACTION-ENDPOINT-REMOVE-USER-PROPOSER-EQ-MARKER
+  imports TRUSTED-PERFORM-ACTION-ENDPOINT-REMOVE-USER-PROPOSER-NOBODY-LEFT-EQ-MARKER
 //@ trusted
 // module TRUSTED-PERFORM-PARTS-REMOVE-USER-EQ
+// imports INVARIANT
 //@ end
   imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
 

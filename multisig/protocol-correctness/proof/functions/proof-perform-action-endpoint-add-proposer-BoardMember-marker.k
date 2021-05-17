@@ -1,33 +1,32 @@
 //@ proof
-require "../functions/trusted-perform-action-endpoint-send-egld.k"  //@ Bazel remove
+require "../functions/trusted-perform-action-endpoint-add-proposer-BoardMember.k"  //@ Bazel remove
 
-module PROOF-PERFORM-PARTS-SEND-EGLD
-  imports TRUSTED-PERFORM-ACTION-ENDPOINT-SEND-EGLD
+module PROOF-PERFORM-ACTION-ENDPOINT-ADD-PROPOSER-BOARDMEMBER-MARKER
+  imports TRUSTED-PERFORM-ACTION-ENDPOINT-ADD-PROPOSER-BOARDMEMBER
 //@ trusted
-// module TRUSTED-PERFORM-PARTS-SEND-EGLD
+// module TRUSTED-PERFORM-ACTION-ENDPOINT-ADD-PROPOSER-BOARDMEMBER-MARKER
 //@ end
 
-  imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
+  imports FUNCTIONS-EXECUTE
 
   claim <T><TT>
-          <k> send-egld.k ~> call(performActionEndpoint(ActionId:Usize)) ~> K:K </k>
+          <k> add-proposer-BoardMember.k ~> call(performActionEndpoint(ActionId:Usize)) ~> K:K </k>
           invariantStateFull(
               NumUsers:Usize,
               UserIdToAddress:Map,
               (CallerAddress |-> CallerId:Usize
+                  UserAddress |-> UserId:Usize
                   _AddressToUserId:Map
               ) #as AddressToUserId:Map,
-              NumBoardMembers:Usize,
-              NumProposers:Usize,
+              u(NumBoardMembers:Int),
+              u(NumProposers:Int),
               (CallerId |-> Role:UserRole
-                  _UserIdToRole:Map
+                  UserId |-> BoardMember
+                  UserIdToRoleInner:Map
               ) #as UserIdToRole:Map,
               u(Quorum:Int),
               ActionLastIndex:Usize,
-              ActionId |-> SendEgld(
-                          _To:Address,
-                          _Amount:BigUint,
-                          _Data:BoxedBytes) #as Action:Action
+              ActionId |-> AddProposer(UserAddress:Address) #as Action:Action
                   ActionData:Map,
               ActionSigners:Map,
               CallerAddress:Address,
@@ -43,9 +42,11 @@ module PROOF-PERFORM-PARTS-SEND-EGLD
               NumUsers,
               UserIdToAddress,
               AddressToUserId,
-              NumBoardMembers,
-              NumProposers,
-              UserIdToRole,
+              u(NumBoardMembers -Int 1),
+              u(NumProposers +Int 1),
+              (CallerId |-> Role:UserRole
+                  UserId |-> Proposer
+                  UserIdToRoleInner),
               u(Quorum),
               ActionLastIndex,
               ActionData,
@@ -59,6 +60,8 @@ module PROOF-PERFORM-PARTS-SEND-EGLD
     requires true
         // perform-from-id
         andBool isKResult(Action)
+        andBool addressToUserIdInvariant(AddressToUserId)
+        andBool Quorum <=Int NumBoardMembers -Int 1
 
         // perform-fragment
         andBool actionSignersInvariant(ActionSigners)

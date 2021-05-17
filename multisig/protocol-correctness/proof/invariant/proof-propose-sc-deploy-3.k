@@ -1,13 +1,18 @@
+// timeout = eternal
+// breadth = 1
 //@ proof
-require "../functions/trusted-propose-sc-deploy-error-BoardMember.k"  //@ Bazel remove
+require "../functions/trusted-propose-sc-deploy-BoardMember.k"  //@ Bazel remove
 
 module PROOF-PROPOSE-SC-DEPLOY-3
+  imports INVARIANT-EXECUTE
+  imports PSEUDOCODE
+
   imports TRUSTED-PROPOSE-SC-DEPLOY-BOARDMEMBER
 //@ trusted
 // module TRUSTED-PROPOSE-SC-DEPLOY-3
+// imports INVARIANT
+// imports PROOF-INSTRUMENTATION
 //@ end
-  imports INVARIANT-EXECUTION
-  imports PSEUDOCODE
 
   claim <T><TT>
           <k> propose-sc-deploy-role.k

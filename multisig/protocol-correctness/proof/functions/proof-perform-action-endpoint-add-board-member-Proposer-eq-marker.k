@@ -1,13 +1,13 @@
 //@ proof
 require "../functions/trusted-perform-action-endpoint-add-board-member-Proposer-eq.k"  //@ Bazel remove
 
-module PROOF-PERFORM-PARTS-ADD-BOARD-MEMBER-PROPOSER-EQ
+module PROOF-PERFORM-ACTION-ENDPOINT-ADD-BOARD-MEMBER-PROPOSER-EQ-MARKER
   imports TRUSTED-PERFORM-ACTION-ENDPOINT-ADD-BOARD-MEMBER-PROPOSER-EQ
 //@ trusted
-// module TRUSTED-PERFORM-PARTS-ADD-BOARD-MEMBER-PROPOSER-EQ
+// module TRUSTED-PERFORM-ACTION-ENDPOINT-ADD-BOARD-MEMBER-PROPOSER-EQ-MARKER
 //@ end
 
-  imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
+  imports FUNCTIONS-EXECUTE
 
   claim <T><TT>
           <k> add-board-member-Proposer-eq.k ~> call(performActionEndpoint(ActionId:Usize)) ~> K:K </k>

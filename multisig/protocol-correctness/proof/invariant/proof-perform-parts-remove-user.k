@@ -1,18 +1,21 @@
+// timeout = eternal
+// breadth = 9
 //@ proof
 require "trusted-perform-parts-remove-user-eq.k"  //@ Bazel remove
 require "trusted-perform-parts-remove-user-neq.k"  //@ Bazel remove
-require "trusted-perform-parts-remove-user-New.k"  //@ Bazel remove
-require "trusted-perform-parts-remove-user-None.k"  //@ Bazel remove
+require "../functions/trusted-perform-action-endpoint-remove-user-New-marker.k"  //@ Bazel remove
+require "../functions/trusted-perform-action-endpoint-remove-user-None-marker.k"  //@ Bazel remove
 
 module PROOF-PERFORM-PARTS-REMOVE-USER
-  imports INVARIANT-EXECUTION
+  imports INVARIANT-EXECUTE
 
   imports TRUSTED-PERFORM-PARTS-REMOVE-USER-EQ
   imports TRUSTED-PERFORM-PARTS-REMOVE-USER-NEQ
-  imports TRUSTED-PERFORM-PARTS-REMOVE-USER-NEW
-  imports TRUSTED-PERFORM-PARTS-REMOVE-USER-NONE
+  imports TRUSTED-PERFORM-ACTION-ENDPOINT-REMOVE-USER-NEW-MARKER
+  imports TRUSTED-PERFORM-ACTION-ENDPOINT-REMOVE-USER-NONE-MARKER
 //@ trusted
 // module TRUSTED-PERFORM-PARTS-REMOVE-USER
+// imports INVARIANT
 //@ end
   imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
 

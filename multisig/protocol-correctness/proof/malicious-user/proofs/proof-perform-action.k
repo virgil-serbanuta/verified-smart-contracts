@@ -5,7 +5,7 @@ require "../functions/trusted-perform-action-endpoint-None-marker.k"  //@ Bazel 
 require "../functions/trusted-perform-action-endpoint-nothing-marker.k"  //@ Bazel remove
 
 module PROOF-PERFORM-ACTION
-  imports INVARIANT-EXECUTION
+  imports INVARIANT-EXECUTE
 
   imports TRUSTED-PERFORM-ACTION-ENDPOINT-NEW-MARKER
   imports TRUSTED-PERFORM-ACTION-ENDPOINT-NO-QUORUM-MARKER

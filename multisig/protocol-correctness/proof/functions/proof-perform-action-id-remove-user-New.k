@@ -1,5 +1,7 @@
+// timeout = long
+// breadth = 3
 //@ proof
-require "trusted-perform-action-remove-user-new.k"  //@ Bazel remove
+require "trusted-perform-action-remove-user-New.k"  //@ Bazel remove
 
 module PROOF-PERFORM-ACTION-ID-REMOVE-USER-NEW
   imports TRUSTED-PERFORM-ACTION-REMOVE-USER-NEW

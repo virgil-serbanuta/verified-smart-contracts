@@ -1,6 +1,7 @@
+// timeout = moderate
 //@ proof
 require "trusted-perform-action-endpoint-fragment-performs.k"  //@ Bazel remove
-require "trusted-perform-action-endpoint-id-add-proposer-Proposer.k"  //@ Bazel remove
+require "trusted-perform-action-id-add-proposer-Proposer.k"  //@ Bazel remove
 
 module PROOF-PERFORM-ACTION-ENDPOINT-ADD-PROPOSER-PROPOSER
   imports TRUSTED-PERFORM-ACTION-ENDPOINT-FRAGMENT-PERFORMS

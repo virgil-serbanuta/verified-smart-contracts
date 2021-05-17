@@ -1,18 +1,21 @@
+// timeout = eternal
+// breadth = 9
 //@ proof
 require "trusted-perform-parts-add-board-member-eq.k"  //@ Bazel remove
 require "trusted-perform-parts-add-board-member-neq.k"  //@ Bazel remove
-require "trusted-perform-parts-add-board-member-New.k"  //@ Bazel remove
-require "trusted-perform-parts-add-board-member-None.k"  //@ Bazel remove
+require "../functions/trusted-perform-action-endpoint-add-board-member-New-marker.k"  //@ Bazel remove
+require "../functions/trusted-perform-action-endpoint-add-board-member-None-marker.k"  //@ Bazel remove
 
 module PROOF-PERFORM-PARTS-ADD-BOARD-MEMBER
-  imports INVARIANT-EXECUTION
+  imports INVARIANT-EXECUTE
 
   imports TRUSTED-PERFORM-PARTS-ADD-BOARD-MEMBER-EQ
   imports TRUSTED-PERFORM-PARTS-ADD-BOARD-MEMBER-NEQ
-  imports TRUSTED-PERFORM-PARTS-ADD-BOARD-MEMBER-NEW
-  imports TRUSTED-PERFORM-PARTS-ADD-BOARD-MEMBER-NONE
+  imports TRUSTED-PERFORM-ACTION-ENDPOINT-ADD-BOARD-MEMBER-NEW-MARKER
+  imports TRUSTED-PERFORM-ACTION-ENDPOINT-ADD-BOARD-MEMBER-NONE-MARKER
 //@ trusted
 // module TRUSTED-PERFORM-PARTS-ADD-BOARD-MEMBER
+// imports INVARIANT
 //@ end
   imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
 

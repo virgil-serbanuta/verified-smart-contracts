@@ -1,5 +1,7 @@
+// timeout = moderate
+// breadth = 3
 //@ proof
-require "trusted-perform-action-sc-call.k"  //@ Bazel remove
+require "trusted-perform-action-nothing.k"  //@ Bazel remove
 
 module PROOF-PERFORM-ACTION-ID-NOTHING
   imports TRUSTED-PERFORM-ACTION-NOTHING
@@ -89,5 +91,4 @@ module PROOF-PERFORM-ACTION-ID-NOTHING
     //@ trusted
     // [trusted]
     //@ end
-
 endmodule

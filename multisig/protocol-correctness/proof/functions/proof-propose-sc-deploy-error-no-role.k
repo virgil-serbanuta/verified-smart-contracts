@@ -1,3 +1,4 @@
+// timeout = moderate
 //@ proof
 require "trusted-propose-action-error-no-role.k"  //@ Bazel remove
 require "trusted-propose-sc-deploy-fragment.k"  //@ Bazel remove

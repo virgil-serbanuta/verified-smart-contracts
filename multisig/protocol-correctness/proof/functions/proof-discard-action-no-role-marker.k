@@ -1,5 +1,5 @@
 //@ proof
-require "proof-discard-action-no-role.k"  //@ Bazel remove
+require "trusted-discard-action-no-role.k"  //@ Bazel remove
 
 module PROOF-DISCARD-ACTION-NO-ROLE-MARKER
   imports TRUSTED-DISCARD-ACTION-NO-ROLE

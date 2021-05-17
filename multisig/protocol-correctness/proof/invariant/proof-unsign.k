@@ -1,3 +1,6 @@
+// timeout = eternal
+// breadth = 17
+//@ proof
 require "../functions/trusted-unsign-no-action.k"  //@ Bazel remove
 require "../functions/trusted-unsign-only-signer.k"  //@ Bazel remove
 require "../functions/trusted-unsign-other-signers-not-first.k"  //@ Bazel remove
@@ -9,7 +12,7 @@ require "../functions/trusted-unsign-no-role-marker.k"  //@ Bazel remove
 require "../functions/trusted-unsign-no-user-marker.k"  //@ Bazel remove
 
 module PROOF-UNSIGN
-  imports INVARIANT-EXECUTION
+  imports INVARIANT-EXECUTE
   imports PSEUDOCODE
 
   imports TRUSTED-UNSIGN-NO-ACTION
@@ -21,6 +24,10 @@ module PROOF-UNSIGN
   imports TRUSTED-UNSIGN-PROPOSER
   imports TRUSTED-UNSIGN-NO-ROLE-MARKER
   imports TRUSTED-UNSIGN-NO-USER-MARKER
+//@ trusted
+// module TRUSTED-UNSIGN
+// imports INVARIANT
+//@ end
 
   claim <T><TT>
           <k> runExternalCalls(
@@ -82,4 +89,8 @@ module PROOF-UNSIGN
         ?ActionData1,
         ?ActionSigners1,
         usesExpanded)
+    //@ proof
+    //@ trusted
+    // [trusted]
+    //@ end
 endmodule

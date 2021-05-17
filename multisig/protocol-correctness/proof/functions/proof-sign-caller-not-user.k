@@ -1,3 +1,4 @@
+// breadth = 2
 //@ proof
 module PROOF-SIGN-CALLER-NOT-USER
 //@ trusted

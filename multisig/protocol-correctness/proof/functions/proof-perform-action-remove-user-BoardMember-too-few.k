@@ -1,3 +1,5 @@
+// timeout = moderate
+// breadth = 2
 //@ proof
 require "trusted-change-user-role-BoardMember.k"  //@ Bazel remove
 

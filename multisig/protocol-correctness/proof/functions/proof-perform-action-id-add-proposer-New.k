@@ -1,5 +1,7 @@
+// timeout = moderate
+// breadth = 5
 //@ proof
-require "trusted-perform-action-add-proposer-new.k"  //@ Bazel remove
+require "trusted-perform-action-add-proposer-New.k"  //@ Bazel remove
 
 module PROOF-PERFORM-ACTION-ID-ADD-PROPOSER-NEW
   imports TRUSTED-PERFORM-ACTION-ADD-PROPOSER-NEW

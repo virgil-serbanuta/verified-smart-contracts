@@ -1,5 +1,5 @@
 //@ proof
-require "trusted-perform-action-endpoint-fragment-none.k"  //@ Bazel remove
+require "trusted-perform-action-endpoint-fragment-None.k"  //@ Bazel remove
 
 module PROOF-PERFORM-ACTION-ENDPOINT-NONE
   imports TRUSTED-PERFORM-ACTION-ENDPOINT-FRAGMENT-NONE

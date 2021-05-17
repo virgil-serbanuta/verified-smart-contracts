@@ -1,16 +1,16 @@
 //@ proof
-require "../functions/trusted-perform-action-endpoint-change-quorum-no-quorum.k"  //@ Bazel remove
+require "../functions/trusted-perform-action-endpoint-add-proposer-Proposer-eq.k"  //@ Bazel remove
 
-module PROOF-PERFORM-PARTS-CHANGE-QUORUM-NO-QUORUM
-  imports TRUSTED-PERFORM-ACTION-ENDPOINT-CHANGE-QUORUM-NO-QUORUM
+module PROOF-PERFORM-ACTION-ENDPOINT-ADD-PROPOSER-PROPOSER-EQ-MARKER
+  imports TRUSTED-PERFORM-ACTION-ENDPOINT-ADD-PROPOSER-PROPOSER-EQ
 //@ trusted
-// module TRUSTED-PERFORM-PARTS-CHANGE-QUORUM-NO-QUORUM
+// module TRUSTED-PERFORM-ACTION-ENDPOINT-ADD-PROPOSER-PROPOSER-EQ-MARKER
 //@ end
 
-  imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
+  imports FUNCTIONS-EXECUTE
 
   claim <T><TT>
-          <k> change-quorum-no-quorum.k ~> call(performActionEndpoint(ActionId:Usize)) ~> K:K </k>
+          <k> add-proposer-Proposer-eq.k ~> call(performActionEndpoint(ActionId:Usize)) ~> K:K </k>
           invariantStateFull(
               NumUsers:Usize,
               UserIdToAddress:Map,
@@ -19,12 +19,12 @@ module PROOF-PERFORM-PARTS-CHANGE-QUORUM-NO-QUORUM
               ) #as AddressToUserId:Map,
               u(NumBoardMembers:Int),
               NumProposers:Usize,
-              (CallerId |-> Role:UserRole
+              (CallerId |-> Proposer
                   _UserIdToRole:Map
               ) #as UserIdToRole:Map,
-              u(OldQuorum:Int),
+              u(Quorum:Int),
               ActionLastIndex:Usize,
-              ActionId |-> ChangeQuorum(u(NewQuorum:Int)) #as Action:Action
+              ActionId |-> AddProposer(CallerAddress:Address) #as Action:Action
                   ActionData:Map,
               ActionSigners:Map,
               CallerAddress:Address,
@@ -35,7 +35,7 @@ module PROOF-PERFORM-PARTS-CHANGE-QUORUM-NO-QUORUM
         </TT></T>
       =>
         <T><TT>
-          <k> error ~> K:K </k>
+          <k> evaluate(void) ~> K:K </k>
           invariantStateFull(
               NumUsers,
               UserIdToAddress,
@@ -43,26 +43,26 @@ module PROOF-PERFORM-PARTS-CHANGE-QUORUM-NO-QUORUM
               u(NumBoardMembers),
               NumProposers,
               UserIdToRole,
-              u(OldQuorum),
+              u(Quorum),
               ActionLastIndex,
-              ActionId |-> Action ActionData,
-              ActionSigners,
+              ActionData,
+              ActionSigners[ActionId <- undef],
               CallerAddress,
               Stack,
               ?_Variables:Map,
-              PerformedActions
+              ListItem(Action) PerformedActions
               )
         </TT></T>
     requires true
         // perform-from-id
         andBool isKResult(Action)
-        andBool NewQuorum >Int NumBoardMembers
+        andBool addressToUserIdInvariant(AddressToUserId)
+        andBool Quorum <=Int NumBoardMembers
 
         // perform-fragment
         andBool actionSignersInvariant(ActionSigners)
         andBool userIdToRoleInvariant(UserIdToRole)
-        andBool (Role ==K BoardMember orBool Role ==K Proposer)
-        andBool OldQuorum
+        andBool Quorum
                 <=Int countCanSignFunction(
                     toExpressionListOrDefault(ActionSigners[ActionId] orDefault [.], [void, .]),
                     UserIdToRole)

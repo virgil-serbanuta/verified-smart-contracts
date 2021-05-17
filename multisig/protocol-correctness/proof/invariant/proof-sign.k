@@ -1,3 +1,6 @@
+// timeout = eternal
+// breadth = 10
+//@ proof
 require "../instrumentation/pushlist/trusted-push-list-not-empty.k"  //@ Bazel remove
 require "../functions/trusted-sign-empty-action.k"  //@ Bazel remove
 require "../functions/trusted-sign-caller-not-user.k"  //@ Bazel remove
@@ -8,7 +11,7 @@ require "../functions/trusted-sign-existing-signers-in-list.k"  //@ Bazel remove
 require "../functions/trusted-sign-existing-signers-not-in-list.k"  //@ Bazel remove
 
 module PROOF-SIGN
-  imports INVARIANT-EXECUTION
+  imports INVARIANT-EXECUTE
   imports PSEUDOCODE
 
   imports TRUSTED-PUSH-LIST-NOT-EMPTY
@@ -19,6 +22,10 @@ module PROOF-SIGN
   imports TRUSTED-SIGN-NO-SIGNERS
   imports TRUSTED-SIGN-EXISTING-SIGNERS-IN-LIST
   imports TRUSTED-SIGN-EXISTING-SIGNERS-NOT-IN-LIST
+//@ trusted
+// module TRUSTED-SIGN
+// imports INVARIANT
+//@ end
 
   claim <T><TT>
           <k> runExternalCalls(
@@ -80,4 +87,8 @@ module PROOF-SIGN
         ?ActionData1:Map,
         ?ActionSigners1:Map,
         usesExpanded)
+    //@ proof
+    //@ trusted
+    // [trusted]
+    //@ end
 endmodule

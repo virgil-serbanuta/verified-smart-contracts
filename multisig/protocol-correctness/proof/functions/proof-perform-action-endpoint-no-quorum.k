@@ -1,5 +1,5 @@
 //@ proof
-require "trusted-perform-action-endpoint-fragment-no-quorum-has-signers.k"  //@ Bazel remove
+require "trusted-perform-action-endpoint-fragment-no-quorum.k"  //@ Bazel remove
 
 module PROOF-PERFORM-ACTION-ENDPOINT-NO-QUORUM
   imports TRUSTED-PERFORM-ACTION-ENDPOINT-FRAGMENT-NO-QUORUM

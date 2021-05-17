@@ -1,14 +1,21 @@
+// timeout = eternal
+// breadth = 8
 require "trusted-discard-action-3.k"  //@ Bazel remove
 require "../functions/trusted-discard-action-no-role-marker.k"  //@ Bazel remove
 require "../functions/trusted-discard-action-no-user-marker.k"  //@ Bazel remove
 
+//@ proof
 module PROOF-DISCARD-ACTION
-  imports INVARIANT-EXECUTION
+  imports INVARIANT-EXECUTE
   imports PSEUDOCODE
 
   imports TRUSTED-DISCARD-ACTION-3
   imports TRUSTED-DISCARD-ACTION-NO-ROLE-MARKER
   imports TRUSTED-DISCARD-ACTION-NO-USER-MARKER
+//@ trusted
+// module TRUSTED-DISCARD-ACTION
+// imports INVARIANT
+//@ end
 
   claim <T><TT>
           <k> runExternalCalls(
@@ -70,4 +77,8 @@ module PROOF-DISCARD-ACTION
         ?ActionData1:Map,
         ?ActionSigners1:Map,
         usesExpanded)
+    //@ proof
+    //@ trusted
+    // [trusted]
+    //@ end
 endmodule

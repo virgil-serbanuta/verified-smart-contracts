@@ -1,5 +1,7 @@
+// timeout = moderate
+// breadth = 3
 //@ proof
-require "trusted-perform-action-add-proposer-boardmember.k"  //@ Bazel remove
+require "trusted-perform-action-add-proposer-BoardMember.k"  //@ Bazel remove
 
 module PROOF-PERFORM-ACTION-ID-ADD-PROPOSER-BOARDMEMBER
   imports TRUSTED-PERFORM-ACTION-ADD-PROPOSER-BOARDMEMBER

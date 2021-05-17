@@ -1,30 +1,31 @@
 //@ proof
-require "../functions/trusted-perform-action-endpoint-add-proposer-Proposer-eq.k"  //@ Bazel remove
+require "../functions/trusted-perform-action-endpoint-add-proposer-None.k"  //@ Bazel remove
 
-module PROOF-PERFORM-PARTS-ADD-PROPOSER-PROPOSER-EQ
-  imports TRUSTED-PERFORM-ACTION-ENDPOINT-ADD-PROPOSER-PROPOSER-EQ
+module PROOF-PERFORM-ACTION-ENDPOINT-ADD-PROPOSER-NONE-MARKER
+  imports TRUSTED-PERFORM-ACTION-ENDPOINT-ADD-PROPOSER-NONE
 //@ trusted
-// module TRUSTED-PERFORM-PARTS-ADD-PROPOSER-PROPOSER-EQ
+// module TRUSTED-PERFORM-ACTION-ENDPOINT-ADD-PROPOSER-NONE-MARKER
 //@ end
 
-  imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
+  imports FUNCTIONS-EXECUTE
 
   claim <T><TT>
-          <k> add-proposer-Proposer-eq.k ~> call(performActionEndpoint(ActionId:Usize)) ~> K:K </k>
+          <k> add-proposer-None.k ~> call(performActionEndpoint(ActionId:Usize)) ~> K:K </k>
           invariantStateFull(
               NumUsers:Usize,
               UserIdToAddress:Map,
               (CallerAddress |-> CallerId:Usize
+                  UserAddress |-> UserId:Usize
                   _AddressToUserId:Map
               ) #as AddressToUserId:Map,
               u(NumBoardMembers:Int),
-              NumProposers:Usize,
-              (CallerId |-> Proposer
+              u(NumProposers:Int),
+              (CallerId |-> Role:UserRole
                   _UserIdToRole:Map
               ) #as UserIdToRole:Map,
               u(Quorum:Int),
               ActionLastIndex:Usize,
-              ActionId |-> AddProposer(CallerAddress:Address) #as Action:Action
+              ActionId |-> AddProposer(UserAddress:Address) #as Action:Action
                   ActionData:Map,
               ActionSigners:Map,
               CallerAddress:Address,
@@ -41,8 +42,8 @@ module PROOF-PERFORM-PARTS-ADD-PROPOSER-PROPOSER-EQ
               UserIdToAddress,
               AddressToUserId,
               u(NumBoardMembers),
-              NumProposers,
-              UserIdToRole,
+              u(NumProposers +Int 1),
+              UserId |-> Proposer UserIdToRole,
               u(Quorum),
               ActionLastIndex,
               ActionData,
@@ -58,10 +59,12 @@ module PROOF-PERFORM-PARTS-ADD-PROPOSER-PROPOSER-EQ
         andBool isKResult(Action)
         andBool addressToUserIdInvariant(AddressToUserId)
         andBool Quorum <=Int NumBoardMembers
+        andBool notBool UserId in_keys(UserIdToRole)
 
         // perform-fragment
         andBool actionSignersInvariant(ActionSigners)
         andBool userIdToRoleInvariant(UserIdToRole)
+        andBool (Role ==K BoardMember orBool Role ==K Proposer)
         andBool Quorum
                 <=Int countCanSignFunction(
                     toExpressionListOrDefault(ActionSigners[ActionId] orDefault [.], [void, .]),

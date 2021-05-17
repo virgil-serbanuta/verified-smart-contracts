@@ -1,3 +1,5 @@
+// timeout = long
+// breadth = 2
 //@ proof
 module PROOF-PROPOSE-ACTION-PROPOSER
 //@ trusted

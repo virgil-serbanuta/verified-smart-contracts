@@ -11,7 +11,7 @@ module PROOF-INIT
 // module TRUSTED-INIT
 //@ end
 
-  imports INVARIANT-EXECUTION
+  imports INVARIANT-EXECUTE
   imports PSEUDOCODE
 
   rule forall-v-greater-or-equal-than-u-v-not-in-m(_:Usize, .Map, _:ExpressionList)

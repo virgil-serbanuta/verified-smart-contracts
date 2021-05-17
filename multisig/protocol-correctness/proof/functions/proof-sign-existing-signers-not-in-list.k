@@ -1,3 +1,5 @@
+// timeout = moderate
+// breadth = 2
 //@ proof
 module PROOF-SIGN-EXISTING-SIGNERS-NOT-IN-LIST
 //@ trusted

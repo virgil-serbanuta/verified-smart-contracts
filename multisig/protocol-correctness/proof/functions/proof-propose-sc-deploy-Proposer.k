@@ -1,3 +1,5 @@
+// timeout = moderate
+// breadth = 2
 //@ proof
 require "trusted-propose-action-Proposer.k"  //@ Bazel remove
 require "trusted-propose-sc-deploy-fragment.k"  //@ Bazel remove

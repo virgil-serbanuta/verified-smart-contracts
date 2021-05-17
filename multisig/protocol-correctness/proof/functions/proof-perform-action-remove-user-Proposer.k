@@ -1,3 +1,4 @@
+// breadth = 2
 //@ proof
 require "trusted-change-user-role-Proposer.k"  //@ Bazel remove
 

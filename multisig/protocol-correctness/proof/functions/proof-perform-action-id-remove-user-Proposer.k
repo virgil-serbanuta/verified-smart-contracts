@@ -1,3 +1,5 @@
+// timeout = moderate
+// breadth = 3
 //@ proof
 require "trusted-perform-action-remove-user-Proposer.k"  //@ Bazel remove
 

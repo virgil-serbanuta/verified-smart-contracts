@@ -1,17 +1,22 @@
+// timeout = eternal
+// breadth = 4
 //@ proof
 require "../functions/trusted-discard-action-has-signers.k"  //@ Bazel remove
 require "../functions/trusted-discard-action-no-valid-signers.k"  //@ Bazel remove
 require "../functions/trusted-discard-action-no-valid-signers-no-action.k"  //@ Bazel remove
 
 module PROOF-DISCARD-ACTION-1
+  imports INVARIANT-EXECUTE
+  imports PSEUDOCODE
+
   imports TRUSTED-DISCARD-ACTION-HAS-SIGNERS
   imports TRUSTED-DISCARD-ACTION-NO-VALID-SIGNERS
   imports TRUSTED-DISCARD-ACTION-NO-VALID-SIGNERS-NO-ACTION
 //@ trusted
 // module TRUSTED-DISCARD-ACTION-1
+// imports INVARIANT
+// imports DISCARD-ACTION-INSTRUMENTATION
 //@ end
-  imports INVARIANT-EXECUTION
-  imports PSEUDOCODE
 
   claim <T><TT>
           <k> splitDiscardAction3(ActionId:Usize)

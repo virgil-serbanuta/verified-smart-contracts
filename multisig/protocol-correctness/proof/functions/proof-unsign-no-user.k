@@ -1,3 +1,4 @@
+// timeout = moderate
 //@ proof
 module PROOF-UNSIGN-NO-USER
   imports FUNCTIONS-EXECUTE

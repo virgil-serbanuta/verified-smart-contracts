@@ -1,3 +1,5 @@
+// timeout = moderate
+// breadth = 1
 //@ proof
 require "trusted-init-loop-body-no-error.k"  //@ Bazel remove
 

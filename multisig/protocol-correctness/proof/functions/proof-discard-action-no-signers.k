@@ -1,3 +1,5 @@
+// timeout = long
+// breadth = 2
 //@ proof
 require "trusted-count-can-sign.k"  //@ Bazel remove
 //@ trusted

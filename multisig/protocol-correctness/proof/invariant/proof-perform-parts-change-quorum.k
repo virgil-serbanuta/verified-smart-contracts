@@ -1,14 +1,17 @@
+// timeout = eternal
+// breadth = 6
 //@ proof
-require "trusted-perform-parts-change-quorum-no-quorum.k"  //@ Bazel remove
-require "trusted-perform-parts-change-quorum-with-quorum.k"  //@ Bazel remove
+require "../functions/trusted-perform-action-endpoint-change-quorum-no-quorum-marker.k"  //@ Bazel remove
+require "../functions/trusted-perform-action-endpoint-change-quorum-with-quorum-marker.k"  //@ Bazel remove
 
 module PROOF-PERFORM-PARTS-CHANGE-QUORUM
-  imports INVARIANT-EXECUTION
+  imports INVARIANT-EXECUTE
 
-  imports TRUSTED-PERFORM-PARTS-CHANGE-QUORUM-NO-QUORUM
-  imports TRUSTED-PERFORM-PARTS-CHANGE-QUORUM-WITH-QUORUM
+  imports TRUSTED-PERFORM-ACTION-ENDPOINT-CHANGE-QUORUM-NO-QUORUM-MARKER
+  imports TRUSTED-PERFORM-ACTION-ENDPOINT-CHANGE-QUORUM-WITH-QUORUM-MARKER
 //@ trusted
 // module TRUSTED-PERFORM-PARTS-CHANGE-QUORUM
+// imports INVARIANT
 //@ end
   imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
 

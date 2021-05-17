@@ -1,34 +1,30 @@
 //@ proof
-require "../functions/trusted-perform-action-endpoint-sc-deploy.k"  //@ Bazel remove
+require "../functions/trusted-perform-action-endpoint-add-board-member-New.k"  //@ Bazel remove
 
-module PROOF-PERFORM-PARTS-SC-DEPLOY
-  imports TRUSTED-PERFORM-ACTION-ENDPOINT-SC-DEPLOY
+module PROOF-PERFORM-ACTION-ENDPOINT-ADD-BOARD-MEMBER-NEW-MARKER
+  imports TRUSTED-PERFORM-ACTION-ENDPOINT-ADD-BOARD-MEMBER-NEW
 //@ trusted
-// module TRUSTED-PERFORM-PARTS-SC-DEPLOY
+// module TRUSTED-PERFORM-ACTION-ENDPOINT-ADD-BOARD-MEMBER-NEW-MARKER
 //@ end
 
-  imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
+  imports FUNCTIONS-EXECUTE
 
   claim <T><TT>
-          <k> sc-deploy.k ~> call(performActionEndpoint(ActionId:Usize)) ~> K:K </k>
+          <k> add-board-member-New.k ~> call(performActionEndpoint(ActionId:Usize)) ~> K:K </k>
           invariantStateFull(
-              NumUsers:Usize,
+              u(NumUsers:Int),
               UserIdToAddress:Map,
               (CallerAddress |-> CallerId:Usize
                   _AddressToUserId:Map
               ) #as AddressToUserId:Map,
-              NumBoardMembers:Usize,
+              u(NumBoardMembers:Int),
               NumProposers:Usize,
               (CallerId |-> Role:UserRole
                   _UserIdToRole:Map
               ) #as UserIdToRole:Map,
               u(Quorum:Int),
               ActionLastIndex:Usize,
-              ActionId |-> SCDeploy(
-                          _Amount:BigUint,
-                          _Code:BoxedBytes,
-                          _CodeMetadata:CodeMetadata,
-                          _Arguments:ExpressionList) #as Action:Action
+              ActionId |-> AddBoardMember(UserAddress:Address) #as Action:Action
                   ActionData:Map,
               ActionSigners:Map,
               CallerAddress:Address,
@@ -41,12 +37,12 @@ module PROOF-PERFORM-PARTS-SC-DEPLOY
         <T><TT>
           <k> evaluate(void) ~> K:K </k>
           invariantStateFull(
-              NumUsers,
-              UserIdToAddress,
-              AddressToUserId,
-              NumBoardMembers,
+              u(NumUsers +Int 1),
+              u(NumUsers +Int 1) |-> UserAddress UserIdToAddress,
+              UserAddress |-> u(NumUsers +Int 1) AddressToUserId,
+              u(NumBoardMembers +Int 1),
               NumProposers,
-              UserIdToRole,
+              u(NumUsers +Int 1) |-> BoardMember UserIdToRole,
               u(Quorum),
               ActionLastIndex,
               ActionData,
@@ -60,6 +56,14 @@ module PROOF-PERFORM-PARTS-SC-DEPLOY
     requires true
         // perform-from-id
         andBool isKResult(Action)
+
+        andBool NumUsers >=Int 0
+        // TODO: Perhaps replace with unusedIdsInMapValues(AddressToUserId) +
+        // someting to map values to keys.
+        andBool unusedIdsInMapKeys(NumUsers +Int 1, keysMap(UserIdToAddress), expand(expanded))
+        andBool unusedIdsInMapKeys(NumUsers +Int 1, keysMap(UserIdToRole), expand(expanded))
+
+        andBool notBool UserAddress in_keys(AddressToUserId)
 
         // perform-fragment
         andBool actionSignersInvariant(ActionSigners)

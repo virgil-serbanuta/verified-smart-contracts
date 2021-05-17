@@ -1,30 +1,32 @@
 //@ proof
-require "../functions/trusted-perform-action-endpoint-remove-user-New.k"  //@ Bazel remove
+require "../functions/trusted-perform-action-endpoint-add-proposer-BoardMember-no-quorum.k"  //@ Bazel remove
 
-module PROOF-PERFORM-PARTS-REMOVE-USER-NEW
-  imports TRUSTED-PERFORM-ACTION-ENDPOINT-REMOVE-USER-NEW
+module PROOF-PERFORM-ACTION-ENDPOINT-ADD-PROPOSER-BOARDMEMBER-NO-QUORUM-MARKER
+  imports TRUSTED-PERFORM-ACTION-ENDPOINT-ADD-PROPOSER-BOARDMEMBER-NO-QUORUM
 //@ trusted
-// module TRUSTED-PERFORM-PARTS-REMOVE-USER-NEW
+// module TRUSTED-PERFORM-ACTION-ENDPOINT-ADD-PROPOSER-BOARDMEMBER-NO-QUORUM-MARKER
 //@ end
 
-  imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
+  imports FUNCTIONS-EXECUTE
 
   claim <T><TT>
-          <k> remove-user-New.k ~> call(performActionEndpoint(ActionId:Usize)) ~> K:K </k>
+          <k> add-proposer-BoardMember-no-quorum.k ~> call(performActionEndpoint(ActionId:Usize)) ~> K:K </k>
           invariantStateFull(
-              u(NumUsers:Int),
+              NumUsers:Usize,
               UserIdToAddress:Map,
               (CallerAddress |-> CallerId:Usize
+                  UserAddress |-> UserId:Usize
                   _AddressToUserId:Map
               ) #as AddressToUserId:Map,
               u(NumBoardMembers:Int),
               u(NumProposers:Int),
               (CallerId |-> Role:UserRole
+                  UserId |-> BoardMember
                   _UserIdToRole:Map
               ) #as UserIdToRole:Map,
               u(Quorum:Int),
               ActionLastIndex:Usize,
-              ActionId |-> RemoveUser(UserAddress:Address) #as Action:Action
+              ActionId |-> AddProposer(UserAddress:Address) #as Action:Action
                   ActionData:Map,
               ActionSigners:Map,
               CallerAddress:Address,
@@ -35,35 +37,29 @@ module PROOF-PERFORM-PARTS-REMOVE-USER-NEW
         </TT></T>
       =>
         <T><TT>
-          <k> evaluate(void) ~> K:K </k>
+          <k> error ~> K:K </k>
           invariantStateFull(
-              u(NumUsers +Int 1),
-              u(NumUsers +Int 1) |-> UserAddress UserIdToAddress,
-              UserAddress |-> u(NumUsers +Int 1) AddressToUserId,
+              NumUsers,
+              UserIdToAddress,
+              AddressToUserId,
               u(NumBoardMembers),
               u(NumProposers),
               UserIdToRole,
               u(Quorum),
               ActionLastIndex,
-              ActionData,
-              ActionSigners[ActionId <- undef],
+              ActionId |-> Action ActionData,
+              ActionSigners,
               CallerAddress,
               Stack,
               ?_Variables:Map,
-              ListItem(Action) PerformedActions
+              PerformedActions
               )
         </TT></T>
     requires true
         // perform-from-id
         andBool isKResult(Action)
-        andBool NumUsers >=Int 0
-        // TODO: Perhaps replace with unusedIdsInMapValues(AddressToUserId) +
-        // something to map values to keys.
-        andBool unusedIdsInMapKeys(NumUsers +Int 1, keysMap(UserIdToAddress), expand(expanded))
-        andBool unusedIdsInMapKeys(NumUsers +Int 1, keysMap(UserIdToRole), expand(expanded))
-        andBool NumBoardMembers +Int NumProposers >Int 0
-        andBool Quorum <=Int NumBoardMembers
-        andBool notBool (UserAddress in_keys(AddressToUserId))
+        andBool addressToUserIdInvariant(AddressToUserId)
+        andBool Quorum ==Int NumBoardMembers
 
         // perform-fragment
         andBool actionSignersInvariant(ActionSigners)

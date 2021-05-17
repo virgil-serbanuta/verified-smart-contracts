@@ -1,3 +1,5 @@
+// timeout = moderate
+// breadth = 6
 //@ proof
 module PROOF-COUNT-CAN-SIGN
   imports FUNCTIONS-EXECUTE

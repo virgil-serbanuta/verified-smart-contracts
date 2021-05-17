@@ -1,16 +1,16 @@
 //@ proof
-require "../functions/trusted-perform-action-endpoint-add-board-member-Proposer.k"  //@ Bazel remove
+require "../functions/trusted-perform-action-endpoint-add-board-member-BoardMember.k"  //@ Bazel remove
 
-module PROOF-PERFORM-PARTS-ADD-BOARD-MEMBER-PROPOSER
-  imports TRUSTED-PERFORM-ACTION-ENDPOINT-ADD-BOARD-MEMBER-PROPOSER
+module PROOF-PERFORM-ACTION-ENDPOINT-ADD-BOARD-MEMBER-BOARDMEMBER-MARKER
+  imports TRUSTED-PERFORM-ACTION-ENDPOINT-ADD-BOARD-MEMBER-BOARDMEMBER
 //@ trusted
-// module TRUSTED-PERFORM-PARTS-ADD-BOARD-MEMBER-PROPOSER
+// module TRUSTED-PERFORM-ACTION-ENDPOINT-ADD-BOARD-MEMBER-BOARDMEMBER-MARKER
 //@ end
 
-  imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
+  imports FUNCTIONS-EXECUTE
 
   claim <T><TT>
-          <k> add-board-member-Proposer.k ~> call(performActionEndpoint(ActionId:Usize)) ~> K:K </k>
+          <k> add-board-member-BoardMember.k ~> call(performActionEndpoint(ActionId:Usize)) ~> K:K </k>
           invariantStateFull(
               NumUsers:Usize,
               UserIdToAddress:Map,
@@ -18,11 +18,11 @@ module PROOF-PERFORM-PARTS-ADD-BOARD-MEMBER-PROPOSER
                   UserAddress |-> UserId:Usize
                   _AddressToUserId:Map
               ) #as AddressToUserId:Map,
-              u(NumBoardMembers:Int),
-              u(NumProposers:Int),
-              (UserId |-> Proposer
-                CallerId |-> Role:UserRole
-                UserIdToRoleInner:Map
+              NumBoardMembers:Usize,
+              NumProposers:Usize,
+              (CallerId |-> Role:UserRole
+                  UserId |-> BoardMember
+                  _UserIdToRole:Map
               ) #as UserIdToRole:Map,
               u(Quorum:Int),
               ActionLastIndex:Usize,
@@ -42,11 +42,9 @@ module PROOF-PERFORM-PARTS-ADD-BOARD-MEMBER-PROPOSER
               NumUsers,
               UserIdToAddress,
               AddressToUserId,
-              u(NumBoardMembers +Int 1),
-              u(NumProposers -Int 1),
-              UserId |-> BoardMember
-                CallerId |-> Role:UserRole
-                UserIdToRoleInner:Map,
+              NumBoardMembers,
+              NumProposers,
+              UserIdToRole,
               u(Quorum),
               ActionLastIndex,
               ActionData,

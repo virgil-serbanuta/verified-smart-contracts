@@ -1,3 +1,5 @@
+// timeout = eternal
+// breadth = 2
 //@ proof
 module PROOF-SIGN-NO-SIGNERS
 //@ trusted

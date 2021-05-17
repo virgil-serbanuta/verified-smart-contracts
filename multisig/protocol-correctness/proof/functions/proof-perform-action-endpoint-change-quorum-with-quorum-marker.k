@@ -1,31 +1,30 @@
 //@ proof
-require "../functions/trusted-perform-action-endpoint-remove-user-None.k"  //@ Bazel remove
+require "../functions/trusted-perform-action-endpoint-change-quorum.k"  //@ Bazel remove
 
-module PROOF-PERFORM-PARTS-REMOVE-USER-NONE
-  imports TRUSTED-PERFORM-ACTION-ENDPOINT-REMOVE-USER-NONE
+module PROOF-PERFORM-ACTION-ENDPOINT-CHANGE-QUORUM-WITH-QUORUM-MARKER
+  imports TRUSTED-PERFORM-ACTION-ENDPOINT-CHANGE-QUORUM
 //@ trusted
-// module TRUSTED-PERFORM-PARTS-REMOVE-USER-NONE
+// module TRUSTED-PERFORM-ACTION-ENDPOINT-CHANGE-QUORUM-WITH-QUORUM-MARKER
 //@ end
 
-  imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
+  imports FUNCTIONS-EXECUTE
 
   claim <T><TT>
-          <k> remove-user-None.k ~> call(performActionEndpoint(ActionId:Usize)) ~> K:K </k>
+          <k> change-quorum.k ~> call(performActionEndpoint(ActionId:Usize)) ~> K:K </k>
           invariantStateFull(
               NumUsers:Usize,
               UserIdToAddress:Map,
               (CallerAddress |-> CallerId:Usize
-                  UserAddress |-> UserId:Usize
                   _AddressToUserId:Map
               ) #as AddressToUserId:Map,
               u(NumBoardMembers:Int),
-              u(NumProposers:Int),
+              NumProposers:Usize,
               (CallerId |-> Role:UserRole
                   _UserIdToRole:Map
               ) #as UserIdToRole:Map,
-              u(Quorum:Int),
+              u(OldQuorum:Int),
               ActionLastIndex:Usize,
-              ActionId |-> RemoveUser(UserAddress:Address) #as Action:Action
+              ActionId |-> ChangeQuorum(u(NewQuorum:Int)) #as Action:Action
                   ActionData:Map,
               ActionSigners:Map,
               CallerAddress:Address,
@@ -42,9 +41,9 @@ module PROOF-PERFORM-PARTS-REMOVE-USER-NONE
               UserIdToAddress,
               AddressToUserId,
               u(NumBoardMembers),
-              u(NumProposers),
+              NumProposers,
               UserIdToRole,
-              u(Quorum),
+              u(NewQuorum),
               ActionLastIndex,
               ActionData,
               ActionSigners[ActionId <- undef],
@@ -57,16 +56,13 @@ module PROOF-PERFORM-PARTS-REMOVE-USER-NONE
     requires true
         // perform-from-id
         andBool isKResult(Action)
-        andBool addressToUserIdInvariant(AddressToUserId)
-        andBool Quorum <=Int NumBoardMembers
-        andBool NumBoardMembers +Int NumProposers >Int 0
-        andBool notBool (UserId in_keys(UserIdToRole))
+        andBool NewQuorum <=Int NumBoardMembers
 
         // perform-fragment
         andBool actionSignersInvariant(ActionSigners)
         andBool userIdToRoleInvariant(UserIdToRole)
         andBool (Role ==K BoardMember orBool Role ==K Proposer)
-        andBool Quorum
+        andBool OldQuorum
                 <=Int countCanSignFunction(
                     toExpressionListOrDefault(ActionSigners[ActionId] orDefault [.], [void, .]),
                     UserIdToRole)

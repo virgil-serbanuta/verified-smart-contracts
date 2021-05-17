@@ -1,16 +1,16 @@
 //@ proof
-require "../functions/trusted-perform-action-endpoint-remove-user-Proposer-nobody-left.k"  //@ Bazel remove
+require "../functions/trusted-perform-action-endpoint-remove-user-Proposer.k"  //@ Bazel remove
 
-module PROOF-PERFORM-PARTS-REMOVE-USER-PROPOSER-NOBODY-LEFT
-  imports TRUSTED-PERFORM-ACTION-ENDPOINT-REMOVE-USER-PROPOSER-NOBODY-LEFT
+module PROOF-PERFORM-ACTION-ENDPOINT-REMOVE-USER-PROPOSER-MARKER
+  imports TRUSTED-PERFORM-ACTION-ENDPOINT-REMOVE-USER-PROPOSER
 //@ trusted
-// module TRUSTED-PERFORM-PARTS-REMOVE-USER-PROPOSER-NOBODY-LEFT
+// module TRUSTED-PERFORM-ACTION-ENDPOINT-REMOVE-USER-PROPOSER-MARKER
 //@ end
 
-  imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
+  imports FUNCTIONS-EXECUTE
 
   claim <T><TT>
-          <k> remove-user-Proposer-nobody-left.k ~> call(performActionEndpoint(ActionId:Usize)) ~> K:K </k>
+          <k> remove-user-Proposer.k ~> call(performActionEndpoint(ActionId:Usize)) ~> K:K </k>
           invariantStateFull(
               NumUsers:Usize,
               UserIdToAddress:Map,
@@ -22,7 +22,7 @@ module PROOF-PERFORM-PARTS-REMOVE-USER-PROPOSER-NOBODY-LEFT
               u(NumProposers:Int),
               (CallerId |-> Role:UserRole
                   UserId |-> Proposer
-                  _UserIdToRole:Map
+                  UserIdToRoleInner:Map
               ) #as UserIdToRole:Map,
               u(Quorum:Int),
               ActionLastIndex:Usize,
@@ -37,22 +37,22 @@ module PROOF-PERFORM-PARTS-REMOVE-USER-PROPOSER-NOBODY-LEFT
         </TT></T>
       =>
         <T><TT>
-          <k> error ~> K:K </k>
+          <k> evaluate(void) ~> K:K </k>
           invariantStateFull(
               NumUsers,
               UserIdToAddress,
               AddressToUserId,
               u(NumBoardMembers),
-              u(NumProposers),
-              UserIdToRole,
+              u(NumProposers -Int 1),
+              (CallerId |-> Role UserIdToRoleInner),
               u(Quorum),
               ActionLastIndex,
-              ActionId |-> Action ActionData,
-              ActionSigners,
+              ActionData,
+              ActionSigners[ActionId <- undef],
               CallerAddress,
               Stack,
               ?_Variables:Map,
-              PerformedActions
+              ListItem(Action) PerformedActions
               )
         </TT></T>
     requires true
@@ -60,7 +60,7 @@ module PROOF-PERFORM-PARTS-REMOVE-USER-PROPOSER-NOBODY-LEFT
         andBool isKResult(Action)
         andBool addressToUserIdInvariant(AddressToUserId)
         andBool Quorum <=Int NumBoardMembers
-        andBool NumBoardMembers +Int NumProposers ==Int 1
+        andBool NumBoardMembers +Int NumProposers -Int 1 >Int 0
 
         // perform-fragment
         andBool actionSignersInvariant(ActionSigners)

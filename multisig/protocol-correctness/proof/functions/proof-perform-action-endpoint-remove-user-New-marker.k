@@ -1,28 +1,26 @@
 //@ proof
-require "../functions/trusted-perform-action-endpoint-remove-user-BoardMember.k"  //@ Bazel remove
+require "../functions/trusted-perform-action-endpoint-remove-user-New.k"  //@ Bazel remove
 
-module PROOF-PERFORM-PARTS-REMOVE-USER-BOARDMEMBER
-  imports TRUSTED-PERFORM-ACTION-ENDPOINT-REMOVE-USER-BOARDMEMBER
+module PROOF-PERFORM-ACTION-ENDPOINT-REMOVE-USER-NEW-MARKER
+  imports TRUSTED-PERFORM-ACTION-ENDPOINT-REMOVE-USER-NEW
 //@ trusted
-// module TRUSTED-PERFORM-PARTS-REMOVE-USER-BOARDMEMBER
+// module TRUSTED-PERFORM-ACTION-ENDPOINT-REMOVE-USER-NEW-MARKER
 //@ end
 
-  imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
+  imports FUNCTIONS-EXECUTE
 
   claim <T><TT>
-          <k> remove-user-BoardMember.k ~> call(performActionEndpoint(ActionId:Usize)) ~> K:K </k>
+          <k> remove-user-New.k ~> call(performActionEndpoint(ActionId:Usize)) ~> K:K </k>
           invariantStateFull(
-              NumUsers:Usize,
+              u(NumUsers:Int),
               UserIdToAddress:Map,
               (CallerAddress |-> CallerId:Usize
-                  UserAddress |-> UserId:Usize
                   _AddressToUserId:Map
               ) #as AddressToUserId:Map,
               u(NumBoardMembers:Int),
               u(NumProposers:Int),
               (CallerId |-> Role:UserRole
-                  UserId |-> BoardMember
-                  UserIdToRoleInner:Map
+                  _UserIdToRole:Map
               ) #as UserIdToRole:Map,
               u(Quorum:Int),
               ActionLastIndex:Usize,
@@ -39,12 +37,12 @@ module PROOF-PERFORM-PARTS-REMOVE-USER-BOARDMEMBER
         <T><TT>
           <k> evaluate(void) ~> K:K </k>
           invariantStateFull(
-              NumUsers,
-              UserIdToAddress,
-              AddressToUserId,
-              u(NumBoardMembers -Int 1),
+              u(NumUsers +Int 1),
+              u(NumUsers +Int 1) |-> UserAddress UserIdToAddress,
+              UserAddress |-> u(NumUsers +Int 1) AddressToUserId,
+              u(NumBoardMembers),
               u(NumProposers),
-              (CallerId |-> Role UserIdToRoleInner),
+              UserIdToRole,
               u(Quorum),
               ActionLastIndex,
               ActionData,
@@ -58,9 +56,14 @@ module PROOF-PERFORM-PARTS-REMOVE-USER-BOARDMEMBER
     requires true
         // perform-from-id
         andBool isKResult(Action)
-        andBool addressToUserIdInvariant(AddressToUserId)
-        andBool NumBoardMembers +Int NumProposers -Int 1 >Int 0
-        andBool Quorum <=Int NumBoardMembers -Int 1
+        andBool NumUsers >=Int 0
+        // TODO: Perhaps replace with unusedIdsInMapValues(AddressToUserId) +
+        // something to map values to keys.
+        andBool unusedIdsInMapKeys(NumUsers +Int 1, keysMap(UserIdToAddress), expand(expanded))
+        andBool unusedIdsInMapKeys(NumUsers +Int 1, keysMap(UserIdToRole), expand(expanded))
+        andBool NumBoardMembers +Int NumProposers >Int 0
+        andBool Quorum <=Int NumBoardMembers
+        andBool notBool (UserAddress in_keys(AddressToUserId))
 
         // perform-fragment
         andBool actionSignersInvariant(ActionSigners)

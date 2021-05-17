@@ -9,7 +9,7 @@ endmodule
 
 module PROPERTIES-EXECUTE
   imports EXECUTION-PROOF
-  imports INVARIANT-EXECUTION
+  imports INVARIANT-EXECUTE
   imports MAP-EXECUTE
 
   syntax KItem ::= allBoardMembersSignFor(actionId:Usize)

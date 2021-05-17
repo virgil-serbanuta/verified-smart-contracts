@@ -1,3 +1,4 @@
+// breadth = 3
 //@ proof
 require "trusted-perform-action-send-egld.k"  //@ Bazel remove
 

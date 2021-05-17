@@ -4,7 +4,7 @@ require "protocol-correctness/proof/instrumentation/pushlist/pushlist-execute.k"
 
 require "protocol-correctness/proof/invariant/init-loop-parts.k"
 
-module INVARIANT-EXECUTION-SYNTAX
+module INVARIANT-EXECUTE-SYNTAX
   imports EXECUTION-PROOF-SYNTAX
 endmodule
 
@@ -635,52 +635,6 @@ module PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
   imports EXECUTION-PROOF
   imports PSEUDOCODE
 
-  // The Haskell backend sometimes leaves traces of
-  // (trusted) claims that failed to apply in the predicate.
-  // Sometimes, these traces increase the execution time by a lot,
-  // so we have to work around this.
-  //
-  // The symbols below allow us to wrap those claims in another set of claims,
-  // which can be attemped without leaving traces.
-  syntax ProofBranch ::= "new.k"
-  syntax ProofBranch ::= "none.k"
-  syntax ProofBranch ::= "no-quorum.k"
-  syntax ProofBranch ::= "add-board-member-New.k"
-  syntax ProofBranch ::= "add-board-member-None.k"
-  syntax ProofBranch ::= "add-board-member-BoardMember.k"
-  syntax ProofBranch ::= "add-board-member-Proposer.k"
-  syntax ProofBranch ::= "add-board-member-BoardMember-eq.k"
-  syntax ProofBranch ::= "add-board-member-Proposer-eq.k"
-  syntax ProofBranch ::= "add-proposer-New.k"
-  syntax ProofBranch ::= "add-proposer-None.k"
-  syntax ProofBranch ::= "add-proposer-BoardMember.k"
-  syntax ProofBranch ::= "add-proposer-BoardMember-no-quorum.k"
-  syntax ProofBranch ::= "add-proposer-Proposer.k"
-  syntax ProofBranch ::= "add-proposer-BoardMember-eq.k"
-  syntax ProofBranch ::= "add-proposer-BoardMember-no-quorum-eq.k"
-  syntax ProofBranch ::= "add-proposer-Proposer-eq.k"
-  syntax ProofBranch ::= "change-quorum.k"
-  syntax ProofBranch ::= "change-quorum-no-quorum.k"
-  syntax ProofBranch ::= "nothing.k"
-  syntax ProofBranch ::= "remove-user-New.k"
-  syntax ProofBranch ::= "remove-user-None.k"
-  syntax ProofBranch ::= "remove-user-BoardMember-too-few.k"
-  syntax ProofBranch ::= "remove-user-BoardMember.k"
-  syntax ProofBranch ::= "remove-user-Proposer-nobody-left.k"
-  syntax ProofBranch ::= "remove-user-Proposer.k"
-  syntax ProofBranch ::= "remove-user-Proposer-nobody-left-eq.k"
-  syntax ProofBranch ::= "remove-user-Proposer-eq.k"
-  syntax ProofBranch ::= "remove-user-BoardMember-too-few-eq.k"
-  syntax ProofBranch ::= "remove-user-BoardMember-eq.k"
-  syntax ProofBranch ::= "sc-call.k"
-  syntax ProofBranch ::= "sc-deploy.k"
-  syntax ProofBranch ::= "send-egld.k"
-
-  syntax KItem ::= ProofBranch
-
-  // TODO: It might be faster to enumerate all cases separately.
-  rule _:ProofBranch => .K
-
   syntax KItem ::= splitPerformActionEndpoint(actionId:Usize)
   syntax KItem ::= splitPerformActionEndpoint1(actionId:Usize)
   syntax KItem ::= splitPerformActionEndpoint1a(actionId:Usize)
@@ -1085,7 +1039,7 @@ module PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
 
 endmodule
 
-module INVARIANT-EXECUTION
+module INVARIANT-EXECUTE
   imports EXECUTION-PROOF
   imports FUNCTIONS-EXECUTE
 

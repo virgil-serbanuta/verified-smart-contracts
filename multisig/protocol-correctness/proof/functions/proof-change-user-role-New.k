@@ -1,3 +1,5 @@
+// timeout = long
+// breadth = 3
 //@ proof
 module PROOF-CHANGE-USER-ROLE-NEW
 //@ trusted

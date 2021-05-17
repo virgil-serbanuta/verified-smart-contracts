@@ -1,3 +1,4 @@
+// timeout = moderate
 //@ proof
 require "trusted-change-user-role-New.k"  //@ Bazel remove
 

@@ -1,18 +1,18 @@
 //@ proof
-require "../functions/trusted-perform-action-endpoint-add-board-member-New.k"  //@ Bazel remove
+require "../functions/trusted-perform-action-endpoint-change-quorum-no-quorum.k"  //@ Bazel remove
 
-module PROOF-PERFORM-PARTS-ADD-BOARD-MEMBER-NEW
-  imports TRUSTED-PERFORM-ACTION-ENDPOINT-ADD-BOARD-MEMBER-NEW
+module PROOF-PERFORM-ACTION-ENDPOINT-CHANGE-QUORUM-NO-QUORUM-MARKER
+  imports TRUSTED-PERFORM-ACTION-ENDPOINT-CHANGE-QUORUM-NO-QUORUM
 //@ trusted
-// module TRUSTED-PERFORM-PARTS-ADD-BOARD-MEMBER-NEW
+// module TRUSTED-PERFORM-ACTION-ENDPOINT-CHANGE-QUORUM-NO-QUORUM-MARKER
 //@ end
 
-  imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
+  imports FUNCTIONS-EXECUTE
 
   claim <T><TT>
-          <k> add-board-member-New.k ~> call(performActionEndpoint(ActionId:Usize)) ~> K:K </k>
+          <k> change-quorum-no-quorum.k ~> call(performActionEndpoint(ActionId:Usize)) ~> K:K </k>
           invariantStateFull(
-              u(NumUsers:Int),
+              NumUsers:Usize,
               UserIdToAddress:Map,
               (CallerAddress |-> CallerId:Usize
                   _AddressToUserId:Map
@@ -22,9 +22,9 @@ module PROOF-PERFORM-PARTS-ADD-BOARD-MEMBER-NEW
               (CallerId |-> Role:UserRole
                   _UserIdToRole:Map
               ) #as UserIdToRole:Map,
-              u(Quorum:Int),
+              u(OldQuorum:Int),
               ActionLastIndex:Usize,
-              ActionId |-> AddBoardMember(UserAddress:Address) #as Action:Action
+              ActionId |-> ChangeQuorum(u(NewQuorum:Int)) #as Action:Action
                   ActionData:Map,
               ActionSigners:Map,
               CallerAddress:Address,
@@ -35,41 +35,34 @@ module PROOF-PERFORM-PARTS-ADD-BOARD-MEMBER-NEW
         </TT></T>
       =>
         <T><TT>
-          <k> evaluate(void) ~> K:K </k>
+          <k> error ~> K:K </k>
           invariantStateFull(
-              u(NumUsers +Int 1),
-              u(NumUsers +Int 1) |-> UserAddress UserIdToAddress,
-              UserAddress |-> u(NumUsers +Int 1) AddressToUserId,
-              u(NumBoardMembers +Int 1),
+              NumUsers,
+              UserIdToAddress,
+              AddressToUserId,
+              u(NumBoardMembers),
               NumProposers,
-              u(NumUsers +Int 1) |-> BoardMember UserIdToRole,
-              u(Quorum),
+              UserIdToRole,
+              u(OldQuorum),
               ActionLastIndex,
-              ActionData,
-              ActionSigners[ActionId <- undef],
+              ActionId |-> Action ActionData,
+              ActionSigners,
               CallerAddress,
               Stack,
               ?_Variables:Map,
-              ListItem(Action) PerformedActions
+              PerformedActions
               )
         </TT></T>
     requires true
         // perform-from-id
         andBool isKResult(Action)
-
-        andBool NumUsers >=Int 0
-        // TODO: Perhaps replace with unusedIdsInMapValues(AddressToUserId) +
-        // someting to map values to keys.
-        andBool unusedIdsInMapKeys(NumUsers +Int 1, keysMap(UserIdToAddress), expand(expanded))
-        andBool unusedIdsInMapKeys(NumUsers +Int 1, keysMap(UserIdToRole), expand(expanded))
-
-        andBool notBool UserAddress in_keys(AddressToUserId)
+        andBool NewQuorum >Int NumBoardMembers
 
         // perform-fragment
         andBool actionSignersInvariant(ActionSigners)
         andBool userIdToRoleInvariant(UserIdToRole)
         andBool (Role ==K BoardMember orBool Role ==K Proposer)
-        andBool Quorum
+        andBool OldQuorum
                 <=Int countCanSignFunction(
                     toExpressionListOrDefault(ActionSigners[ActionId] orDefault [.], [void, .]),
                     UserIdToRole)

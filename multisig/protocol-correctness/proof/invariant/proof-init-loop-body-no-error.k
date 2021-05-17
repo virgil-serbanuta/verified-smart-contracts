@@ -1,3 +1,5 @@
+// timeout = moderate
+// breadth = 2
 //@ proof
 module PROOF-INIT-LOOP-BODY-NO-ERROR
 //@ trusted

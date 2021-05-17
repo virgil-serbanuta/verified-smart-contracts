@@ -1,33 +1,29 @@
+// timeout = eternal
+// breadth = 7
 //@ proof
 require "trusted-perform-parts-add-board-member.k"  //@ Bazel remove
 require "trusted-perform-parts-add-proposer-signers.k"  //@ Bazel remove
 require "trusted-perform-parts-add-proposer-no-signers.k"  //@ Bazel remove
 require "trusted-perform-parts-change-quorum.k"  //@ Bazel remove
-// require "trusted-perform-parts-New.k"  //@ Bazel remove
-// require "trusted-perform-parts-no-quorum.k"  //@ Bazel remove
-// require "trusted-perform-parts-None.k"  //@ Bazel remove
 require "trusted-perform-parts-remove-user.k"  //@ Bazel remove
-require "trusted-perform-parts-sc-call.k"  //@ Bazel remove
-require "trusted-perform-parts-sc-deploy.k"  //@ Bazel remove
-require "trusted-perform-parts-send-egld.k"  //@ Bazel remove
-
+require "../functions/trusted-perform-action-endpoint-sc-call-marker.k"  //@ Bazel remove
+require "../functions/trusted-perform-action-endpoint-sc-deploy-marker.k"  //@ Bazel remove
+require "../functions/trusted-perform-action-endpoint-send-egld-marker.k"  //@ Bazel remove
 
 module PROOF-PERFORM-PARTS-2
-  imports INVARIANT-EXECUTION
+  imports INVARIANT-EXECUTE
 
   imports TRUSTED-PERFORM-PARTS-ADD-BOARD-MEMBER
   imports TRUSTED-PERFORM-PARTS-ADD-PROPOSER-SIGNERS
   imports TRUSTED-PERFORM-PARTS-ADD-PROPOSER-NO-SIGNERS
   imports TRUSTED-PERFORM-PARTS-CHANGE-QUORUM
-//   imports TRUSTED-PERFORM-PARTS-NEW
-//   imports TRUSTED-PERFORM-PARTS-NO-QUORUM
-//   imports TRUSTED-PERFORM-PARTS-NONE
   imports TRUSTED-PERFORM-PARTS-REMOVE-USER
-  imports TRUSTED-PERFORM-PARTS-SC-CALL
-  imports TRUSTED-PERFORM-PARTS-SC-DEPLOY
-  imports TRUSTED-PERFORM-PARTS-SEND-EGLD
+  imports TRUSTED-PERFORM-ACTION-ENDPOINT-SC-CALL-MARKER
+  imports TRUSTED-PERFORM-ACTION-ENDPOINT-SC-DEPLOY-MARKER
+  imports TRUSTED-PERFORM-ACTION-ENDPOINT-SEND-EGLD-MARKER
 //@ trusted
 // module TRUSTED-PERFORM-PARTS-2
+// imports INVARIANT
 //@ end
   imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
 

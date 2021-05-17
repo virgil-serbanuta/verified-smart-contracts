@@ -1,3 +1,4 @@
+// timeout = moderate
 //@ proof
 require "trusted-perform-action-endpoint-fragment-performs.k"  //@ Bazel remove
 require "trusted-perform-action-id-change-quorum.k"  //@ Bazel remove

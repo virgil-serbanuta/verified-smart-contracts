@@ -1,16 +1,16 @@
 //@ proof
-require "../functions/trusted-perform-action-endpoint-add-proposer-None.k"  //@ Bazel remove
+require "../functions/trusted-perform-action-endpoint-add-board-member-None.k"  //@ Bazel remove
 
-module PROOF-PERFORM-PARTS-ADD-PROPOSER-NONE
-  imports TRUSTED-PERFORM-ACTION-ENDPOINT-ADD-PROPOSER-NONE
+module PROOF-PERFORM-ACTION-ENDPOINT-ADD-BOARD-MEMBER-NONE-MARKER
+  imports TRUSTED-PERFORM-ACTION-ENDPOINT-ADD-BOARD-MEMBER-NONE
 //@ trusted
-// module TRUSTED-PERFORM-PARTS-ADD-PROPOSER-NONE
+// module TRUSTED-PERFORM-ACTION-ENDPOINT-ADD-BOARD-MEMBER-NONE-MARKER
 //@ end
 
-  imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
+  imports FUNCTIONS-EXECUTE
 
   claim <T><TT>
-          <k> add-proposer-None.k ~> call(performActionEndpoint(ActionId:Usize)) ~> K:K </k>
+          <k> add-board-member-None.k ~> call(performActionEndpoint(ActionId:Usize)) ~> K:K </k>
           invariantStateFull(
               NumUsers:Usize,
               UserIdToAddress:Map,
@@ -19,13 +19,13 @@ module PROOF-PERFORM-PARTS-ADD-PROPOSER-NONE
                   _AddressToUserId:Map
               ) #as AddressToUserId:Map,
               u(NumBoardMembers:Int),
-              u(NumProposers:Int),
+              NumProposers:Usize,
               (CallerId |-> Role:UserRole
                   _UserIdToRole:Map
               ) #as UserIdToRole:Map,
               u(Quorum:Int),
               ActionLastIndex:Usize,
-              ActionId |-> AddProposer(UserAddress:Address) #as Action:Action
+              ActionId |-> AddBoardMember(UserAddress:Address) #as Action:Action
                   ActionData:Map,
               ActionSigners:Map,
               CallerAddress:Address,
@@ -41,9 +41,9 @@ module PROOF-PERFORM-PARTS-ADD-PROPOSER-NONE
               NumUsers,
               UserIdToAddress,
               AddressToUserId,
-              u(NumBoardMembers),
-              u(NumProposers +Int 1),
-              UserId |-> Proposer UserIdToRole,
+              u(NumBoardMembers +Int 1),
+              NumProposers,
+              UserId |-> BoardMember UserIdToRole,
               u(Quorum),
               ActionLastIndex,
               ActionData,
@@ -58,7 +58,6 @@ module PROOF-PERFORM-PARTS-ADD-PROPOSER-NONE
         // perform-from-id
         andBool isKResult(Action)
         andBool addressToUserIdInvariant(AddressToUserId)
-        andBool Quorum <=Int NumBoardMembers
         andBool notBool UserId in_keys(UserIdToRole)
 
         // perform-fragment

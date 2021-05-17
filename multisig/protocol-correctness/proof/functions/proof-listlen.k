@@ -1,3 +1,5 @@
+// timeout = moderate
+// breadth = 4
 //@ proof
 module PROOF-LISTLEN
 //@ trusted

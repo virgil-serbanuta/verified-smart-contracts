@@ -1,30 +1,34 @@
 //@ proof
-require "../functions/trusted-perform-action-endpoint-remove-user-Proposer-nobody-left-eq.k"  //@ Bazel remove
+require "../functions/trusted-perform-action-endpoint-sc-call.k"  //@ Bazel remove
 
-module PROOF-PERFORM-PARTS-REMOVE-USER-PROPOSER-NOBODY-LEFT-EQ
-  imports TRUSTED-PERFORM-ACTION-ENDPOINT-REMOVE-USER-PROPOSER-NOBODY-LEFT-EQ
+module PROOF-PERFORM-ACTION-ENDPOINT-SC-CALL-MARKER
+  imports TRUSTED-PERFORM-ACTION-ENDPOINT-SC-CALL
 //@ trusted
-// module TRUSTED-PERFORM-PARTS-REMOVE-USER-PROPOSER-NOBODY-LEFT-EQ
+// module TRUSTED-PERFORM-ACTION-ENDPOINT-SC-CALL-MARKER
 //@ end
 
-  imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
+  imports FUNCTIONS-EXECUTE
 
   claim <T><TT>
-          <k> remove-user-Proposer-nobody-left-eq.k ~> call(performActionEndpoint(ActionId:Usize)) ~> K:K </k>
+          <k> sc-call.k ~> call(performActionEndpoint(ActionId:Usize)) ~> K:K </k>
           invariantStateFull(
               NumUsers:Usize,
               UserIdToAddress:Map,
               (CallerAddress |-> CallerId:Usize
                   _AddressToUserId:Map
               ) #as AddressToUserId:Map,
-              u(NumBoardMembers:Int),
-              u(NumProposers:Int),
-              (CallerId |-> Proposer
+              NumBoardMembers:Usize,
+              NumProposers:Usize,
+              (CallerId |-> Role:UserRole
                   _UserIdToRole:Map
               ) #as UserIdToRole:Map,
               u(Quorum:Int),
               ActionLastIndex:Usize,
-              ActionId |-> RemoveUser(CallerAddress:Address) #as Action:Action
+              ActionId |-> SCCall(
+                          _To:Address,
+                          _Amount:BigUint,
+                          _Function:BoxedBytes,
+                          _Arguments:ExpressionList) #as Action:Action
                   ActionData:Map,
               ActionSigners:Map,
               CallerAddress:Address,
@@ -35,34 +39,32 @@ module PROOF-PERFORM-PARTS-REMOVE-USER-PROPOSER-NOBODY-LEFT-EQ
         </TT></T>
       =>
         <T><TT>
-          <k> error ~> K:K </k>
+          <k> evaluate(void) ~> K:K </k>
           invariantStateFull(
               NumUsers,
               UserIdToAddress,
               AddressToUserId,
-              u(NumBoardMembers),
-              u(NumProposers),
+              NumBoardMembers,
+              NumProposers,
               UserIdToRole,
               u(Quorum),
               ActionLastIndex,
-              ActionId |-> Action ActionData,
-              ActionSigners,
+              ActionData,
+              ActionSigners[ActionId <- undef],
               CallerAddress,
               Stack,
               ?_Variables:Map,
-              PerformedActions
+              ListItem(Action) PerformedActions
               )
         </TT></T>
     requires true
         // perform-from-id
         andBool isKResult(Action)
-        andBool addressToUserIdInvariant(AddressToUserId)
-        andBool Quorum <=Int NumBoardMembers
-        andBool NumBoardMembers +Int NumProposers ==Int 1
 
         // perform-fragment
         andBool actionSignersInvariant(ActionSigners)
         andBool userIdToRoleInvariant(UserIdToRole)
+        andBool (Role ==K BoardMember orBool Role ==K Proposer)
         andBool Quorum
                 <=Int countCanSignFunction(
                     toExpressionListOrDefault(ActionSigners[ActionId] orDefault [.], [void, .]),

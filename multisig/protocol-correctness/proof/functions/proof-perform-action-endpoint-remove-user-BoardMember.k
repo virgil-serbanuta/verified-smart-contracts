@@ -1,6 +1,7 @@
+// timeout = moderate
 //@ proof
 require "trusted-perform-action-endpoint-fragment-performs.k"  //@ Bazel remove
-require "trusted-perform-action-endpoint-id-remove-user-BoardMember.k"  //@ Bazel remove
+require "trusted-perform-action-id-remove-user-BoardMember.k"  //@ Bazel remove
 
 module PROOF-PERFORM-ACTION-ENDPOINT-REMOVE-USER-BOARDMEMBER
   imports TRUSTED-PERFORM-ACTION-ENDPOINT-FRAGMENT-PERFORMS

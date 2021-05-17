@@ -1,3 +1,5 @@
+// timeout = eternal
+// breadth = 6
 //@ proof
 require "trusted-count-can-sign.k"  //@ Bazel remove
 

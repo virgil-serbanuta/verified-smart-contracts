@@ -1,5 +1,7 @@
+// timeout = moderate
+// breadth = 3
 //@ proof
-require "trusted-perform-action-remove-user-none.k"  //@ Bazel remove
+require "trusted-perform-action-remove-user-None.k"  //@ Bazel remove
 
 module PROOF-PERFORM-ACTION-ID-REMOVE-USER-NONE
   imports TRUSTED-PERFORM-ACTION-REMOVE-USER-NONE

@@ -1,3 +1,5 @@
+// timeout = moderate
+// breadth = 3
 //@ proof
 require "trusted-perform-action-sc-call.k"  //@ Bazel remove
 

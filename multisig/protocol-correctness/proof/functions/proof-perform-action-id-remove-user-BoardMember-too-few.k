@@ -1,5 +1,7 @@
+// timeout = moderate
+// breadth = 3
 //@ proof
-require "trusted-perform-action-remove-user-boardmember-too-few.k"  //@ Bazel remove
+require "trusted-perform-action-remove-user-BoardMember-too-few.k"  //@ Bazel remove
 
 module PROOF-PERFORM-ACTION-ID-REMOVE-USER-BOARDMEMBER-TOO-FEW
   imports TRUSTED-PERFORM-ACTION-REMOVE-USER-BOARDMEMBER-TOO-FEW

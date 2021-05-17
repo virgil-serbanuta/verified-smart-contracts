@@ -1,3 +1,5 @@
+// timeout = eternal
+// breadth = 26
 //@ proof
 require "trusted-perform-parts-1.k"  //@ Bazel remove
 require "trusted-perform-parts-2.k"  //@ Bazel remove
@@ -7,7 +9,7 @@ require "../functions/trusted-perform-action-endpoint-None-marker.k"  //@ Bazel 
 require "../functions/trusted-perform-action-endpoint-nothing-marker.k"  //@ Bazel remove
 
 module PROOF-PERFORM-ACTION-ENDPOINT
-  imports INVARIANT-EXECUTION
+  imports INVARIANT-EXECUTE
 
   imports TRUSTED-PERFORM-PARTS-1
   imports TRUSTED-PERFORM-PARTS-2
@@ -17,6 +19,7 @@ module PROOF-PERFORM-ACTION-ENDPOINT
   imports TRUSTED-PERFORM-ACTION-ENDPOINT-NOTHING-MARKER
 //@ trusted
 // module TRUSTED-PERFORM-ACTION-ENDPOINT
+// imports INVARIANT
 //@ end
 
   imports INVARIANT

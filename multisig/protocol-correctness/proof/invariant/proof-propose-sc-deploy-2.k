@@ -1,13 +1,18 @@
+// timeout = eternal
+// breadth = 1
 //@ proof
 require "../functions/trusted-propose-sc-deploy-error-no-role.k"  //@ Bazel remove
 
 module PROOF-PROPOSE-SC-DEPLOY-2
+  imports INVARIANT-EXECUTE
+  imports PSEUDOCODE
+
   imports TRUSTED-PROPOSE-SC-DEPLOY-ERROR-NO-ROLE
 //@ trusted
 // module TRUSTED-PROPOSE-SC-DEPLOY-2
+// imports INVARIANT
+// imports PROOF-INSTRUMENTATION
 //@ end
-  imports INVARIANT-EXECUTION
-  imports PSEUDOCODE
 
   claim <T><TT>
           <k> propose-sc-deploy-no-role.k
