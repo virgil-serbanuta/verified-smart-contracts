@@ -1,8 +1,10 @@
+// timeout = eternal
+// breadth = 6
 //@ proof
-require "../functions/trusted-propose-action-BoardMember.k"  //@ Bazel remove
-require "../functions/trusted-propose-action-Proposer.k"  //@ Bazel remove
-require "../functions/trusted-propose-action-error-no-user.k"  //@ Bazel remove
-require "../functions/trusted-propose-action-error-no-role.k"  //@ Bazel remove
+require "../../functions/trusted-propose-action-BoardMember.k"  //@ Bazel remove
+require "../../functions/trusted-propose-action-Proposer.k"  //@ Bazel remove
+require "../../functions/trusted-propose-action-error-no-user.k"  //@ Bazel remove
+require "../../functions/trusted-propose-action-error-no-role.k"  //@ Bazel remove
 
 module PROOF-PROPOSE-ADD-PROPOSER
   imports TRUSTED-PROPOSE-ACTION-ERROR-NO-ROLE

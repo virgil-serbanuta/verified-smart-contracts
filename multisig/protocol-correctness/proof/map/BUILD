@@ -1,8 +1,33 @@
-load("//:proof.bzl", "klibrary")
+load("//:proof.bzl", "kompile", "klibrary", "kprove_test", "ktrusted")
 
-klibrary(
-  name = "map-files",
+kompile(
+  name = "map-execute",
   srcs = ["map-execute.k"],
-  deps = [],
+  deps = [
+  ],
   visibility = ["//visibility:public"],
 )
+
+klibrary(
+  name = "map-execute-files",
+  srcs = ["map-execute.k"],
+  deps = [
+  ],
+  visibility = ["//visibility:public"],
+)
+
+kprove_test(
+  name = "proof-map-semantics",
+  srcs = ["proof-map-semantics.k"],
+  trusted = [
+  ],
+  semantics = "map-execute",
+  breadth = "3",
+)
+
+ktrusted(
+  name = "trusted-map-semantics",
+  srcs = ["proof-map-semantics.k"],
+  visibility = ["//visibility:public"],
+)
+

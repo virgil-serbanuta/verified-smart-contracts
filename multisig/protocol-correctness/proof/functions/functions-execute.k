@@ -1,7 +1,7 @@
-require "protocol-correctness/proof/execution-proof.k"
+require "protocol-correctness/proof/main-proof-execute.k"
 
 module FUNCTIONS-EXECUTE-SYNTAX
-  imports EXECUTION-PROOF-SYNTAX
+  imports MAIN-PROOF-EXECUTE-SYNTAX
 endmodule
 
 module PROPOSE-ACTION-INSTRUMENTATION
@@ -65,7 +65,7 @@ module FUNCTIONS-HELPERS
 endmodule
 
 module FUNCTIONS-EXECUTE
-  imports EXECUTION-PROOF
+  imports MAIN-PROOF-EXECUTE
 
   imports FUNCTIONS-INSTRUMENTATION
   imports PROPOSE-ACTION-INSTRUMENTATION

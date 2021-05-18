@@ -23,9 +23,9 @@ module PROOF-PERFORM-PARTS-1
   imports TRUSTED-PERFORM-ACTION-ENDPOINT-SEND-EGLD-MARKER
 //@ trusted
 // module TRUSTED-PERFORM-PARTS-1
-// imports INVARIANT
+//   imports INVARIANT-FUNCTIONS
+//   imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
 //@ end
-  imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
 
   claim <T><TT>
           <k> splitAction(Action:Action)
@@ -84,6 +84,7 @@ module PROOF-PERFORM-PARTS-1
         </TT></T>
     requires true
         andBool invariant(
+            no-data,
             NumUsers,
             UserIdToAddress,
             AddressToUserId,
@@ -101,6 +102,7 @@ module PROOF-PERFORM-PARTS-1
                     toExpressionListOrDefault(ActionSigners[ActionId] orDefault [.], [void, .]),
                     UserIdToRole)
     ensures invariant(
+        no-data,
         ?NumUsers1,
         ?UserIdToAddress1,
         ?AddressToUserId1,

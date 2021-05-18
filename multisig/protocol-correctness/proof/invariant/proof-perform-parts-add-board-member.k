@@ -15,9 +15,9 @@ module PROOF-PERFORM-PARTS-ADD-BOARD-MEMBER
   imports TRUSTED-PERFORM-ACTION-ENDPOINT-ADD-BOARD-MEMBER-NONE-MARKER
 //@ trusted
 // module TRUSTED-PERFORM-PARTS-ADD-BOARD-MEMBER
-// imports INVARIANT
+//   imports INVARIANT-FUNCTIONS
+//   imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
 //@ end
-  imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
 
   claim <T><TT>
           <k> splitPerformActionEndpoint4(AddBoardMember(_UserAddress:Address) #as Action:Action)
@@ -75,6 +75,7 @@ module PROOF-PERFORM-PARTS-ADD-BOARD-MEMBER
         </TT></T>
     requires true
         andBool invariant(
+            no-data,
             NumUsers,
             UserIdToAddress,
             AddressToUserId,
@@ -92,6 +93,7 @@ module PROOF-PERFORM-PARTS-ADD-BOARD-MEMBER
                     toExpressionListOrDefault(ActionSigners[ActionId] orDefault [.], [void, .]),
                     UserIdToRole)
     ensures invariant(
+        no-data,
         ?NumUsers1,
         ?UserIdToAddress1,
         ?AddressToUserId1,

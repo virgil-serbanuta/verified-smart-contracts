@@ -6,7 +6,7 @@ module PROOF-UNSIGN-NO-USER-MARKER
   imports TRUSTED-UNSIGN-NO-USER
 //@ trusted
 // module TRUSTED-UNSIGN-NO-USER-MARKER
-  // imports EXECUTION-PROOF
+  // imports MAIN-PROOF-EXECUTE
 //@ end
 
   claim <T><TT>

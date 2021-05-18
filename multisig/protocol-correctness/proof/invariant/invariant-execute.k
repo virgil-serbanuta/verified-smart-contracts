@@ -1,11 +1,11 @@
-require "protocol-correctness/proof/execution-proof.k"
+require "protocol-correctness/proof/main-proof-execute.k"
 require "protocol-correctness/proof/functions/functions-execute.k"
 require "protocol-correctness/proof/instrumentation/pushlist/pushlist-execute.k"
 
 require "protocol-correctness/proof/invariant/init-loop-parts.k"
 
 module INVARIANT-EXECUTE-SYNTAX
-  imports EXECUTION-PROOF-SYNTAX
+  imports MAIN-PROOF-EXECUTE-SYNTAX
 endmodule
 
 module INVARIANT-INSTRUMENTATION
@@ -484,7 +484,7 @@ endmodule
 module DISCARD-ACTION-INSTRUMENTATION
   imports INVARIANT-INSTRUMENTATION
   imports PROOF-INSTRUMENTATION
-  imports EXECUTION-PROOF
+  imports MAIN-PROOF-EXECUTE
   imports PSEUDOCODE
 
   syntax KItem ::= splitDiscardAction(actionId:Usize)
@@ -632,7 +632,7 @@ module PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
 
   imports PERFORM-SPLIT-ACTION-INSTRUMENTATION
   imports PROOF-INSTRUMENTATION
-  imports EXECUTION-PROOF
+  imports MAIN-PROOF-EXECUTE
   imports PSEUDOCODE
 
   syntax KItem ::= splitPerformActionEndpoint(actionId:Usize)
@@ -1036,13 +1036,29 @@ module PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
         <user-roles>UserIdToRole:Map</user-roles>
         <address-to-user-id>UserAddress |-> UserId:Usize _AddressToUserId:Map</address-to-user-id>
     requires UserId in_keys(UserIdToRole)
-
 endmodule
 
-module INVARIANT-EXECUTE
-  imports EXECUTION-PROOF
-  imports FUNCTIONS-EXECUTE
+module INVARIANT-FUNCTIONS
+  imports INVARIANT
 
+  syntax CustomInvariantData ::= "no-data"
+  rule  customInvariant(
+          no-data,
+          _NumUsers:Usize,
+          _UserIdToAddress:Map,
+          _AddressToUserId:Map,
+          _NumBoardMembers:Usize,
+          _NumProposers:Usize,
+          _UserRoles:Map,
+          _Quorum:Usize,
+          _ActionLastIndex:Usize,
+          _ActionData:Map,
+          _ActionSigners:Map,
+          _Handling:PropertyHandling)
+      => true
+endmodule
+
+module ALL-INVARIANT-INSTRUMENTATION
   imports INVARIANT-INSTRUMENTATION
   imports SIGN-INSTRUMENTATION
   imports CHANGE-USER-ROLE-INSTRUMENTATION
@@ -1055,6 +1071,15 @@ module INVARIANT-EXECUTE
   imports DISCARD-ACTION-INSTRUMENTATION
   imports UNSIGN-INSTRUMENTATION
   imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
+endmodule
+
+module INVARIANT-EXECUTE
+  imports MAIN-PROOF-EXECUTE
+  imports FUNCTIONS-EXECUTE
+
+  imports ALL-INVARIANT-INSTRUMENTATION
+
+  imports INVARIANT-FUNCTIONS
 
   imports INIT-LOOP-PARTS
 endmodule

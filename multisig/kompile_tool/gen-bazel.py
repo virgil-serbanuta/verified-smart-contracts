@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import subprocess
 import sys
 
 class KFile(object):
@@ -84,7 +85,7 @@ class StringRecorder(object):
     assert not self.__current_string
     return self.__strings
 
-def loadFile(name):
+def loadFile(directory, name):
   START = 0
   SLASH = 1
   MULTILINE = 2
@@ -210,7 +211,7 @@ def loadFile(name):
       lambda_tr(tr(SSLASH_SP_BREADTH_SP_EQ_SP_IN), breadth.add)
     ],
   }
-  with open(name, 'r') as f:
+  with open(os.path.join(directory, name), 'r') as f:
     contents = f.read()
   state = START
   for c in contents:
@@ -287,6 +288,7 @@ def makeSemanticsRule(file, dependencyResolver, out):
   appendName(rule_name, out)
   appendSrcs(file_name, out)
   appendDeps('deps', file.require(), libraryName, dependencyResolver, False, out)
+  appendPublic(out)
   out.append(')\n')
   out.append('\n')
 
@@ -312,7 +314,7 @@ def makeProofRule(file, semantics, dependencyResolver, out):
   appendSrcs(file_name, out)
   appendDeps('trusted', file.require(), removeExtension, dependencyResolver, True, out)
   out.append('  semantics = "')
-  out.append(semanticsName(semantics))
+  out.append(semantics)
   out.append('",\n')
   if (file.timeout()):
     out.append('  timeout = "')
@@ -361,56 +363,114 @@ class DependencyResolver(object):
       return "//%s:%s" % (split[0], split[1])
     return ":%s" % relative_to_current
 
-def main(name, argv):
-  if len(argv) != 1:
-    print("Usage: %s <bazel-root>" % name)
-  bazel_root = argv[0]
-  dependencyResolver = DependencyResolver(bazel_root, os.getcwd())
+def loadConfig(name):
+  semantics = None
+  skip = False
+  with open(name, 'r') as f:
+    for line in f:
+      line = line.strip()
+      if not line or line.startswith('#'):
+        continue
+      (key, _, value) = line.partition(':')
+      key = key.strip()
+      value = value.strip()
+      if key == 'semantics':
+        semantics = value
+      elif key == 'skip':
+        skip = bool(value)
+      else:
+        assert False, "Unrecognized configuration key: '%s'." % key
+  return (skip, semantics)
+
+def generateBuildFile(current_dir, bazel_root):
+  semantics = None
+  skip = False
+  config_file = os.path.join(current_dir, '.gen-bazel')
+  print('Generating for: %s' % current_dir)
+  if os.path.exists(config_file):
+    skip, semantics = loadConfig(config_file)
+  if skip:
+    return
+
+  dependencyResolver = DependencyResolver(bazel_root, current_dir)
   out = []
   libraries = []
   proofs = []
   main = None
-  for fname in os.listdir('.'):
+  for fname in os.listdir(current_dir):
     if os.path.isdir(fname):
       continue
     if not fname.endswith('.k'):
       continue
-    if fname.endswith('-execute.k'):
-      assert not main
-      main = fname
-      continue
     if fname.startswith('proof'):
       proofs.append(fname)
       continue
+    if fname.endswith('-execute.k'):
+      assert not main, [main, fname]
+      main = fname
+      continue
     libraries.append(fname)
 
-  assert main
-
-  to_load = ['"//:proof.bzl"', '"kompile"', '"klibrary"']
+  to_load = ['"//:proof.bzl"']
+  if main:
+    assert not semantics
+    semantics = semanticsName(main)
+    to_load.append('"kompile"')
+    to_load.append('"klibrary"')
+  elif libraries:
+    to_load.append('"klibrary"')
   if proofs:
     to_load.append('"kprove_test"')
     to_load.append('"ktrusted"')
+
+  if not main and not libraries and not proofs:
+    with open(os.path.join(current_dir, 'BUILD'), 'w') as f:
+      f.write('')
+    return
+
+  assert semantics, "Semantics rule not present in the config file and no semantics could be found in the current directory (%s)." % current_dir
 
   out.append('load(')
   out.append(', '.join(to_load))
   out.append(')\n')
   out.append('\n')
 
-  contents = loadFile(main)
-  
-  makeSemanticsRule(contents, dependencyResolver, out)
-  makeLibraryRule(contents, dependencyResolver, out)
+  if main:
+    contents = loadFile(current_dir, main)
+    makeSemanticsRule(contents, dependencyResolver, out)
+    makeLibraryRule(contents, dependencyResolver, out)
 
   for l in sorted(libraries):
-    contents = loadFile(l)
+    contents = loadFile(current_dir, l)
     makeLibraryRule(contents, dependencyResolver, out)
 
   for p in sorted(proofs):
-    contents = loadFile(p)
-    makeProofRule(contents, main, dependencyResolver, out)
+    contents = loadFile(current_dir, p)
+    makeProofRule(contents, semantics, dependencyResolver, out)
     makeTrustedRule(contents, out)
 
-  print(''.join(out))
+  with open(os.path.join(current_dir, 'BUILD'), 'w') as f:
+    f.write(''.join(out))
+
+def recursiveGenBuild(current_dir, bazel_root):
+  generateBuildFile(current_dir, bazel_root)
+  for fname in os.listdir(current_dir):
+    if fname.endswith('-kompiled'):
+      continue
+    if fname.startswith('tmp'):
+      continue
+    if fname == 'out':
+      continue
+    if os.path.isdir(os.path.join(current_dir, fname)):
+      recursiveGenBuild(os.path.join(current_dir, fname), bazel_root)
+      continue
+
+def main(name, argv):
+  # if len(argv) < 1 or len(argv) > 2:
+  #   print("Usage: %s <bazel-root> [<main-semantics-rule>]" % name)
+  bazel_root = subprocess.check_output('bazel info | grep "workspace:" | sed \'s/^.* //\'', shell=True)
+  bazel_root = bazel_root.decode('utf-8').strip()
+  recursiveGenBuild(os.path.join(bazel_root, 'protocol-correctness'), bazel_root)
 
 if __name__ == '__main__':
   main(sys.argv[0], sys.argv[1:])

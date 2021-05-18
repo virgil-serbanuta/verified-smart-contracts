@@ -4,7 +4,7 @@ module PROOF-UNSIGN-OTHER-SIGNERS-NOT-FIRST
   imports FUNCTIONS-EXECUTE
 //@ trusted
 // module TRUSTED-UNSIGN-OTHER-SIGNERS-NOT-FIRST
-  // imports EXECUTION-PROOF
+  // imports MAIN-PROOF-EXECUTE
 //@ end
 
   claim <T><TT>

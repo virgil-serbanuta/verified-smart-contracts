@@ -16,7 +16,8 @@ module PROOF-PROPOSE-SEND-EGLD
   imports TRUSTED-PROPOSE-ACTION-PROPOSER
 //@ trusted
 // module TRUSTED-PROPOSE-SEND-EGLD
-// imports INVARIANT
+//   imports INVARIANT-FUNCTIONS
+//   imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
 //@ end
 
   claim <T><TT>
@@ -56,6 +57,7 @@ module PROOF-PROPOSE-SEND-EGLD
               PerformedActions:List):StateCell
         </TT></T>
     requires invariant(
+        no-data,
         NumUsers:Usize,
         UserIdToAddress:Map,
         AddressToUserId:Map,
@@ -68,6 +70,7 @@ module PROOF-PROPOSE-SEND-EGLD
         ActionSigners0:Map,
         expand(expanded))
     ensures invariant(
+        no-data,
         NumUsers:Usize,
         UserIdToAddress:Map,
         AddressToUserId:Map,

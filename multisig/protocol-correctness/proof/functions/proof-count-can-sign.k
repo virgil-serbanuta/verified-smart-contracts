@@ -5,7 +5,7 @@ module PROOF-COUNT-CAN-SIGN
   imports FUNCTIONS-EXECUTE
 //@ trusted
 // module TRUSTED-COUNT-CAN-SIGN
-  // imports EXECUTION-PROOF
+  // imports MAIN-PROOF-EXECUTE
 //@ end
 
   claim <T> <TT>

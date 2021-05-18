@@ -16,7 +16,7 @@ module PROOF-PROPOSE-SC-CALL
   imports TRUSTED-PROPOSE-ACTION-PROPOSER
 //@ trusted
 // module TRUSTED-PROPOSE-SC-CALL
-// imports INVARIANT
+//   imports INVARIANT-FUNCTIONS
 //@ end
 
   claim <T><TT>
@@ -60,6 +60,7 @@ module PROOF-PROPOSE-SC-CALL
               PerformedActions:List):StateCell
         </TT></T>
     requires invariant(
+            no-data,
             NumUsers:Usize,
             UserIdToAddress:Map,
             AddressToUserId:Map,
@@ -73,6 +74,7 @@ module PROOF-PROPOSE-SC-CALL
             expand(expanded))
         andBool isKResult(Args)
     ensures invariant(
+        no-data,
             NumUsers:Usize,
             UserIdToAddress:Map,
             AddressToUserId:Map,

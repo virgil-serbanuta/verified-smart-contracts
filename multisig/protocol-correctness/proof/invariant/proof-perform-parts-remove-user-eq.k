@@ -15,9 +15,9 @@ module PROOF-PERFORM-PARTS-REMOVE-USER-EQ
   imports TRUSTED-PERFORM-ACTION-ENDPOINT-REMOVE-USER-PROPOSER-NOBODY-LEFT-EQ-MARKER
 //@ trusted
 // module TRUSTED-PERFORM-PARTS-REMOVE-USER-EQ
-// imports INVARIANT
+//   imports INVARIANT-FUNCTIONS
+//   imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
 //@ end
-  imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
 
   claim <T><TT>
           <k> splitRemoveUser1(CallerAddress:Address)
@@ -75,6 +75,7 @@ module PROOF-PERFORM-PARTS-REMOVE-USER-EQ
         </TT></T>
     requires true
         andBool invariant(
+            no-data,
             NumUsers,
             UserIdToAddress,
             AddressToUserId,
@@ -92,6 +93,7 @@ module PROOF-PERFORM-PARTS-REMOVE-USER-EQ
                     toExpressionListOrDefault(ActionSigners[ActionId] orDefault [.], [void, .]),
                     UserIdToRole)
     ensures invariant(
+        no-data,
         ?NumUsers1,
         ?UserIdToAddress1,
         ?AddressToUserId1,

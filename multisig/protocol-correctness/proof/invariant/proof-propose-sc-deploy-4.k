@@ -10,8 +10,8 @@ module PROOF-PROPOSE-SC-DEPLOY-4
   imports TRUSTED-PROPOSE-SC-DEPLOY-PROPOSER
 //@ trusted
 // module TRUSTED-PROPOSE-SC-DEPLOY-4
-// imports INVARIANT
-// imports PROOF-INSTRUMENTATION
+//   imports INVARIANT-FUNCTIONS
+//   imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
 //@ end
 
   claim <T><TT>
@@ -77,6 +77,7 @@ module PROOF-PROPOSE-SC-DEPLOY-4
         </TT></T>
     requires true
         andBool invariant(
+            no-data,
             NumUsers,
             UserIdToAddress,
             AddressToUserId,
@@ -91,6 +92,7 @@ module PROOF-PROPOSE-SC-DEPLOY-4
         andBool isKResult(Args)
     ensures true
         andBool invariant(
+            no-data,
             NumUsers,
             UserIdToAddress,
             AddressToUserId,

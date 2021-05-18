@@ -1,3 +1,4 @@
+// breadth = 3
 module TRUSTED-MAP-SEMANTICS
   imports MAP-EXECUTE
 

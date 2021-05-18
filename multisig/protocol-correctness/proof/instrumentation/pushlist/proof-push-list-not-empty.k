@@ -1,3 +1,4 @@
+// breadth = 2
 //@ proof
 
 module PROOF-PUSH-LIST-NOT-EMPTY

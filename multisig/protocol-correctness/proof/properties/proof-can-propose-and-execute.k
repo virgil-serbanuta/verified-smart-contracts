@@ -1,13 +1,17 @@
-require "../invariant/proof-count-can-sign.k"
-require "../map/proof-map-semantics.k"
-require "proof-board-members-sign-for.k"
-require "proof-board-members-sign-for-2.k"
-require "proof-board-members-sign-for-3.k"
+// timeout = eternal
+// breadth = 2
+//@ proof
+require "trusted-board-members-sign-for.k"  //@ Bazel remove
+require "trusted-board-members-sign-for-2.k"  //@ Bazel remove
+require "trusted-board-members-sign-for-3.k"  //@ Bazel remove
 
-require "../functions/trusted-propose-action-BoardMember.k"
-require "../functions/trusted-propose-action-Proposer.k"
-require "../functions/trusted-propose-action-error-no-user.k"
-require "../functions/trusted-propose-action-error-no-role.k"
+require "../map/trusted-map-semantics.k"  //@ Bazel remove
+
+require "../functions/trusted-count-can-sign.k"  //@ Bazel remove
+require "../functions/trusted-propose-action-BoardMember.k"  //@ Bazel remove
+require "../functions/trusted-propose-action-Proposer.k"  //@ Bazel remove
+require "../functions/trusted-propose-action-error-no-user.k"  //@ Bazel remove
+require "../functions/trusted-propose-action-error-no-role.k"  //@ Bazel remove
 
 module PROOF-CAN-PROPOSE-AND-EXECUTE
   imports MAP-EXECUTE
@@ -25,6 +29,11 @@ module PROOF-CAN-PROPOSE-AND-EXECUTE
   imports TRUSTED-PROPOSE-ACTION-ERROR-NO-USER
   imports TRUSTED-PROPOSE-ACTION-BOARDMEMBER
   imports TRUSTED-PROPOSE-ACTION-PROPOSER
+//@ trusted
+// module TRUSTED-CAN-PROPOSE-AND-EXECUTE
+//   imports PROPERTIES-EXECUTE
+//   imports PSEUDOCODE
+//@ end
 
   claim <T><TT>
           <k> pickBoardMemberOrProposer(UserIdToRole)
@@ -50,29 +59,30 @@ module PROOF-CAN-PROPOSE-AND-EXECUTE
         <T><TT>
           <k> .K </k>
           invariantState(
-              NumUsers:Usize,
-              UserIdToAddress:Map,
-              AddressToUserId:Map,
-              NumBoardMembers:Usize,
-              NumProposers:Usize,
-              UserIdToRole:Map,
+              NumUsers,
+              UserIdToAddress,
+              AddressToUserId,
+              NumBoardMembers,
+              NumProposers,
+              UserIdToRole,
               u(0),
               add(ActionLastIndex, u(1)),
-              ActionData:Map,
-              ActionSigners:Map,
+              ActionData,
+              ActionSigners,
               ?_PerformedActions:List):StateCell
         </TT></T>
     requires invariant(
-          NumUsers:Usize,
-          UserIdToAddress:Map,
-          AddressToUserId:Map,
-          NumBoardMembers:Usize,
-          NumProposers:Usize,
-          UserIdToRole:Map,
-          Quorum:Usize,
-          ActionLastIndex:Usize,
-          ActionData:Map,
-          ActionSigners:Map,
+          no-data,
+          NumUsers,
+          UserIdToAddress,
+          AddressToUserId,
+          NumBoardMembers,
+          NumProposers,
+          UserIdToRole,
+          Quorum,
+          ActionLastIndex,
+          ActionData,
+          ActionSigners,
           expand(expand(expanded)))
       // TODO: Move everything below to the invariant.
       andBool valuesAreOfType(UserIdToAddress, rAddress)
@@ -87,5 +97,8 @@ module PROOF-CAN-PROPOSE-AND-EXECUTE
       andBool mapCount(UserIdToRole, MEP.IsValue(BoardMember))
           +Int mapCount(UserIdToRole, MEP.IsValue(Proposer))
           >Int 0
-
+    //@ proof
+    //@ trusted
+    // [trusted]
+    //@ end
 endmodule

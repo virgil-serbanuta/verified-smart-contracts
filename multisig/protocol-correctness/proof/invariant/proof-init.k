@@ -1,3 +1,5 @@
+// timeout = long
+// breadth = 2
 //@ proof
 require "trusted-init-loop-error.k"  //@ Bazel remove
 require "trusted-init-loop-no-error.k"  //@ Bazel remove
@@ -49,6 +51,7 @@ module PROOF-INIT
         andBool noReusedIndexRole(u(1), .Map, Addresses)
 
     ensures invariant(
+        no-data,
           ?NumUsers,
           ?UserIdToAddress,
           ?AddressToUserId,

@@ -1,3 +1,5 @@
+// timeout = long
+// breadth = 2
 //@ proof
 require "trusted-call-invariant.k"  //@ Bazel remove
 

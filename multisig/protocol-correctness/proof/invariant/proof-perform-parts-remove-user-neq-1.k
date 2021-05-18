@@ -1,22 +1,33 @@
-// timeout = long
+// timeout = eternal
 // breadth = 6
 //@ proof
-require "../functions/trusted-perform-action-endpoint-add-board-member-BoardMember-eq-marker.k"  //@ Bazel remove
-require "../functions/trusted-perform-action-endpoint-add-board-member-Proposer-eq-marker.k"  //@ Bazel remove
+// require "../functions/trusted-perform-action-endpoint-remove-user-BoardMember-marker.k"  //@ Bazel remove
+// require "../functions/trusted-perform-action-endpoint-remove-user-BoardMember-too-few-marker.k"  //@ Bazel remove
+require "../functions/trusted-perform-action-endpoint-remove-user-Proposer-marker.k"  //@ Bazel remove
+require "../functions/trusted-perform-action-endpoint-remove-user-Proposer-nobody-left-marker.k"  //@ Bazel remove
 
-module PROOF-PERFORM-PARTS-ADD-BOARD-MEMBER-EQ
+module PROOF-PERFORM-PARTS-REMOVE-USER-NEQ-1
   imports INVARIANT-EXECUTE
 
-  imports TRUSTED-PERFORM-ACTION-ENDPOINT-ADD-BOARD-MEMBER-BOARDMEMBER-EQ-MARKER
-  imports TRUSTED-PERFORM-ACTION-ENDPOINT-ADD-BOARD-MEMBER-PROPOSER-EQ-MARKER
+  // imports TRUSTED-PERFORM-ACTION-ENDPOINT-REMOVE-USER-BOARDMEMBER-MARKER
+  // imports TRUSTED-PERFORM-ACTION-ENDPOINT-REMOVE-USER-BOARDMEMBER-TOO-FEW-MARKER
+  imports TRUSTED-PERFORM-ACTION-ENDPOINT-REMOVE-USER-PROPOSER-MARKER
+  imports TRUSTED-PERFORM-ACTION-ENDPOINT-REMOVE-USER-PROPOSER-NOBODY-LEFT-MARKER
 //@ trusted
-// module TRUSTED-PERFORM-PARTS-ADD-BOARD-MEMBER-EQ
+// module TRUSTED-PERFORM-PARTS-REMOVE-USER-NEQ-1
 //   imports INVARIANT-FUNCTIONS
 //   imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
 //@ end
 
   claim <T><TT>
-          <k> splitAddBoardMember1(CallerAddress:Address)
+          <k>
+              branchK
+                ( countMapValues(UserIdToRole, wrap(BoardMember))
+                      +Int countMapValues(UserIdToRole, wrap(Proposer))
+                    ==Int 1
+                , remove-user-Proposer-nobody-left.k
+                , remove-user-Proposer.k
+                )
               ~> call(performActionEndpoint(ActionId:Usize))
               ~> popContext
               ~> evaluateReturnValue
@@ -27,13 +38,19 @@ module PROOF-PERFORM-PARTS-ADD-BOARD-MEMBER-EQ
           invariantStateStack(
               NumUsers:Usize,
               UserIdToAddress:Map,
-              (CallerAddress |-> CallerId:Usize _AddressToUserId:Map) #as AddressToUserId:Map,
+              (CallerAddress |-> CallerId:Usize
+                  UserAddress |-> u(UserId:Int)
+                  _AddressToUserId:Map
+              ) #as AddressToUserId:Map,
               NumBoardMembers:Usize,
               NumProposers:Usize,
-              (CallerId |-> CallerRole:UserRole _UserIdToRole:Map) #as UserIdToRole:Map,
+              (CallerId |-> CallerRole:UserRole
+                  u(UserId) |-> Proposer
+                  _UserIdToRole:Map
+              ) #as UserIdToRole:Map,
               u(Quorum:Int),
               ActionLastIndex0:Usize,
-              (ActionId |-> AddBoardMember(CallerAddress) ActionData0:Map) #as ActionData:Map,
+              (ActionId |-> RemoveUser(UserAddress:Address) _ActionData:Map) #as ActionData:Map,
               ActionSigners:Map,
               CallerAddress:Address,
               stack(
@@ -80,7 +97,7 @@ module PROOF-PERFORM-PARTS-ADD-BOARD-MEMBER-EQ
             UserIdToRole,
             u(Quorum),
             ActionLastIndex0,
-            ActionData0,
+            ActionData,
             ActionSigners,
             expand(expanded))
         andBool (CallerRole ==K BoardMember orBool CallerRole ==K Proposer)
@@ -88,6 +105,7 @@ module PROOF-PERFORM-PARTS-ADD-BOARD-MEMBER-EQ
                 <=Int countCanSignFunction(
                     toExpressionListOrDefault(ActionSigners[ActionId] orDefault [.], [void, .]),
                     UserIdToRole)
+        andBool notBool UserAddress ==K CallerAddress
     ensures invariant(
         no-data,
         ?NumUsers1,

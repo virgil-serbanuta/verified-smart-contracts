@@ -4,18 +4,19 @@ kompile(
   name = "invariant-execute",
   srcs = ["invariant-execute.k"],
   deps = [
-      "//protocol-correctness/proof:execution-proof-files",
+      "//protocol-correctness/proof:main-proof-execute-files",
       "//protocol-correctness/proof/functions:functions-execute-files",
       "//protocol-correctness/proof/instrumentation/pushlist:pushlist-execute-files",
       ":init-loop-parts-files",
   ],
+  visibility = ["//visibility:public"],
 )
 
 klibrary(
   name = "invariant-execute-files",
   srcs = ["invariant-execute.k"],
   deps = [
-      "//protocol-correctness/proof:execution-proof-files",
+      "//protocol-correctness/proof:main-proof-execute-files",
       "//protocol-correctness/proof/functions:functions-execute-files",
       "//protocol-correctness/proof/instrumentation/pushlist:pushlist-execute-files",
       ":init-loop-parts-files",
@@ -101,7 +102,7 @@ kprove_test(
       "//protocol-correctness/proof/functions:trusted-discard-action-no-user-marker",
   ],
   semantics = "invariant-execute",
-  timeout = "eternal",
+  timeout = "long",
   breadth = "8",
 )
 
@@ -118,7 +119,7 @@ kprove_test(
   ],
   semantics = "invariant-execute",
   timeout = "moderate",
-  breadth = "1",
+  breadth = "2",
 )
 
 ktrusted(
@@ -133,8 +134,8 @@ kprove_test(
   trusted = [
   ],
   semantics = "invariant-execute",
-  timeout = "moderate",
-  breadth = "1",
+  timeout = "long",
+  breadth = "2",
 )
 
 ktrusted(
@@ -151,7 +152,7 @@ kprove_test(
   ],
   semantics = "invariant-execute",
   timeout = "moderate",
-  breadth = "1",
+  breadth = "2",
 )
 
 ktrusted(
@@ -169,6 +170,8 @@ kprove_test(
       "//protocol-correctness/proof/functions:trusted-listlen",
   ],
   semantics = "invariant-execute",
+  timeout = "long",
+  breadth = "2",
 )
 
 ktrusted(
@@ -458,17 +461,51 @@ ktrusted(
 )
 
 kprove_test(
-  name = "proof-perform-parts-remove-user-neq",
-  srcs = ["proof-perform-parts-remove-user-neq.k"],
+  name = "proof-perform-parts-remove-user-neq-1",
+  srcs = ["proof-perform-parts-remove-user-neq-1.k"],
   trusted = [
-      "//protocol-correctness/proof/functions:trusted-perform-action-endpoint-remove-user-BoardMember-marker",
-      "//protocol-correctness/proof/functions:trusted-perform-action-endpoint-remove-user-BoardMember-too-few-marker",
       "//protocol-correctness/proof/functions:trusted-perform-action-endpoint-remove-user-Proposer-marker",
       "//protocol-correctness/proof/functions:trusted-perform-action-endpoint-remove-user-Proposer-nobody-left-marker",
   ],
   semantics = "invariant-execute",
   timeout = "eternal",
-  breadth = "13",
+  breadth = "6",
+)
+
+ktrusted(
+  name = "trusted-perform-parts-remove-user-neq-1",
+  srcs = ["proof-perform-parts-remove-user-neq-1.k"],
+  visibility = ["//visibility:public"],
+)
+
+kprove_test(
+  name = "proof-perform-parts-remove-user-neq-2",
+  srcs = ["proof-perform-parts-remove-user-neq-2.k"],
+  trusted = [
+      "//protocol-correctness/proof/functions:trusted-perform-action-endpoint-remove-user-BoardMember-marker",
+      "//protocol-correctness/proof/functions:trusted-perform-action-endpoint-remove-user-BoardMember-too-few-marker",
+  ],
+  semantics = "invariant-execute",
+  timeout = "eternal",
+  breadth = "6",
+)
+
+ktrusted(
+  name = "trusted-perform-parts-remove-user-neq-2",
+  srcs = ["proof-perform-parts-remove-user-neq-2.k"],
+  visibility = ["//visibility:public"],
+)
+
+kprove_test(
+  name = "proof-perform-parts-remove-user-neq",
+  srcs = ["proof-perform-parts-remove-user-neq.k"],
+  trusted = [
+      ":trusted-perform-parts-remove-user-neq-1",
+      ":trusted-perform-parts-remove-user-neq-2",
+  ],
+  semantics = "invariant-execute",
+  timeout = "eternal",
+  breadth = "3",
 )
 
 ktrusted(
@@ -638,7 +675,7 @@ kprove_test(
       "//protocol-correctness/proof/functions:trusted-propose-sc-deploy-BoardMember",
   ],
   semantics = "invariant-execute",
-  timeout = "eternal",
+  timeout = "long",
   breadth = "1",
 )
 
@@ -753,5 +790,4 @@ ktrusted(
   srcs = ["proof-unsign.k"],
   visibility = ["//visibility:public"],
 )
-
 

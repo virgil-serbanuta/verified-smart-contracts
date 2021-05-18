@@ -1,9 +1,21 @@
-load("//:proof.bzl", "klibrary")
+load("//:proof.bzl", "kompile", "klibrary")
+
+kompile(
+  name = "main-proof-execute",
+  srcs = ["main-proof-execute.k"],
+  deps = [
+      "//protocol-correctness:pseudocode-files",
+      ":invariant-files",
+      ":execution-proof-helpers-files",
+  ],
+  visibility = ["//visibility:public"],
+)
 
 klibrary(
-  name = "execution-proof-files",
-  srcs = ["execution-proof.k"],
+  name = "main-proof-execute-files",
+  srcs = ["main-proof-execute.k"],
   deps = [
+      "//protocol-correctness:pseudocode-files",
       ":invariant-files",
       ":execution-proof-helpers-files",
   ],
@@ -15,7 +27,7 @@ klibrary(
   srcs = ["execution-proof-helpers.k"],
   deps = [
       "//protocol-correctness:pseudocode-files",
-      "//protocol-correctness/proof/map:map-files",
+      "//protocol-correctness/proof/map:map-execute-files",
   ],
   visibility = ["//visibility:public"],
 )
@@ -25,7 +37,7 @@ klibrary(
   srcs = ["invariant.k"],
   deps = [
       ":execution-proof-helpers-files",
-      "//protocol-correctness:pseudocode-files"
   ],
   visibility = ["//visibility:public"],
 )
+

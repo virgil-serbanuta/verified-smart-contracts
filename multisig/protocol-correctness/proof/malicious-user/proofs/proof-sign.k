@@ -1,12 +1,14 @@
+// timeout = eternal
+// breadth = 9
 //@ proof
-require "../instrumentation/pushlist/trusted-push-list-not-empty.k"  //@ Bazel remove
-require "../functions/trusted-sign-empty-action.k"  //@ Bazel remove
-require "../functions/trusted-sign-caller-not-user.k"  //@ Bazel remove
-require "../functions/trusted-sign-caller-none.k"  //@ Bazel remove
-require "../functions/trusted-sign-caller-proposer.k"  //@ Bazel remove
-require "../functions/trusted-sign-no-signers.k"  //@ Bazel remove
-require "../functions/trusted-sign-existing-signers-in-list.k"  //@ Bazel remove
-require "../functions/trusted-sign-existing-signers-not-in-list.k"  //@ Bazel remove
+require "../../instrumentation/pushlist/trusted-push-list-not-empty.k"  //@ Bazel remove
+require "../../functions/trusted-sign-empty-action.k"  //@ Bazel remove
+require "../../functions/trusted-sign-caller-not-user.k"  //@ Bazel remove
+require "../../functions/trusted-sign-caller-none.k"  //@ Bazel remove
+require "../../functions/trusted-sign-caller-proposer.k"  //@ Bazel remove
+require "../../functions/trusted-sign-no-signers.k"  //@ Bazel remove
+require "../../functions/trusted-sign-existing-signers-in-list.k"  //@ Bazel remove
+require "../../functions/trusted-sign-existing-signers-not-in-list.k"  //@ Bazel remove
 
 module PROOF-SIGN
   imports TRUSTED-PUSH-LIST-NOT-EMPTY

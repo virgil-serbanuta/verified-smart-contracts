@@ -1,3 +1,5 @@
+// timeout = eternal
+// breadth = 11
 //@ proof
 require "trusted-discard-action.k"  //@ Bazel remove
 require "trusted-perform-action.k"  //@ Bazel remove

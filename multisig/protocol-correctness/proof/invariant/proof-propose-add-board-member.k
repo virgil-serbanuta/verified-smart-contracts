@@ -16,7 +16,7 @@ module PROOF-PROPOSE-ADD-BOARD-MEMBER
   imports TRUSTED-PROPOSE-ACTION-PROPOSER
 //@ trusted
 // module TRUSTED-PROPOSE-ADD-BOARD-MEMBER
-// imports INVARIANT
+//   imports INVARIANT-FUNCTIONS
 //@ end
 
   claim <T><TT>
@@ -56,6 +56,7 @@ module PROOF-PROPOSE-ADD-BOARD-MEMBER
               PerformedActions:List):StateCell
         </TT></T>
     requires invariant(
+        no-data,
         NumUsers:Usize,
         UserIdToAddress:Map,
         AddressToUserId:Map,
@@ -68,6 +69,7 @@ module PROOF-PROPOSE-ADD-BOARD-MEMBER
         ActionSigners0:Map,
         expand(expanded))
     ensures invariant(
+        no-data,
         NumUsers:Usize,
         UserIdToAddress:Map,
         AddressToUserId:Map,

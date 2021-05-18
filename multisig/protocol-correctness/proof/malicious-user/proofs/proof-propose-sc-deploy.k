@@ -1,3 +1,5 @@
+// timeout = eternal
+// breadth = 6
 //@ proof
 require "trusted-propose-sc-deploy-1.k"  //@ Bazel remove
 require "trusted-propose-sc-deploy-2.k"  //@ Bazel remove

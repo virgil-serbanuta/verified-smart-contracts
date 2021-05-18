@@ -4,7 +4,7 @@ module PROOF-UNSIGN-NO-SIGNERS
   imports FUNCTIONS-EXECUTE
 //@ trusted
 // module TRUSTED-UNSIGN-NO-SIGNERS
-  // imports EXECUTION-PROOF
+  // imports MAIN-PROOF-EXECUTE
 //@ end
 
   claim <T><TT>

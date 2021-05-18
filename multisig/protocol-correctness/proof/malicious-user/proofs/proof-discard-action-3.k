@@ -1,8 +1,10 @@
+// timeout = eternal
+// breadth = 9
 //@ proof
 require "trusted-discard-action-1.k"  //@ Bazel remove
 require "trusted-discard-action-2.k"  //@ Bazel remove
-require "protocol-correctness/proof/functions/trusted-discard-action-no-signers.k"  //@ Bazel remove
-require "protocol-correctness/proof/functions/trusted-discard-action-no-signers-no-action.k"  //@ Bazel remove
+require "../../functions/trusted-discard-action-no-signers.k"  //@ Bazel remove
+require "../../functions/trusted-discard-action-no-signers-no-action.k"  //@ Bazel remove
 
 module PROOF-DISCARD-ACTION-3
   imports TRUSTED-DISCARD-ACTION-1

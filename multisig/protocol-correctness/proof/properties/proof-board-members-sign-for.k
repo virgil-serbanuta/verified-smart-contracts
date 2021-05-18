@@ -1,90 +1,15 @@
-require "../map/proof-map-semantics.k"
+// timeout = long
+// breadth = 3
+//@ proof
+require "../map/trusted-map-semantics.k"  //@ Bazel remove
 
-require "../functions/trusted-sign-empty-action.k"
-require "../functions/trusted-sign-caller-not-user.k"
-require "../functions/trusted-sign-caller-none.k"
-require "../functions/trusted-sign-caller-proposer.k"
-require "../functions/trusted-sign-no-signers.k"
-require "../functions/trusted-sign-existing-signers-in-list.k"
-require "../functions/trusted-sign-existing-signers-not-in-list.k"
-
-// TODO: Make a single module
-module TRUSTED-BOARD-MEMBERS-SIGN-FOR
-  imports PROPERTIES-EXECUTE
-  imports PSEUDOCODE
-
-  claim <T><TT>
-          <k> boardMembersSignFor(ActionIndex:Usize, PartialUserRoles:Map)
-              ~> K:K
-          </k>
-          invariantState(
-              NumUsers:Usize,
-              UserIdToAddress:Map,
-              AddressToUserId:Map,
-              NumBoardMembers:Usize,
-              NumProposers:Usize,
-              UserRoles:Map,
-              Quorum:Usize,
-              ActionLastIndex:Usize,
-              (ActionIndex |-> _Action:KItem _ActionData:Map) #as ActionData:Map,
-              ActionIndex |-> Signatures:ExpressionList ActionSigners:Map,
-              PerformedActions:List)
-        </TT></T>
-      =>
-        <T><TT>
-          <k> K:K </k>
-          invariantState(
-              NumUsers,
-              UserIdToAddress,
-              AddressToUserId,
-              NumBoardMembers,
-              NumProposers,
-              UserRoles,
-              Quorum,
-              ActionLastIndex,
-              ActionData,
-              ActionIndex |-> ?Signatures ActionSigners,
-              PerformedActions:List):StateCell
-        </TT></T>
-    requires invariant(
-            NumUsers,
-            UserIdToAddress,
-            AddressToUserId,
-            NumBoardMembers,
-            NumProposers,
-            UserRoles,
-            Quorum,
-            ActionLastIndex,
-            ActionData,
-            ActionIndex |-> Signatures ActionSigners,
-            expand(expanded))
-
-        andBool newUserIdToRoleInvariant(PartialUserRoles, UserIdToAddress)
-        andBool userIdToAddressInvariant(UserIdToAddress, AddressToUserId)
-        andBool mapsAreReverse(AddressToUserId, UserIdToAddress)
-        andBool mapIncluded(PartialUserRoles, UserRoles)
-        andBool valuesAreNotEmpty(ActionData, rAction)
-
-        andBool noMapKeyInList(PartialUserRoles, Signatures)
-
-    ensures invariant(
-            NumUsers,
-            UserIdToAddress,
-            AddressToUserId,
-            NumBoardMembers,
-            NumProposers,
-            UserRoles,
-            Quorum,
-            ActionLastIndex,
-            ActionData,
-            ActionIndex |-> ?Signatures ActionSigners,
-            usesExpanded)
-
-        andBool countCanSignFunction(?Signatures, UserRoles)
-                ==Int countMapValues(PartialUserRoles, BoardMember)
-                      +Int countCanSignFunction(Signatures, UserRoles)
-    [trusted]
-endmodule
+require "../functions/trusted-sign-empty-action.k"  //@ Bazel remove
+require "../functions/trusted-sign-caller-not-user.k"  //@ Bazel remove
+require "../functions/trusted-sign-caller-none.k"  //@ Bazel remove
+require "../functions/trusted-sign-caller-proposer.k"  //@ Bazel remove
+require "../functions/trusted-sign-no-signers.k"  //@ Bazel remove
+require "../functions/trusted-sign-existing-signers-in-list.k"  //@ Bazel remove
+require "../functions/trusted-sign-existing-signers-not-in-list.k"  //@ Bazel remove
 
 module PROOF-BOARD-MEMBERS-SIGN-FOR
   imports MAP-EXECUTE
@@ -100,6 +25,11 @@ module PROOF-BOARD-MEMBERS-SIGN-FOR
   imports TRUSTED-SIGN-NO-SIGNERS
   imports TRUSTED-SIGN-EXISTING-SIGNERS-IN-LIST
   imports TRUSTED-SIGN-EXISTING-SIGNERS-NOT-IN-LIST
+//@ trusted
+// module TRUSTED-BOARD-MEMBERS-SIGN-FOR
+//   imports PROPERTIES-EXECUTE
+//   imports PSEUDOCODE
+//@ end
 
   claim <T><TT>
           <k> boardMembersSignFor(ActionIndex:Usize, PartialUserRoles:Map)
@@ -135,6 +65,7 @@ module PROOF-BOARD-MEMBERS-SIGN-FOR
               PerformedActions:List):StateCell
         </TT></T>
     requires invariant(
+            no-data,
             NumUsers,
             UserIdToAddress,
             AddressToUserId,
@@ -154,6 +85,7 @@ module PROOF-BOARD-MEMBERS-SIGN-FOR
         andBool valuesAreNotEmpty(ActionData, rAction)
         andBool noMapKeyInList(PartialUserRoles, Signatures)
     ensures invariant(
+            no-data,
             NumUsers,
             UserIdToAddress,
             AddressToUserId,
@@ -166,7 +98,11 @@ module PROOF-BOARD-MEMBERS-SIGN-FOR
             ActionIndex |-> ?Signatures ActionSigners,
             usesExpanded)
         andBool countCanSignFunction(?Signatures, UserRoles)
-                ==Int countMapValues(PartialUserRoles, BoardMember)
+                ==Int countMapValues(PartialUserRoles, wrap(BoardMember))
                       +Int countCanSignFunction(Signatures, UserRoles)
+    //@ proof
+    //@ trusted
+    // [trusted]
+    //@ end
 
 endmodule

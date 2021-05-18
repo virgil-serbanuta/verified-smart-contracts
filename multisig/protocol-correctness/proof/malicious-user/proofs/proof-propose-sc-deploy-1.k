@@ -1,13 +1,17 @@
+// timeout = eternal
+// breadth = 1
 //@ proof
-require "../functions/trusted-propose-sc-deploy-error-no-user.k"  //@ Bazel remove
+require "../../functions/trusted-propose-sc-deploy-error-no-user.k"  //@ Bazel remove
 
 module PROOF-PROPOSE-SC-DEPLOY-1
+  imports MALICIOUS-USER-EXECUTE
+
   imports TRUSTED-PROPOSE-SC-DEPLOY-ERROR-NO-USER
 //@ trusted
 // module TRUSTED-PROPOSE-SC-DEPLOY-1
+//   imports PROOF-INSTRUMENTATION
+//   imports MALICIOUS-USER-INVARIANT
 //@ end
-  imports MALICIOUS-USER-EXECUTE
-  imports PSEUDOCODE
 
   claim <T><TT>
           <k> propose-sc-deploy-no-user.k

@@ -1,12 +1,12 @@
+// timeout = eternal
+// breadth = 13
 //@ proof
-require "../functions/trusted-perform-action-endpoint-New-marker.k"  //@ Bazel remove
-require "../functions/trusted-perform-action-endpoint-no-quorum-marker.k"  //@ Bazel remove
-require "../functions/trusted-perform-action-endpoint-None-marker.k"  //@ Bazel remove
-require "../functions/trusted-perform-action-endpoint-nothing-marker.k"  //@ Bazel remove
+require "../../functions/trusted-perform-action-endpoint-New-marker.k"  //@ Bazel remove
+require "../../functions/trusted-perform-action-endpoint-no-quorum-marker.k"  //@ Bazel remove
+require "../../functions/trusted-perform-action-endpoint-None-marker.k"  //@ Bazel remove
+require "../../functions/trusted-perform-action-endpoint-nothing-marker.k"  //@ Bazel remove
 
 module PROOF-PERFORM-ACTION
-  imports INVARIANT-EXECUTE
-
   imports TRUSTED-PERFORM-ACTION-ENDPOINT-NEW-MARKER
   imports TRUSTED-PERFORM-ACTION-ENDPOINT-NO-QUORUM-MARKER
   imports TRUSTED-PERFORM-ACTION-ENDPOINT-NONE-MARKER

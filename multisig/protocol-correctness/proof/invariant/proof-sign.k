@@ -64,6 +64,7 @@ module PROOF-SIGN
               PerformedActions:List):StateCell
         </TT></T>
     requires invariant(
+        no-data,
         NumUsers:Usize,
         UserIdToAddress:Map,
         AddressToUserId:Map,
@@ -76,6 +77,7 @@ module PROOF-SIGN
         ActionSigners0:Map,
         expand(expanded))
     ensures invariant(
+        no-data,
         NumUsers:Usize,
         UserIdToAddress:Map,
         AddressToUserId:Map,

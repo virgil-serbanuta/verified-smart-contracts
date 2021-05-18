@@ -11,7 +11,7 @@ module PROOF-DISCARD-ACTION-NO-SIGNERS
   imports TRUSTED-COUNT-CAN-SIGN
 //@ trusted
 // module TRUSTED-DISCARD-ACTION-NO-SIGNERS
-  // imports EXECUTION-PROOF
+  // imports MAIN-PROOF-EXECUTE
 //@ end
 
   claim <T><TT>

@@ -11,9 +11,9 @@ module PROOF-PERFORM-PARTS-CHANGE-QUORUM
   imports TRUSTED-PERFORM-ACTION-ENDPOINT-CHANGE-QUORUM-WITH-QUORUM-MARKER
 //@ trusted
 // module TRUSTED-PERFORM-PARTS-CHANGE-QUORUM
-// imports INVARIANT
+//   imports INVARIANT-FUNCTIONS
+//   imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
 //@ end
-  imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
 
   claim <T><TT>
           <k> splitPerformActionEndpoint4(ChangeQuorum(_NewQuorum:Usize) #as Action:Action)
@@ -71,6 +71,7 @@ module PROOF-PERFORM-PARTS-CHANGE-QUORUM
         </TT></T>
     requires true
         andBool invariant(
+            no-data,
             NumUsers,
             UserIdToAddress,
             AddressToUserId,
@@ -88,6 +89,7 @@ module PROOF-PERFORM-PARTS-CHANGE-QUORUM
                     toExpressionListOrDefault(ActionSigners[ActionId] orDefault [.], [void, .]),
                     UserIdToRole)
     ensures invariant(
+        no-data,
         ?NumUsers1,
         ?UserIdToAddress1,
         ?AddressToUserId1,

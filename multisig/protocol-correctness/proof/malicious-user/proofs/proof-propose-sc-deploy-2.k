@@ -1,5 +1,7 @@
+// timeout = eternal
+// breadth = 1
 //@ proof
-require "../functions/trusted-propose-sc-deploy-error-no-role.k"  //@ Bazel remove
+require "../../functions/trusted-propose-sc-deploy-error-no-role.k"  //@ Bazel remove
 
 module PROOF-PROPOSE-SC-DEPLOY-2
   imports TRUSTED-PROPOSE-SC-DEPLOY-ERROR-NO-ROLE

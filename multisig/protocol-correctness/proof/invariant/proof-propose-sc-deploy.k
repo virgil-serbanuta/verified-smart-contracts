@@ -16,7 +16,8 @@ module PROOF-PROPOSE-SC-DEPLOY
   imports TRUSTED-PROPOSE-SC-DEPLOY-4
 //@ trusted
 // module TRUSTED-PROPOSE-SC-DEPLOY
-// imports INVARIANT
+//   imports INVARIANT-FUNCTIONS
+//   imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
 //@ end
 
   claim <T><TT>
@@ -62,6 +63,7 @@ module PROOF-PROPOSE-SC-DEPLOY
               PerformedActions:List):StateCell
         </TT></T>
     requires invariant(
+            no-data,
             NumUsers:Usize,
             UserIdToAddress:Map,
             AddressToUserId:Map,
@@ -75,6 +77,7 @@ module PROOF-PROPOSE-SC-DEPLOY
             expand(expanded))
         andBool isKResult(Args)
     ensures invariant(
+        no-data,
             NumUsers:Usize,
             UserIdToAddress:Map,
             AddressToUserId:Map,

@@ -13,10 +13,9 @@ module PROOF-PERFORM-PARTS-ADD-PROPOSER-SIGNERS-NEQ
   imports TRUSTED-PERFORM-ACTION-ENDPOINT-ADD-PROPOSER-PROPOSER-MARKER
 //@ trusted
 // module TRUSTED-PERFORM-PARTS-ADD-PROPOSER-SIGNERS-NEQ
-// imports INVARIANT
+//   imports INVARIANT-FUNCTIONS
+//   imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
 //@ end
-
-  imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
 
   claim <T><TT>
           <k> splitAddProposer3(UserAddress)
@@ -77,6 +76,7 @@ module PROOF-PERFORM-PARTS-ADD-PROPOSER-SIGNERS-NEQ
         </TT></T>
     requires true
         andBool invariant(
+            no-data,
             NumUsers,
             UserIdToAddress,
             AddressToUserId,
@@ -96,6 +96,7 @@ module PROOF-PERFORM-PARTS-ADD-PROPOSER-SIGNERS-NEQ
         andBool notBool UserAddress ==K CallerAddress
         andBool UserId in_keys(UserIdToRole)
     ensures invariant(
+        no-data,
         ?NumUsers1,
         ?UserIdToAddress1,
         ?AddressToUserId1,

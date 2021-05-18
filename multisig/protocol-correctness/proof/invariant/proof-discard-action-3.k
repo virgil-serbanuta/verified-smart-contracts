@@ -16,8 +16,8 @@ module PROOF-DISCARD-ACTION-3
   imports TRUSTED-DISCARD-ACTION-NO-SIGNERS-NO-ACTION
 //@ trusted
 // module TRUSTED-DISCARD-ACTION-3
-// imports INVARIANT
-// imports DISCARD-ACTION-INSTRUMENTATION
+//   imports INVARIANT-FUNCTIONS
+//   imports DISCARD-ACTION-INSTRUMENTATION
 //@ end
 
   claim <T><TT>
@@ -77,6 +77,7 @@ module PROOF-DISCARD-ACTION-3
         </TT></T>
     requires true
         andBool invariant(
+            no-data,
             NumUsers,
             UserIdToAddress,
             AddressToUserId,
@@ -91,6 +92,7 @@ module PROOF-DISCARD-ACTION-3
         andBool CallerId in_keys(UserIdToRole)
     ensures true
         andBool invariant(
+            no-data,
             NumUsers,
             UserIdToAddress,
             AddressToUserId,

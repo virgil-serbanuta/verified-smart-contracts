@@ -11,7 +11,7 @@ module PROOF-DISCARD-ACTION-HAS-SIGNERS
   imports TRUSTED-COUNT-CAN-SIGN
 //@ trusted
 // module TRUSTED-DISCARD-ACTION-HAS-SIGNERS
-  // imports EXECUTION-PROOF
+  // imports MAIN-PROOF-EXECUTE
 //@ end
 
   claim <T><TT>

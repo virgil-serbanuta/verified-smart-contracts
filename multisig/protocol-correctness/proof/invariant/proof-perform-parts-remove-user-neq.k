@@ -1,23 +1,20 @@
 // timeout = eternal
-// breadth = 13
+// breadth = 3
 //@ proof
-require "../functions/trusted-perform-action-endpoint-remove-user-BoardMember-marker.k"  //@ Bazel remove
-require "../functions/trusted-perform-action-endpoint-remove-user-BoardMember-too-few-marker.k"  //@ Bazel remove
-require "../functions/trusted-perform-action-endpoint-remove-user-Proposer-marker.k"  //@ Bazel remove
-require "../functions/trusted-perform-action-endpoint-remove-user-Proposer-nobody-left-marker.k"  //@ Bazel remove
+
+require "trusted-perform-parts-remove-user-neq-1.k"  //@ Bazel remove
+require "trusted-perform-parts-remove-user-neq-2.k"  //@ Bazel remove
 
 module PROOF-PERFORM-PARTS-REMOVE-USER-NEQ
   imports INVARIANT-EXECUTE
 
-  imports TRUSTED-PERFORM-ACTION-ENDPOINT-REMOVE-USER-BOARDMEMBER-MARKER
-  imports TRUSTED-PERFORM-ACTION-ENDPOINT-REMOVE-USER-BOARDMEMBER-TOO-FEW-MARKER
-  imports TRUSTED-PERFORM-ACTION-ENDPOINT-REMOVE-USER-PROPOSER-MARKER
-  imports TRUSTED-PERFORM-ACTION-ENDPOINT-REMOVE-USER-PROPOSER-NOBODY-LEFT-MARKER
+  imports TRUSTED-PERFORM-PARTS-REMOVE-USER-NEQ-1
+  imports TRUSTED-PERFORM-PARTS-REMOVE-USER-NEQ-2
 //@ trusted
 // module TRUSTED-PERFORM-PARTS-REMOVE-USER-NEQ
-// imports INVARIANT
+//   imports INVARIANT-FUNCTIONS
+//   imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
 //@ end
-  imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
 
   claim <T><TT>
           <k> splitRemoveUser3(UserAddress:Address)
@@ -80,6 +77,7 @@ module PROOF-PERFORM-PARTS-REMOVE-USER-NEQ
         </TT></T>
     requires true
         andBool invariant(
+            no-data,
             NumUsers,
             UserIdToAddress,
             AddressToUserId,
@@ -99,6 +97,7 @@ module PROOF-PERFORM-PARTS-REMOVE-USER-NEQ
         andBool notBool UserAddress ==K CallerAddress
         andBool u(UserId) in_keys(UserIdToRole)
     ensures invariant(
+        no-data,
         ?NumUsers1,
         ?UserIdToAddress1,
         ?AddressToUserId1,

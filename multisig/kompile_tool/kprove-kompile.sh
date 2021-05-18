@@ -41,7 +41,14 @@ nice -n 10 \
 $KPROVE \
   --spec-module "$MODULE_NAME" \
   --dry-run \
-  "$PROOF_FILE" > output
+  "$PROOF_FILE" > output 2>&1 \
+|| ( \
+    ( \
+      (cat output | grep "core dumped") \
+      && (cp output /home/virgil/tmp/kprove; cp * /home/virgil/tmp/kprove; cat output 2>&1; false) \
+    ) \
+    || (cat output 2>&1; false) \
+  )
 
 SPEC_FILE=$(cat output | grep kore-exec | sed 's/^.*--prove \([^ ]*\) .*$/\1/')
 COMMAND=$(cat output | grep kore-exec)

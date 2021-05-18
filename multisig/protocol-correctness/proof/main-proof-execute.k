@@ -2,7 +2,7 @@ require "protocol-correctness/pseudocode.k"
 require "protocol-correctness/proof/invariant.k"
 require "protocol-correctness/proof/execution-proof-helpers.k"
 
-module EXECUTION-PROOF-SYNTAX
+module MAIN-PROOF-EXECUTE-SYNTAX
   imports PSEUDOCODE-SYNTAX
 endmodule
 
@@ -243,25 +243,25 @@ module PROOF-INSTRUMENTATION
   rule propose-sc-deploy-role.k => .K
 endmodule
 
-module EXECUTION-PROOF-BOOL
+module MAIN-PROOF-EXECUTE-BOOL
   imports BOOL
 
-  rule B1:Bool orBool _:Bool => true
-    requires B1
-    [simplification]
-  rule _:Bool orBool B2:Bool => true
-    requires B2
-    [simplification]
-  rule B1:Bool orBool B2:Bool => B2
-    requires notBool B1
-    [simplification]
-  rule B1:Bool orBool B2:Bool => B1
-    requires notBool B2
-    [simplification]
+  // rule B1:Bool orBool _:Bool => true
+  //   requires B1
+  //   [simplification]
+  // rule _:Bool orBool B2:Bool => true
+  //   requires B2
+  //   [simplification]
+  // rule B1:Bool orBool B2:Bool => B2
+  //   requires notBool B1
+  //   [simplification]
+  // rule B1:Bool orBool B2:Bool => B1
+  //   requires notBool B2
+  //   [simplification]
 endmodule
 
-module EXECUTION-PROOF
-  imports EXECUTION-PROOF-BOOL
+module MAIN-PROOF-EXECUTE
+  imports MAIN-PROOF-EXECUTE-BOOL
   imports EXECUTION-PROOF-HELPERS
   imports PROOF-INSTRUMENTATION
 

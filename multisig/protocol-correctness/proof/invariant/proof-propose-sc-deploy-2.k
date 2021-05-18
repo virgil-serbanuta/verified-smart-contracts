@@ -10,8 +10,8 @@ module PROOF-PROPOSE-SC-DEPLOY-2
   imports TRUSTED-PROPOSE-SC-DEPLOY-ERROR-NO-ROLE
 //@ trusted
 // module TRUSTED-PROPOSE-SC-DEPLOY-2
-// imports INVARIANT
-// imports PROOF-INSTRUMENTATION
+//   imports INVARIANT-FUNCTIONS
+//   imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
 //@ end
 
   claim <T><TT>
@@ -77,6 +77,7 @@ module PROOF-PROPOSE-SC-DEPLOY-2
         </TT></T>
     requires true
         andBool invariant(
+            no-data,
             NumUsers,
             UserIdToAddress,
             AddressToUserId,
@@ -92,6 +93,7 @@ module PROOF-PROPOSE-SC-DEPLOY-2
         andBool notBool MaliciousId in_keys(UserIdToRole)
     ensures true
         andBool invariant(
+            no-data,
             NumUsers,
             UserIdToAddress,
             AddressToUserId,

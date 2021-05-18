@@ -4,15 +4,16 @@ kompile(
   name = "functions-execute",
   srcs = ["functions-execute.k"],
   deps = [
-      "//protocol-correctness/proof:execution-proof-files",
+      "//protocol-correctness/proof:main-proof-execute-files",
   ],
+  visibility = ["//visibility:public"],
 )
 
 klibrary(
   name = "functions-execute-files",
   srcs = ["functions-execute.k"],
   deps = [
-      "//protocol-correctness/proof:execution-proof-files",
+      "//protocol-correctness/proof:main-proof-execute-files",
   ],
   visibility = ["//visibility:public"],
 )
@@ -1140,6 +1141,7 @@ kprove_test(
       ":trusted-perform-action-id-remove-user-BoardMember",
   ],
   semantics = "functions-execute",
+  timeout = "moderate",
 )
 
 ktrusted(
@@ -2454,5 +2456,4 @@ ktrusted(
   srcs = ["proof-unsign-other-signers-not-first.k"],
   visibility = ["//visibility:public"],
 )
-
 

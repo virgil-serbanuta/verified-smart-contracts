@@ -279,7 +279,7 @@ module INVARIANT
           </action-state>
         </multisig-state>
 
-  syntax Bool ::= invariant(
+  syntax Bool ::= baseInvariant(
       numUsers:Usize,
       userIdToAddress:Map,
       addressToUserId:Map,
@@ -292,7 +292,7 @@ module INVARIANT
       actionSigners:Map,
       handling:PropertyHandling)  [function, functional]
 
-  rule invariant(
+  rule baseInvariant(
       u(NumUsers:Int),
       UserIdToAddress:Map,
       AddressToUserId:Map,
@@ -350,6 +350,76 @@ module INVARIANT
 
       andBool NumBoardMembers ==Int countMapValues(UserIdToRole, wrap(BoardMember))
       andBool NumProposers ==Int countMapValues(UserIdToRole, wrap(Proposer))
+
+  // CustomInvariantData and customInvariant are defined differently for each
+  // group of proofs.
+  syntax CustomInvariantData
+  syntax Bool ::= customInvariant(
+      CustomInvariantData,
+      numUsers:Usize,
+      userIdToAddress:Map,
+      addressToUserId:Map,
+      numBoardMembers:Usize,
+      numProposers:Usize,
+      userIdToRole:Map,
+      quorum:Usize,
+      actionLastIndex:Usize,
+      actionData:Map,
+      actionSigners:Map,
+      handling:PropertyHandling)  [function, functional]
+
+  syntax Bool ::= invariant(
+      CustomInvariantData,
+      numUsers:Usize,
+      userIdToAddress:Map,
+      addressToUserId:Map,
+      numBoardMembers:Usize,
+      numProposers:Usize,
+      userIdToRole:Map,
+      quorum:Usize,
+      actionLastIndex:Usize,
+      actionData:Map,
+      actionSigners:Map,
+      handling:PropertyHandling)  [function, functional]
+  rule invariant(
+      CustomData:CustomInvariantData,
+      NumUsers:Usize,
+      UserIdToAddress:Map,
+      AddressToUserId:Map,
+      NumBoardMembers:Usize,
+      NumProposers:Usize,
+      UserIdToRole:Map,
+      Quorum:Usize,
+      ActionLastIndex:Usize,
+      ActionData:Map,
+      ActionSigners:Map,
+      Handling:PropertyHandling)
+    => true
+      andBool baseInvariant(
+          NumUsers,
+          UserIdToAddress,
+          AddressToUserId,
+          NumBoardMembers,
+          NumProposers,
+          UserIdToRole,
+          Quorum,
+          ActionLastIndex,
+          ActionData,
+          ActionSigners,
+          Handling)
+      andBool customInvariant(
+          CustomData,
+          NumUsers,
+          UserIdToAddress,
+          AddressToUserId,
+          NumBoardMembers,
+          NumProposers,
+          UserIdToRole,
+          Quorum,
+          ActionLastIndex,
+          ActionData,
+          ActionSigners,
+          Handling)
 
   // TODO: Maybe move somewhere else.
   syntax Bool ::= subset(Map, Map)  [function, functional]

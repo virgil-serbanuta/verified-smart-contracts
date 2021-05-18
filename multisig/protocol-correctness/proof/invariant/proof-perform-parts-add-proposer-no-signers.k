@@ -15,10 +15,9 @@ module PROOF-PERFORM-PARTS-ADD-PROPOSER-NO-SIGNERS
   imports TRUSTED-PERFORM-ACTION-ENDPOINT-ADD-PROPOSER-NONE
 //@ trusted
 // module TRUSTED-PERFORM-PARTS-ADD-PROPOSER-NO-SIGNERS
-// imports INVARIANT
+//   imports INVARIANT-FUNCTIONS
+//   imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
 //@ end
-
-  imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
 
   claim <T><TT>
           <k> splitAddProposer(AddProposer(_UserAddress:Address) #as Action:Action)
@@ -76,6 +75,7 @@ module PROOF-PERFORM-PARTS-ADD-PROPOSER-NO-SIGNERS
         </TT></T>
     requires true
         andBool invariant(
+            no-data,
             NumUsers,
             UserIdToAddress,
             AddressToUserId,
@@ -94,6 +94,7 @@ module PROOF-PERFORM-PARTS-ADD-PROPOSER-NO-SIGNERS
                     UserIdToRole)
         andBool notBool ActionId in_keys(ActionSigners)
     ensures invariant(
+        no-data,
         ?NumUsers1,
         ?UserIdToAddress1,
         ?AddressToUserId1,

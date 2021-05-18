@@ -1,5 +1,7 @@
+// timeout = eternal
+// breadth = 1
 //@ proof
-require "../functions/trusted-propose-sc-deploy-error-Proposer.k"  //@ Bazel remove
+require "../../functions/trusted-propose-sc-deploy-Proposer.k"  //@ Bazel remove
 
 module PROOF-PROPOSE-SC-DEPLOY-4
   imports TRUSTED-PROPOSE-SC-DEPLOY-PROPOSER

@@ -1,14 +1,13 @@
-require "../execution-proof.k"
-require "../invariant/invariant-execution.k"
-// TODO: Rename to map-execution
-require "../map/map-execute.k"
+require "protocol-correctness/proof/main-proof-execute.k"
+require "protocol-correctness/proof/invariant/invariant-execute.k"
+require "protocol-correctness/proof/map/map-execute.k"
 
 module PROPERTIES-EXECUTE-SYNTAX
-  imports EXECUTION-PROOF-SYNTAX
+  imports MAIN-PROOF-EXECUTE-SYNTAX
 endmodule
 
 module PROPERTIES-EXECUTE
-  imports EXECUTION-PROOF
+  imports MAIN-PROOF-EXECUTE
   imports INVARIANT-EXECUTE
   imports MAP-EXECUTE
 
@@ -93,6 +92,15 @@ module PROPERTIES-EXECUTE
   rule castValue(Value:KItem, Type:ReflectionType)
       => cast(Value, Type) ~> removeValue
 
+  syntax KItem ::= pickBoardMember(Map)
+
+  rule pickBoardMember(M:Map)
+      => branchK(
+          mapCount(M, MEP.IsValue(BoardMember)) >Int 0,
+          lazyMapSelectProperty(M, MEP.IsValue(BoardMember)),
+          stuck
+        )
+
   syntax KItem ::= pickBoardMemberOrProposer(Map)
 
   rule pickBoardMemberOrProposer(M:Map)
@@ -171,8 +179,8 @@ module PROPERTIES-EXECUTE
 
   rule A:Int <=Int countCanSignFunction(L:ExpressionList, K:KItem |-> BoardMember M:Map) => true
     requires true
-        andBool A <=Int countMapValues(M, BoardMember) +Int 1
-        andBool countMapValues(M, BoardMember) +Int 1
+        andBool A <=Int countMapValues(M, wrap(BoardMember)) +Int 1
+        andBool countMapValues(M, wrap(BoardMember)) +Int 1
                 ==K countCanSignFunction(L:ExpressionList, K |-> BoardMember M:Map)
     [simplification]
 

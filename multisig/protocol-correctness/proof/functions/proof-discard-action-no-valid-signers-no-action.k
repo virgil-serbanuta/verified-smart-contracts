@@ -11,7 +11,7 @@ module PROOF-DISCARD-ACTION-NO-VALID-SIGNERS-NO-ACTION
   imports TRUSTED-COUNT-CAN-SIGN
 //@ trusted
 // module TRUSTED-DISCARD-ACTION-NO-VALID-SIGNERS-NO-ACTION
-  // imports EXECUTION-PROOF
+  // imports MAIN-PROOF-EXECUTE
 //@ end
 
   // TODO: I think that this is an invalid case that should be discarded

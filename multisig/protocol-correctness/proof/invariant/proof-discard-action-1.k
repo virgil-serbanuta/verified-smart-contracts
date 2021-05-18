@@ -14,8 +14,8 @@ module PROOF-DISCARD-ACTION-1
   imports TRUSTED-DISCARD-ACTION-NO-VALID-SIGNERS-NO-ACTION
 //@ trusted
 // module TRUSTED-DISCARD-ACTION-1
-// imports INVARIANT
-// imports DISCARD-ACTION-INSTRUMENTATION
+//   imports INVARIANT-FUNCTIONS
+//   imports DISCARD-ACTION-INSTRUMENTATION
 //@ end
 
   claim <T><TT>
@@ -75,6 +75,7 @@ module PROOF-DISCARD-ACTION-1
         </TT></T>
     requires true
         andBool invariant(
+            no-data,
             NumUsers,
             UserIdToAddress,
             AddressToUserId,
@@ -89,6 +90,7 @@ module PROOF-DISCARD-ACTION-1
         andBool ActionId in_keys(ActionSigners)
     ensures true
         andBool invariant(
+            no-data,
             NumUsers,
             UserIdToAddress,
             AddressToUserId,

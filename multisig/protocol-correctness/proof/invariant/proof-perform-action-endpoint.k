@@ -19,10 +19,8 @@ module PROOF-PERFORM-ACTION-ENDPOINT
   imports TRUSTED-PERFORM-ACTION-ENDPOINT-NOTHING-MARKER
 //@ trusted
 // module TRUSTED-PERFORM-ACTION-ENDPOINT
-// imports INVARIANT
+//   imports INVARIANT-FUNCTIONS
 //@ end
-
-  imports INVARIANT
 
   claim <T><TT>
           <k> runExternalCalls(
@@ -61,6 +59,7 @@ module PROOF-PERFORM-ACTION-ENDPOINT
               ?_PerformedActions:List):StateCell
         </TT></T>
     requires invariant(
+        no-data,
         NumUsers:Usize,
         UserIdToAddress:Map,
         AddressToUserId:Map,
@@ -73,6 +72,7 @@ module PROOF-PERFORM-ACTION-ENDPOINT
         ActionSigners0:Map,
         expand(expanded))
     ensures invariant(
+        no-data,
         ?NumUsers1:Usize,
         ?UserIdToAddress1:Map,
         ?AddressToUserId1:Map,

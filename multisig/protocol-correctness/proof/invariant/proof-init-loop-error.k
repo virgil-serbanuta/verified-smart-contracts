@@ -1,4 +1,4 @@
-// timeout = moderate
+// timeout = long
 // breadth = 2
 //@ proof
 module PROOF-INIT-LOOP-ERROR

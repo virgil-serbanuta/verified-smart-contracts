@@ -1,4 +1,4 @@
-// timeout = eternal
+// timeout = long
 // breadth = 8
 require "trusted-discard-action-3.k"  //@ Bazel remove
 require "../functions/trusted-discard-action-no-role-marker.k"  //@ Bazel remove
@@ -14,7 +14,7 @@ module PROOF-DISCARD-ACTION
   imports TRUSTED-DISCARD-ACTION-NO-USER-MARKER
 //@ trusted
 // module TRUSTED-DISCARD-ACTION
-// imports INVARIANT
+//   imports INVARIANT-FUNCTIONS
 //@ end
 
   claim <T><TT>
@@ -54,6 +54,7 @@ module PROOF-DISCARD-ACTION
               PerformedActions:List):StateCell
         </TT></T>
     requires invariant(
+        no-data,
         NumUsers,
         UserIdToAddress,
         AddressToUserId,
@@ -66,6 +67,7 @@ module PROOF-DISCARD-ACTION
         ActionSigners0,
         expand(expanded))
     ensures invariant(
+        no-data,
         NumUsers,
         UserIdToAddress,
         AddressToUserId,

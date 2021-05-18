@@ -16,7 +16,7 @@ module PROOF-PROPOSE-ADD-PROPOSER
   imports TRUSTED-PROPOSE-ACTION-PROPOSER
 //@ trusted
 // module TRUSTED-PROPOSE-ADD-PROPOSER
-// imports INVARIANT
+//   imports INVARIANT-FUNCTIONS
 //@ end
 
   claim <T><TT>
@@ -56,6 +56,7 @@ module PROOF-PROPOSE-ADD-PROPOSER
               PerformedActions:List):StateCell
         </TT></T>
     requires invariant(
+        no-data,
         NumUsers:Usize,
         UserIdToAddress:Map,
         AddressToUserId:Map,
@@ -68,6 +69,7 @@ module PROOF-PROPOSE-ADD-PROPOSER
         ActionSigners0:Map,
         expand(expanded))
     ensures invariant(
+        no-data,
         NumUsers:Usize,
         UserIdToAddress:Map,
         AddressToUserId:Map,

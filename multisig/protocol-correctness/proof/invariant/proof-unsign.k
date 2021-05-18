@@ -66,6 +66,7 @@ module PROOF-UNSIGN
               PerformedActions:List):StateCell
         </TT></T>
     requires invariant(
+        no-data,
         u(NumUsers),
         UserIdToAddress,
         AddressToUserId,
@@ -78,6 +79,7 @@ module PROOF-UNSIGN
         ActionSigners0,
         expand(expanded))
     ensures invariant(
+        no-data,
         u(NumUsers),
         UserIdToAddress,
         AddressToUserId,

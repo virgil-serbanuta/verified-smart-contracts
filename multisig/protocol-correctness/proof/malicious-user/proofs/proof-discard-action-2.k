@@ -1,7 +1,9 @@
+// timeout = eternal
+// breadth = 4
 //@ proof
-require "protocol-correctness/proof/functions/trusted-discard-action-has-signers.k"  //@ Bazel remove
-require "protocol-correctness/proof/functions/trusted-discard-action-no-valid-signers.k"  //@ Bazel remove
-require "protocol-correctness/proof/functions/trusted-discard-action-no-valid-signers-no-action.k"  //@ Bazel remove
+require "../../functions/trusted-discard-action-has-signers.k"  //@ Bazel remove
+require "../../functions/trusted-discard-action-no-valid-signers.k"  //@ Bazel remove
+require "../../functions/trusted-discard-action-no-valid-signers-no-action.k"  //@ Bazel remove
 
 module PROOF-DISCARD-ACTION-2
   imports TRUSTED-DISCARD-ACTION-HAS-SIGNERS

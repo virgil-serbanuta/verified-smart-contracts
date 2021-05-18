@@ -1,7 +1,9 @@
+// timeout = long
+// breadth = 3
 //@ proof
 require "trusted-discard-action-3.k"  //@ Bazel remove
-require "protocol-correctness/proof/functions/trusted-discard-action-no-role-marker.k"  //@ Bazel remove
-require "protocol-correctness/proof/functions/trusted-discard-action-no-user-marker.k"  //@ Bazel remove
+require "../../functions/trusted-discard-action-no-role-marker.k"  //@ Bazel remove
+require "../../functions/trusted-discard-action-no-user-marker.k"  //@ Bazel remove
 
 module PROOF-DISCARD-ACTION
   imports TRUSTED-DISCARD-ACTION-3

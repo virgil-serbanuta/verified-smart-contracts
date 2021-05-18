@@ -11,9 +11,9 @@ module PROOF-PERFORM-PARTS-ADD-BOARD-MEMBER-NEQ
   imports TRUSTED-PERFORM-ACTION-ENDPOINT-ADD-BOARD-MEMBER-PROPOSER-MARKER
 //@ trusted
 // module TRUSTED-PERFORM-PARTS-ADD-BOARD-MEMBER-NEQ
-// imports INVARIANT
+//   imports INVARIANT-FUNCTIONS
+//   imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
 //@ end
-  imports PERFORM-ACTION-ENDPOINT-INSTRUMENTATION
 
   claim <T><TT>
           <k> splitAddBoardMember3(UserAddress:Address)
@@ -71,6 +71,7 @@ module PROOF-PERFORM-PARTS-ADD-BOARD-MEMBER-NEQ
         </TT></T>
     requires true
         andBool invariant(
+            no-data,
             NumUsers,
             UserIdToAddress,
             AddressToUserId,
@@ -90,6 +91,7 @@ module PROOF-PERFORM-PARTS-ADD-BOARD-MEMBER-NEQ
         andBool notBool UserAddress ==K CallerAddress
         andBool u(UserId) in_keys(UserIdToRole)
     ensures invariant(
+        no-data,
         ?NumUsers1,
         ?UserIdToAddress1,
         ?AddressToUserId1,
