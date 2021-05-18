@@ -166,111 +166,6 @@ module MALICIOUS-USER-HELPERS
         => runExternalCall(from A run discardAction(?_ActionId:Usize);)
 endmodule
 
-module MALICIOUS-USER-DELETE
-  imports PROPERTIES-EXECUTE
-  imports MALICIOUS-USER-INVARIANT-FUNCTIONS
-
-  syntax KItem ::= allBoardMembersSignForInterspersed(actionId:Usize, K)
-  syntax KItem ::= boardMembersSignForInterspersed(actionId:Usize, userRoles:Map, K)
-  syntax KItem ::= boardMembersSignForInterspersedFreezer(actionId:Usize, K)
-  syntax KItem ::= #boardMembersSignForInterspersed(
-                      actionId:Usize,
-                      key:KItem,
-                      value:KItem,
-                      userRoles:Map,
-                      K)
-
-  rule  <k> allBoardMembersSignForInterspersed(ActionId:Usize, K:K)
-            => boardMembersSignForInterspersed(ActionId, UserIdToRole, K)
-        ...</k>
-        <user-roles> UserIdToRole:Map </user-roles>
-        <action-signers> ActionSigners:Map </action-signers>
-    requires notBool (ActionId in_keys(ActionSigners))
-
-  rule  <k> allBoardMembersSignForInterspersed(ActionId:Usize, K:K)
-            => boardMembersSignForInterspersed(ActionId, UserIdToRole, K)
-        ...</k>
-        <user-roles> UserId |-> BoardMember UserIdToRole:Map </user-roles>
-        <action-signers> ActionId |-> [UserId:Usize, .] _ActionSigners:Map </action-signers>
-
-  rule  boardMembersSignForInterspersed(_ActionId:Usize, .Map, _:K) => .K
-  rule  boardMembersSignForInterspersed(ActionId:Usize, UserIdToRole:Map, K:K)
-        =>  (  lazyMapSelectProperty(UserIdToRole, MEP.AlwaysTrue)
-            ~> boardMembersSignForInterspersedFreezer(ActionId, K)
-            )
-    requires notBool (UserIdToRole ==K .Map)
-
-  rule  (  mapSelected(Key:KItem, Value:KItem, UserIdToRole:Map)
-        ~> boardMembersSignForInterspersedFreezer(ActionId:Usize, K:K)
-        )
-        => #boardMembersSignForInterspersed(ActionId, Key, Value, UserIdToRole, K)
-
-  rule  #boardMembersSignForInterspersed(
-            ActionId:Usize,
-            UserId:KItem,
-            V:KItem,
-            UserIdToRole:Map,
-            K:K)
-        =>  (   cast(V, rUserRole)
-            ~>  removeValue
-            ~>  concretizeValue(V)
-            ~>  branchK(
-                  V ==K BoardMember,
-                  cast(UserId, rUsize)
-                    ~> removeValue
-                    ~> signFor(ActionId, UserId)
-                    ~> K
-                    ~> boardMembersSignFor(ActionId, UserIdToRole),
-                  boardMembersSignFor(ActionId, UserIdToRole)
-                )
-            )
-
-  syntax Bool ::= maliciousDeleteInvariant(
-            /*maliciousAddress:*/Address,
-            /*numUsers:*/Usize,
-            /*currentUserIdToAddress:*/Map,
-            /*currentAddressToUserId:*/Map,
-            /*numBoardMembers:*/Usize,
-            /*numProposers:*/Usize,
-            /*userRoles:*/Map,
-            /*quorum:*/Usize,
-            /*actionLastIndex:*/Usize,
-            /*actionData:*/Map,
-            /*actionSigners:*/Map,
-            PropertyHandling)
-      [function, functional]
-
-  rule  maliciousDeleteInvariant(
-            MaliciousAddress:Address,
-            NumUsers:Usize,
-            UserIdToAddress:Map,
-            AddressToUserId:Map,
-            NumBoardMembers:Usize,
-            NumProposers:Usize,
-            UserRoles:Map,
-            u(Quorum:Int),
-            ActionLastIndex:Usize,
-            ActionData:Map,
-            ActionSigners:Map,
-            Handling:PropertyHandling)
-      => true
-        andBool baseInvariant(
-            NumUsers,
-            UserIdToAddress,
-            AddressToUserId,
-            NumBoardMembers,
-            NumProposers,
-            UserRoles,
-            u(Quorum),
-            ActionLastIndex,
-            ActionData,
-            ActionSigners,
-            Handling)
-        andBool onlyThisSigner(AddressToUserId, MaliciousAddress, ActionSigners)
-        andBool Quorum >=Int 2
-
-endmodule
-
 module MALICIOUS-USER-EXECUTE
   imports MAIN-PROOF-EXECUTE
   imports FUNCTIONS-EXECUTE
@@ -282,6 +177,4 @@ module MALICIOUS-USER-EXECUTE
 
   imports MALICIOUS-USER-INVARIANT
   imports MALICIOUS-USER-HELPERS
-
-  imports MALICIOUS-USER-DELETE
 endmodule

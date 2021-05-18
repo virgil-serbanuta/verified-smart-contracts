@@ -1,0 +1,176 @@
+require "protocol-correctness/pseudocode.k"
+require "protocol-correctness/proof/execution-proof-helpers.k"
+require "protocol-correctness/proof/invariant.k"
+require "protocol-correctness/proof/main-proof-execute.k"
+require "protocol-correctness/proof/malicious-user/malicious-user-execute.k"
+require "protocol-correctness/proof/map/map-execute.k"
+require "protocol-correctness/proof/properties/properties-execute.k"
+
+module CAN-BE-DELETED-EXECUTE-SYNTAX
+  imports PSEUDOCODE-SYNTAX
+  imports MALICIOUS-USER-DELETE-ACTIONS-SYNTAX
+  imports MALICIOUS-USER-DELETE-INVARIANT-SYNTAX
+
+  imports EXECUTION-PROOF-HELPERS
+  imports MALICIOUS-USER-HELPERS
+endmodule
+
+module MALICIOUS-USER-DELETE-ACTIONS-SYNTAX
+  imports MAP
+  imports PSEUDOCODE-SYNTAX
+
+  imports PROPERTIES-EXECUTE
+
+  syntax KItem ::= allBoardMembersSignForInterspersed(/*actionId:*/Usize, K)
+  syntax KItem ::= boardMembersSignForInterspersed(/*actionId:*/Usize, /*userRoles:*/Map, K)
+  syntax KItem ::= boardMembersSignForInterspersedFreezer(/*actionId:*/Usize, K)
+  syntax KItem ::= #boardMembersSignForInterspersed(
+                      /*actionId:*/Usize,
+                      /*key:*/KItem,
+                      /*value:*/KItem,
+                      /*userRoles:*/Map,
+                      K)
+  syntax KItem ::= pickOtherBoardMember(
+                      /*userIdToRole:*/Map,
+                      /*addressToUserId:*/Map,
+                      Address)
+endmodule
+
+module MALICIOUS-USER-DELETE-ACTIONS
+  imports CONCRETIZE-INSTRUMENTATION
+  imports MALICIOUS-USER-DELETE-ACTIONS-SYNTAX
+  imports MAP-EXECUTE
+  imports PROOF-INSTRUMENTATION
+  imports PROPERTIES-EXECUTE
+  imports PSEUDOCODE
+
+  rule  <k> allBoardMembersSignForInterspersed(ActionId:Usize, K:K)
+            => boardMembersSignForInterspersed(ActionId, UserIdToRole, K)
+        ...</k>
+        <user-roles> UserIdToRole:Map </user-roles>
+        <action-signers> ActionSigners:Map </action-signers>
+    requires notBool (ActionId in_keys(ActionSigners))
+
+  rule  <k> allBoardMembersSignForInterspersed(ActionId:Usize, K:K)
+            => boardMembersSignForInterspersed(ActionId, UserIdToRole, K)
+        ...</k>
+        <user-roles> UserId |-> BoardMember UserIdToRole:Map </user-roles>
+        <action-signers> ActionId |-> [UserId:Usize, .] _ActionSigners:Map </action-signers>
+
+  rule  boardMembersSignForInterspersed(_ActionId:Usize, .Map, _:K) => .K
+  rule  boardMembersSignForInterspersed(ActionId:Usize, UserIdToRole:Map, K:K)
+        =>  (  lazyMapSelectProperty(UserIdToRole, MEP.AlwaysTrue)
+            ~> boardMembersSignForInterspersedFreezer(ActionId, K)
+            )
+    requires notBool (UserIdToRole ==K .Map)
+
+  rule  (  mapSelected(Key:KItem, Value:KItem, UserIdToRole:Map)
+        ~> boardMembersSignForInterspersedFreezer(ActionId:Usize, K:K)
+        )
+        => #boardMembersSignForInterspersed(ActionId, Key, Value, UserIdToRole, K)
+
+  rule  #boardMembersSignForInterspersed(
+            ActionId:Usize,
+            UserId:KItem,
+            V:KItem,
+            UserIdToRole:Map,
+            K:K)
+        =>  (   cast(V, rUserRole)
+            ~>  removeValue
+            ~>  concretizeValue(V)
+            ~>  branchK(
+                  V ==K BoardMember,
+                  cast(UserId, rUsize)
+                    ~> removeValue
+                    ~> signFor(ActionId, UserId)
+                    ~> K
+                    ~> boardMembersSignFor(ActionId, UserIdToRole),
+                  boardMembersSignFor(ActionId, UserIdToRole)
+                )
+            )
+
+  rule pickOtherBoardMember(UserIdToRole:Map, AddressToUserId:Map, Address:Address)
+      => branchK(
+        UserIdToRole[AddressToUserId[Address]] ==K BoardMember,
+        pickBoardMember(UserIdToRole[AddressToUserId[Address] <- undef]),
+        pickBoardMember(UserIdToRole))
+    requires Address in_keys(AddressToUserId)
+        andBool AddressToUserId[Address] in_keys(UserIdToRole)
+  /*
+  rule pickOtherBoardMember(UserIdToRole:Map, AddressToUserId:Map, Address:Address)
+      => pickBoardMember(UserIdToRole)
+    requires notBool Address in_keys(AddressToUserId)
+  rule pickOtherBoardMember(UserIdToRole:Map, AddressToUserId:Map, Address:Address)
+      => pickBoardMember(UserIdToRole)
+    requires Address in_keys(AddressToUserId)
+        andBool notBool AddressToUserId[Address] in_keys(UserIdToRole)
+  */
+  rule pickOtherBoardMember(UserIdToRole:Map, AddressToUserId:Map, Address:Address)
+      => pickBoardMember(UserIdToRole)
+    requires notBool Address in_keys(AddressToUserId)
+        orBool notBool AddressToUserId[Address] in_keys(UserIdToRole)
+
+endmodule
+
+module MALICIOUS-USER-DELETE-INVARIANT-SYNTAX
+  imports MAP
+  imports PSEUDOCODE-SYNTAX
+  imports EXECUTION-PROOF-HELPERS
+
+  syntax Bool ::= maliciousDeleteInvariant(
+            /*maliciousAddress:*/Address,
+            /*numUsers:*/Usize,
+            /*currentUserIdToAddress:*/Map,
+            /*currentAddressToUserId:*/Map,
+            /*numBoardMembers:*/Usize,
+            /*numProposers:*/Usize,
+            /*userRoles:*/Map,
+            /*quorum:*/Usize,
+            /*actionLastIndex:*/Usize,
+            /*actionData:*/Map,
+            /*actionSigners:*/Map,
+            PropertyHandling)
+      [function, functional]
+endmodule
+
+module MALICIOUS-USER-DELETE-INVARIANT
+  imports INVARIANT
+  imports MALICIOUS-USER-DELETE-INVARIANT-SYNTAX
+  imports MALICIOUS-USER-INVARIANT-FUNCTIONS
+
+  rule  maliciousDeleteInvariant(
+            MaliciousAddress:Address,
+            NumUsers:Usize,
+            UserIdToAddress:Map,
+            AddressToUserId:Map,
+            NumBoardMembers:Usize,
+            NumProposers:Usize,
+            UserRoles:Map,
+            u(Quorum:Int),
+            ActionLastIndex:Usize,
+            ActionData:Map,
+            ActionSigners:Map,
+            Handling:PropertyHandling)
+      => true
+        andBool baseInvariant(
+            NumUsers,
+            UserIdToAddress,
+            AddressToUserId,
+            NumBoardMembers,
+            NumProposers,
+            UserRoles,
+            u(Quorum),
+            ActionLastIndex,
+            ActionData,
+            ActionSigners,
+            Handling)
+        andBool onlyThisSigner(AddressToUserId, MaliciousAddress, ActionSigners)
+        andBool Quorum >=Int 2
+
+endmodule
+
+module CAN-BE-DELETED-EXECUTE
+  imports CAN-BE-DELETED-EXECUTE-SYNTAX
+  imports MALICIOUS-USER-DELETE-INVARIANT
+  imports MALICIOUS-USER-DELETE-ACTIONS
+endmodule
