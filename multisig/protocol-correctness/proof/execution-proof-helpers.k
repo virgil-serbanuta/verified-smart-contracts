@@ -132,7 +132,7 @@ module EXECUTION-PROOF-HELPERS
   rule listElementsAreDistinct([#listSwapRemove(L:ExpressionCSV, _:Int)])
       => true
     requires listElementsAreDistinct([L])
-    [simplification, label(xyzzy)]
+    [simplification]
   rule listElementsAreDistinct([lastToStart(L:ExpressionCSV) => L])
     [simplification]
 

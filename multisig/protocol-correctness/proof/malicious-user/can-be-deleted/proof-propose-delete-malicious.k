@@ -11,7 +11,7 @@ module PROOF-PROPOSE-DELETE-MALICIOUS
   imports PSEUDOCODE-CONFIGURATION
 
   claim <T><TT>
-          <k> pickOtherBoardMember(UserIdToRole, AddressToUserId, MaliciousAddress)
+          <k> pickOtherBoardMember(UserIdToRole, AddressToUserId, MaliciousAddress:Address)
               ~> withPickedUserCall(proposeRemoveUser(MaliciousAddress))
               ~> K:K
           </k>

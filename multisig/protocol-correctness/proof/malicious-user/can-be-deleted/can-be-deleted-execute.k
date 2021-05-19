@@ -90,25 +90,21 @@ module MALICIOUS-USER-DELETE-ACTIONS
             )
 
   rule pickOtherBoardMember(UserIdToRole:Map, AddressToUserId:Map, Address:Address)
-      => branchK(
-        UserIdToRole[AddressToUserId[Address]] ==K BoardMember,
-        pickBoardMember(UserIdToRole[AddressToUserId[Address] <- undef]),
-        pickBoardMember(UserIdToRole))
+      => #pickOtherBoardMember(UserIdToRole, AddressToUserId[Address])
     requires Address in_keys(AddressToUserId)
-        andBool AddressToUserId[Address] in_keys(UserIdToRole)
-  /*
   rule pickOtherBoardMember(UserIdToRole:Map, AddressToUserId:Map, Address:Address)
       => pickBoardMember(UserIdToRole)
     requires notBool Address in_keys(AddressToUserId)
-  rule pickOtherBoardMember(UserIdToRole:Map, AddressToUserId:Map, Address:Address)
-      => pickBoardMember(UserIdToRole)
-    requires Address in_keys(AddressToUserId)
-        andBool notBool AddressToUserId[Address] in_keys(UserIdToRole)
-  */
-  rule pickOtherBoardMember(UserIdToRole:Map, AddressToUserId:Map, Address:Address)
-      => pickBoardMember(UserIdToRole)
-    requires notBool Address in_keys(AddressToUserId)
-        orBool notBool AddressToUserId[Address] in_keys(UserIdToRole)
+
+  syntax KItem ::= #pickOtherBoardMember(
+                      /*userIdToRole:*/Map,
+                      /*userId:*/KItem)
+  rule #pickOtherBoardMember(UserIdToRole:Map, UserId:KItem)
+    => pickBoardMember(UserIdToRole[UserId <- undef])
+    requires UserId in_keys(UserIdToRole)
+  rule #pickOtherBoardMember(UserIdToRole:Map, UserId:KItem)
+    => pickBoardMember(UserIdToRole)
+    requires notBool UserId in_keys(UserIdToRole)
 
 endmodule
 
