@@ -18,19 +18,36 @@ module INVARIANT-HELPERS
       andBool addressToUserIdInvariant(AddressToUserId)
     [simplification]
 
+  syntax Bool ::= userIdToAddressInvariant(userIdToAddress:Map, addressToUserId:Map)
+    [function, functional]
 
-  syntax Bool ::= userIdToRoleInvariant(userIdToRole:Map)
+  rule userIdToAddressInvariant(.Map, _:Map) => true
+
+  rule userIdToAddressInvariant(K:KItem |-> V:KItem UserIdToAddress:Map, AddressToUserId:Map)
+    => true
+      andBool valueOfType(V, rAddress)  // valuesAreOfType(UserIdToAddress, rAddress)
+      andBool isKResult(V)  // valuesAreKResult(UserIdToAddress)
+      andBool valueIsNotEmpty(V, rAddress)  // valuesAreNotEmpty(UserIdToAddress, rAddress)
+      andBool V in_keys(AddressToUserId) andBool AddressToUserId[V] ==K K  // mapsAreReverseHalf(UserIdToAddress, AddressToUserId)
+
+      andBool userIdToAddressInvariant(UserIdToAddress, AddressToUserId)
+    [simplification]
+
+  syntax Bool ::= userIdToRoleInvariant(/*userIdToRole:*/Map)
     [function, functional]
 
   rule userIdToRoleInvariant(.Map) => true
 
-  rule userIdToRoleInvariant(_:KItem |-> V:KItem UserIdToRole:Map)
+  rule userIdToRoleInvariant(K:KItem |-> V:KItem UserIdToRole:Map)
     => true
       andBool valueOfType(V, rUserRole)  // valuesAreOfType(UserIdToRole, rUserRole)
       andBool isKResult(V)  // valuesAreKResult(UserIdToRole)
       andBool valueIsNotEmpty(V, rUserRole)  // valuesAreNotEmpty(UserIdToRole, rUserRole)
 
-      andBool userIdToRoleInvariant(UserIdToRole:Map)
+      andBool valueOfType(K, rUsize)  // keysAreOfType(UserIdToRole, rUsize)
+      andBool isKResult(K)  // keysAreKResult(UserIdToRole)
+
+      andBool userIdToRoleInvariant(UserIdToRole)
     [simplification]
 
 
@@ -319,6 +336,8 @@ module INVARIANT
       andBool unusedIdsInMapValues(NumUsers +Int 1, AddressToUserId, Handling)
       andBool noReusedIndexValue(NumUsers +Int 1, AddressToUserId, Handling)
 
+      andBool userIdToAddressInvariant(UserIdToAddress, AddressToUserId)
+
       andBool unusedIdsInMapKeys(NumUsers +Int 1, keysMap(UserIdToAddress), Handling)
 
       andBool userIdToRoleInvariant(UserIdToRole)
@@ -326,6 +345,7 @@ module INVARIANT
       // andBool valuesAreKResult(UserIdToRole)
       // andBool valuesAreNotEmpty(UserIdToRole, rUserRole)
       andBool unusedIdsInMapKeys(NumUsers +Int 1, keysMap(UserIdToRole), Handling)
+      andBool allKeysBecomeKeys(UserIdToRole, UserIdToAddress)
 
       andBool unusedIdsInMapKeys(ActionLastIndex +Int 1, keysMap(ActionData), Handling)
       andBool unusedIdsInMapKeys(ActionLastIndex +Int 1, keysMap(ActionSigners), Handling)

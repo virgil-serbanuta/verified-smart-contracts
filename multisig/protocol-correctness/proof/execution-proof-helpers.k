@@ -470,6 +470,16 @@ module EXECUTION-PROOF-HELPERS
 
   rule 0 <=Int countCanSignFunction(_, _) => true  [simplification, smt-lemma]
 
+  syntax Bool ::= allKeysBecomeKeys(Map, Map)  [function, functional]
+
+  rule allKeysBecomeKeys(.Map, _:Map) => true
+  rule allKeysBecomeKeys(K:KItem |-> _:KItem M:Map, N:Map)
+      => K in_keys(N) andBool allKeysBecomeKeys(M, N)
+    [simplification]
+  rule allKeysBecomeKeys(M:Map, _:KItem |-> _:KItem N:Map) => true
+    requires allKeysBecomeKeys(M, N)
+    [simplification]
+
 endmodule
 
 module EXPLICIT-KITEM-INJECTION

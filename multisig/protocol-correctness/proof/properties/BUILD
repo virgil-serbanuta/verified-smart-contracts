@@ -55,7 +55,7 @@ kprove_test(
   ],
   semantics = "properties-execute",
   timeout = "long",
-  breadth = "2",
+  breadth = "3",
 )
 
 ktrusted(

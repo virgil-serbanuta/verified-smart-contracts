@@ -141,7 +141,7 @@ module MALICIOUS-USER-DELETE-INVARIANT
             AddressToUserId:Map,
             NumBoardMembers:Usize,
             NumProposers:Usize,
-            UserRoles:Map,
+            UserIdToRole:Map,
             u(Quorum:Int),
             ActionLastIndex:Usize,
             ActionData:Map,
@@ -154,7 +154,7 @@ module MALICIOUS-USER-DELETE-INVARIANT
             AddressToUserId,
             NumBoardMembers,
             NumProposers,
-            UserRoles,
+            UserIdToRole,
             u(Quorum),
             ActionLastIndex,
             ActionData,
@@ -162,6 +162,7 @@ module MALICIOUS-USER-DELETE-INVARIANT
             Handling)
         andBool onlyThisSigner(AddressToUserId, MaliciousAddress, ActionSigners)
         andBool Quorum >=Int 2
+        andBool mapCount(UserIdToRole[AddressToUserId[MaliciousAddress] orDefault u(0) <- undef], MEP.IsValue(BoardMember)) >Int 0
 
 endmodule
 

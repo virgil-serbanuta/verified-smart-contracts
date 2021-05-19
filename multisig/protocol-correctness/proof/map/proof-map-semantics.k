@@ -1,21 +1,10 @@
 // breadth = 3
-module TRUSTED-MAP-SEMANTICS
-  imports MAP-EXECUTE
-
-  claim mapSelectProperty(M:Map, Property:MapElementProperty)
-      => mapSelected(?Key:KItem, ?Value:KItem, ?M:Map)
-    requires mapCount(M, Property) >Int 0
-    ensures applyMapElementProperty(Property, ?Key, ?Value)
-        andBool M ==K (?Key |-> ?Value ?M)
-    [trusted]
-
-  claim mapSelectProperty(M:Map, Property:MapElementProperty)
-      => mapNotFound
-    requires notBool (mapCount(M, Property) >Int 0)
-    [trusted]
-endmodule
-
+//@ proof
 module PROOF-MAP-SEMANTICS
+//@ trusted
+// module TRUSTED-MAP-SEMANTICS
+//@ end
+
   imports MAP-EXECUTE
 
   claim mapSelectProperty(M:Map, Property:MapElementProperty)
@@ -23,11 +12,20 @@ module PROOF-MAP-SEMANTICS
     requires mapCount(M, Property) >Int 0
     ensures applyMapElementProperty(Property, ?Key, ?Value)
         andBool M ==K (?Key |-> ?Value ?M)
+    //@ proof
+    //@ trusted
+    // [trusted]
+    //@ end
 
   claim mapSelectProperty(M:Map, Property:MapElementProperty)
       => mapNotFound
     requires notBool (mapCount(M, Property) >Int 0)
+    //@ proof
+    //@ trusted
+    // [trusted]
+    //@ end
 
+  //@ proof
   claim #mapSelectProperty(M:Map, Property:MapElementProperty, Processed:Map)
       => mapSelected(?Key:KItem, ?Value:KItem, ?M:Map)
     requires mapCount(M, Property) >Int 0
@@ -51,5 +49,7 @@ module PROOF-MAP-SEMANTICS
           MEP.IsValue(2) #as Property:MapElementProperty)
       => mapSelected(2, 2, N)
     requires mapCount(M, Property) >Int 0
+  //@ trusted
+  //@ end
 
 endmodule

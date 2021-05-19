@@ -82,8 +82,8 @@ module PROOF-BOARD-MEMBERS-SIGN-FOR-2
             ActionSigners,
             expand(expanded))
 
-        andBool newUserIdToRoleInvariant(PartialUserRoles, UserIdToAddress)
-        andBool userIdToAddressInvariant(UserIdToAddress, AddressToUserId)
+        // andBool newUserIdToRoleInvariant(PartialUserRoles, UserIdToAddress)
+        // andBool userIdToAddressInvariant(UserIdToAddress, AddressToUserId)
         andBool mapsAreReverse(AddressToUserId, UserIdToAddress)
         andBool mapIncluded(PartialUserRoles, UserRoles)
         andBool valuesAreNotEmpty(ActionData, rAction)

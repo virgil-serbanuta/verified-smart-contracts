@@ -88,8 +88,8 @@ module PROOF-CAN-PROPOSE-AND-EXECUTE
       andBool valuesAreOfType(UserIdToAddress, rAddress)
       andBool valuesAreKResult(UserIdToAddress)
 
-      andBool newUserIdToRoleInvariant(UserIdToRole, UserIdToAddress)
-      andBool userIdToAddressInvariant(UserIdToAddress, AddressToUserId)
+      // andBool newUserIdToRoleInvariant(UserIdToRole, UserIdToAddress)
+      // andBool userIdToAddressInvariant(UserIdToAddress, AddressToUserId)
       andBool mapsAreReverse(AddressToUserId, UserIdToAddress)
 
       andBool valuesAreNotEmpty(ActionData, rAction)

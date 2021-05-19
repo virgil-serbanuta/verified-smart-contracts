@@ -1,9 +1,10 @@
 //@ proof
-
 require "../../functions/trusted-propose-action-BoardMember.k"  //@ Bazel remove
+require "../../map/trusted-map-semantics.k"  //@ Bazel remove
 
 module PROOF-PROPOSE-DELETE-MALICIOUS
   imports TRUSTED-PROPOSE-ACTION-BOARDMEMBER
+  imports TRUSTED-MAP-SEMANTICS
 //@ trusted
 // module TRUSTED-PROPOSE-DELETE-MALICIOUS
 //@ end
@@ -21,7 +22,7 @@ module PROOF-PROPOSE-DELETE-MALICIOUS
               (MaliciousAddress |-> MaliciousId:Usize _AddressToUserId:Map) #as AddressToUserId:Map,
               NumBoardMembers:Usize,
               NumProposers:Usize,
-              (MaliciousId |-> _Role:UserRole UserIdToRoleFinal:Map) #as UserIdToRole:Map,
+              (MaliciousId |-> _Role:UserRole _UserIdToRole:Map) #as UserIdToRole:Map,
               u(Quorum:Int),
               u(ActionLastIndex:Int),
               ActionData:Map,
@@ -66,11 +67,11 @@ module PROOF-PROPOSE-DELETE-MALICIOUS
             AddressToUserId,
             NumBoardMembers,
             NumProposers,
-            UserIdToRoleFinal,
+            UserIdToRole,
             u(Quorum),
             u(ActionLastIndex +Int 1),
             u(ActionLastIndex +Int 1) |-> RemoveUser(MaliciousAddress) ActionData,
-            (u(ActionLastIndex +Int 1) |-> [?SomeId:Usize, .]) ActionSigners,
+            ActionSigners,
             usesExpanded)
         andBool notBool ?SomeId ==K MaliciousId
     //@ proof

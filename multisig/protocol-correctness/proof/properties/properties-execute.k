@@ -132,50 +132,40 @@ module PROPERTIES-EXECUTE
 
   ////////////////////////////////////////
 
-  syntax Bool ::= allKeysBecomeKeys(Map, Map)  [function, functional]
-
-  rule allKeysBecomeKeys(.Map, _:Map) => true
-  rule allKeysBecomeKeys(K:KItem |-> _:KItem M:Map, N:Map)
-      => K in_keys(N) andBool allKeysBecomeKeys(M, N)
-    [simplification]
-  rule allKeysBecomeKeys(M:Map, _:KItem |-> _:KItem N:Map) => true
-    requires allKeysBecomeKeys(M, N)
-    [simplification]
-
 // TODO: Move to the execution module.
 
   // TODO: Make this the main invariant
-  syntax Bool ::= newUserIdToRoleInvariant(userIdToRole:Map, userIdToAddress:Map)
-    [function, functional]
+  // syntax Bool ::= newUserIdToRoleInvariant(userIdToRole:Map, userIdToAddress:Map)
+  //   [function, functional]
 
-  rule newUserIdToRoleInvariant(.Map, _:Map) => true
+  // rule newUserIdToRoleInvariant(.Map, _:Map) => true
 
-  rule newUserIdToRoleInvariant(K:KItem |-> V:KItem UserIdToRole:Map, UserIdToAddress:Map)
-    => true
-      andBool valueOfType(V, rUserRole)  // valuesAreOfType(UserIdToRole, rUserRole)
-      andBool isKResult(V)  // valuesAreKResult(UserIdToRole)
-      andBool valueIsNotEmpty(V, rUserRole)  // valuesAreNotEmpty(UserIdToRole, rUserRole)
-      andBool valueOfType(K, rUsize)  // keysAreOfType(UserIdToRole, rUsize)
-      andBool isKResult(K)  // keysAreKResult(UserIdToRole)
-      andBool K in_keys(UserIdToAddress)  // allKeysBecomeKeys(UserIdToRole, UserIdToAddress)
+  // rule newUserIdToRoleInvariant(K:KItem |-> V:KItem UserIdToRole:Map, UserIdToAddress:Map)
+  //   => true
+  //     andBool valueOfType(V, rUserRole)  // valuesAreOfType(UserIdToRole, rUserRole)
+  //     andBool isKResult(V)  // valuesAreKResult(UserIdToRole)
+  //     andBool valueIsNotEmpty(V, rUserRole)  // valuesAreNotEmpty(UserIdToRole, rUserRole)
+  //     andBool valueOfType(K, rUsize)  // keysAreOfType(UserIdToRole, rUsize)
+  //     andBool isKResult(K)  // keysAreKResult(UserIdToRole)
+  //     andBool K in_keys(UserIdToAddress)  // allKeysBecomeKeys(UserIdToRole, UserIdToAddress)
 
-      andBool newUserIdToRoleInvariant(UserIdToRole, UserIdToAddress)
-    [simplification]
+  //     andBool newUserIdToRoleInvariant(UserIdToRole, UserIdToAddress)
+  //   [simplification]
 
-  syntax Bool ::= userIdToAddressInvariant(userIdToAddress:Map, addressToUserId:Map)
-    [function, functional]
+  // syntax Bool ::= userIdToAddressInvariant(userIdToAddress:Map, addressToUserId:Map)
+  //   [function, functional]
 
-  rule userIdToAddressInvariant(.Map, _:Map) => true
+  // rule userIdToAddressInvariant(.Map, _:Map) => true
 
-  rule userIdToAddressInvariant(K:KItem |-> V:KItem UserIdToAddress:Map, AddressToUserId:Map)
-    => true
-      andBool valueOfType(V, rAddress)  // valuesAreOfType(UserIdToAddress, rAddress)
-      andBool isKResult(V)  // valuesAreKResult(UserIdToAddress)
-      andBool valueIsNotEmpty(V, rAddress)  // valuesAreNotEmpty(UserIdToAddress, rAddress)
-      andBool V in_keys(AddressToUserId) andBool AddressToUserId[V] ==K K  // mapsAreReverseHalf(UserIdToAddress, AddressToUserId)
+  // rule userIdToAddressInvariant(K:KItem |-> V:KItem UserIdToAddress:Map, AddressToUserId:Map)
+  //   => true
+  //     andBool valueOfType(V, rAddress)  // valuesAreOfType(UserIdToAddress, rAddress)
+  //     andBool isKResult(V)  // valuesAreKResult(UserIdToAddress)
+  //     andBool valueIsNotEmpty(V, rAddress)  // valuesAreNotEmpty(UserIdToAddress, rAddress)
+  //     andBool V in_keys(AddressToUserId) andBool AddressToUserId[V] ==K K  // mapsAreReverseHalf(UserIdToAddress, AddressToUserId)
 
-      andBool userIdToAddressInvariant(UserIdToAddress, AddressToUserId)
-    [simplification]
+  //     andBool userIdToAddressInvariant(UserIdToAddress, AddressToUserId)
+  //   [simplification]
 
   rule A:Int <=Int countCanSignFunction(L:ExpressionList, K:KItem |-> BoardMember M:Map) => true
     requires true

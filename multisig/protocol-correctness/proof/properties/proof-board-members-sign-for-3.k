@@ -1,5 +1,5 @@
 // timeout = long
-// breadth = 2
+// breadth = 3
 //@ proof
 require "../map/trusted-map-semantics.k"  //@ Bazel remove
 
@@ -62,8 +62,8 @@ module PROOF-BOARD-MEMBERS-SIGN-FOR-3
             ActionSigners,
             expand(expanded))
 
-        andBool newUserIdToRoleInvariant(PartialUserRoles, UserIdToAddress)
-        andBool userIdToAddressInvariant(UserIdToAddress, AddressToUserId)
+        // andBool newUserIdToRoleInvariant(PartialUserRoles, UserIdToAddress)
+        // andBool userIdToAddressInvariant(UserIdToAddress, AddressToUserId)
         andBool mapsAreReverse(AddressToUserId, UserIdToAddress)
         andBool mapIncluded(PartialUserRoles, UserRoles)
         andBool valuesAreNotEmpty(ActionData, rAction)

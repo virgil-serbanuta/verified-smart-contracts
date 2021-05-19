@@ -50,6 +50,7 @@ kprove_test(
   srcs = ["proof-propose-delete-malicious.k"],
   trusted = [
       "//protocol-correctness/proof/functions:trusted-propose-action-BoardMember",
+      "//protocol-correctness/proof/map:trusted-map-semantics",
   ],
   semantics = "can-be-deleted-execute",
 )
@@ -57,6 +58,20 @@ kprove_test(
 ktrusted(
   name = "trusted-propose-delete-malicious",
   srcs = ["proof-propose-delete-malicious.k"],
+  visibility = ["//visibility:public"],
+)
+
+kprove_test(
+  name = "proof-tmp",
+  srcs = ["proof-tmp.k"],
+  trusted = [
+  ],
+  semantics = "can-be-deleted-execute",
+)
+
+ktrusted(
+  name = "trusted-tmp",
+  srcs = ["proof-tmp.k"],
   visibility = ["//visibility:public"],
 )
 

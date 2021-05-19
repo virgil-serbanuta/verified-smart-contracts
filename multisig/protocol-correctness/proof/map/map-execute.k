@@ -133,6 +133,7 @@ module MAP-EXECUTE
           Processed:Map)
       => mapSelected(Key, Value, M Processed)
     requires applyMapElementProperty(Property, Key, Value)
+    [label(mapSelectedPropertyTrue)]
   rule #mapSelectedProperty(
           Key:KItem,
           Value:KItem,
@@ -141,5 +142,6 @@ module MAP-EXECUTE
           Processed:Map)
       => #mapSelectProperty(M, Property, Key |-> Value Processed)
     requires notBool applyMapElementProperty(Property, Key, Value)
+    [label(mapSelectedPropertyFalse)]
 
 endmodule
