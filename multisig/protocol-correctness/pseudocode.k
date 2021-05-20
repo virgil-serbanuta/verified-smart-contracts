@@ -1110,7 +1110,7 @@ module MAP-UTILS
     [label(concretizeMapKey)]
   rule concretizeMapKey(Key:KItem, M:Map) => .K
     requires notBool Key in_keys(M)
-    [label(normalizeKeyNotInMap)]
+    [label(concretizeKeyNotInMap)]
 
   syntax KItem ::= splitMap(key:KItem, toSplit:Map, value:KItem, remainder:Map)
       [function, functional]
@@ -1119,12 +1119,14 @@ module MAP-UTILS
 
   rule splitMap(Key:KItem, M:Map, _Value:KItem, _Remainder:Map) => splitMapStuck
     requires notBool Key in_keys(M)
-  rule splitMap(Key:KItem, (Key |-> _:KItem) _:Map, _Value:KItem, _Remainder:Map)
+  rule splitMap(Key:KItem, (Key |-> _:KItem) M:Map, _Value:KItem, _Remainder:Map)
       => endSplitMap
+    ensures notBool Key in_keys(M)
     [simplification(30)]
   rule splitMap(Key:KItem, (K1:KItem |-> _SomeValue:KItem) M:Map, Value:KItem, Remainder:Map)
       => splitMap(Key, M, Value, Remainder)
     requires notBool (Key ==K K1) andBool Key in_keys(M)
+    ensures notBool K1 in_keys(M)
     [simplification(30)]
   rule splitMap(Key:KItem, M:Map, Value:KItem, Remainder:Map)
       => endSplitMap
@@ -1225,8 +1227,9 @@ module MAP-UTILS
     ensures false
     [owise]
 
-  rule X:KItem in_keys((Y:KItem |-> _:KItem M:Map) #as _:Map)
+  rule X:KItem in_keys(Y:KItem |-> _:KItem M:Map)
         => X ==K Y orBool X in_keys(M)
+    ensures notBool Y in_keys(M)
     [simplification]
 
   rule M:Map[Key:KItem] orDefault _:KItem => M[Key]

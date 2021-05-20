@@ -31,6 +31,7 @@ module INVARIANT-HELPERS
       andBool V in_keys(AddressToUserId) andBool AddressToUserId[V] ==K K  // mapsAreReverseHalf(UserIdToAddress, AddressToUserId)
 
       andBool userIdToAddressInvariant(UserIdToAddress, AddressToUserId)
+    ensures notBool K in_keys(UserIdToAddress)
     [simplification]
 
   syntax Bool ::= userIdToRoleInvariant(/*userIdToRole:*/Map)

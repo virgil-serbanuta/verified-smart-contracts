@@ -262,11 +262,13 @@ module EXECUTION-PROOF-HELPERS
 
   rule #allValuesBecomeKeys(.Map, _:Map) => true
   // TODO: This does not work if the key is in the map. Fix it and everything else.
-  rule #allValuesBecomeKeys((_ |-> V M:Map) #as _:Map, N:Map)
+  rule #allValuesBecomeKeys(K |-> V M:Map, N:Map)
       => V in_keys(N) andBool #allValuesBecomeKeys(M, N)
+    ensures notBool K in_keys(M)
     [simplification]
-  rule #allValuesBecomeKeys(M:Map, (_ |-> _ N:Map) #as _:Map) => true
+  rule #allValuesBecomeKeys(M:Map, K |-> _ N:Map) => true
     requires #allValuesBecomeKeys(M, N)
+    ensures notBool K in_keys(N)
     [simplification]
 
   syntax Bool ::= mapsAreReverse(Map, Map) [function, functional]
