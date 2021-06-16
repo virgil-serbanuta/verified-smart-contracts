@@ -24,7 +24,7 @@ module WITH-CONTRACT
   syntax Bytes ::= "bytesCt2"  [function, functional]
   rule bytesCt2 => String2Bytes("uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu")
 
-  /*/
+  /*
   imports MANDOS-SYNTAX
   // imports WITH-CONTRACT-BYTES
 
